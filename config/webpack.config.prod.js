@@ -12,6 +12,7 @@ const eslintFormatter = require('react-dev-utils/eslintFormatter');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
+const { resolve } = require("path");
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -92,6 +93,9 @@ module.exports = {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
+        "views": resolve(paths.appSrc, "views"),
+        "data": resolve(paths.appSrc, "data"),
+        "api": resolve(paths.appSrc, "api"),
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
