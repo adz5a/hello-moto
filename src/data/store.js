@@ -5,7 +5,8 @@ import {
     combineReducers
 } from 'redux';
 import {
-    reducer as bucket 
+    reducer as bucket,
+    middleware as bucketMiddleware
 } from "data/bucket";
 
 
@@ -30,6 +31,6 @@ export function createStore ( {
     }
 
     return  createReduxStore(reducer, /* preloadedState, */ composeEnhancers(
-        applyMiddleware(...middlewares)
+        applyMiddleware(...[ bucketMiddleware, ...middlewares ])
     ));
 }

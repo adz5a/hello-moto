@@ -23,7 +23,7 @@ export function isSafe ( action = {} ) {
     const { meta } = action;
 
     // all actions emitted by a middleware must have a meta key
-    if ( !typeof meta === "object" || meta === null ) {
+    if ( typeof meta !== "object" || meta === null ) {
 
         return true;
 
@@ -31,7 +31,7 @@ export function isSafe ( action = {} ) {
 
         // it means that this action is in itself
         // a side effect
-        return meta.origin === "middleware";
+        return meta.origin !== "middleware";
 
     }
 
@@ -40,4 +40,4 @@ export function isSafe ( action = {} ) {
 
 
 const GLOBAL_ACTION = ACTIONFACTORY("global");
-const PROCESSING = GLOBAL_ACTION("processing");
+export const PROCESSING = GLOBAL_ACTION("processing");

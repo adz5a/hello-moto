@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {  } from 'react';
 import curry from "lodash/curry";
 import {
     connect
@@ -84,10 +84,3 @@ export const enhance = compose(
 
 
 export const EnhancedBucket = enhance(Bucket);
-
-
-export function ListDir () {
-
-
-
-}

@@ -1,7 +1,9 @@
 "use strict";
+
 const map = require("lodash/fp/map");
 const conforms = require("lodash/fp/conforms");
 const reduce = require("lodash/fp/reduce");
+const isString = require("lodash/isString");
 
 // will blow up in node
 // should be mocked

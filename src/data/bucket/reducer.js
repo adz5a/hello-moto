@@ -12,7 +12,9 @@ export const SAVE = ACTION("save");
 const defaultState = {
     saved: false,
     baseURL: null,
-    bucket: null
+    bucket: null,
+    prefixes: {},
+    content: []
 };
 
 
