@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import {
-    Bucket
+    // Bucket,
+    EnhancedBucket as Bucket
 } from "views/Bucket";
 
 class App extends Component {
