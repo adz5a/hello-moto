@@ -99,12 +99,12 @@ const listPrefixes = ( { baseURL, bucket, prefix = "" }, set = new Set() ) => {
             if ( prefixes.length > 0 ) {
 
                 return Promise.all(prefixes.map(
-                    p => listPrefixes({ 
+                    prefix => listPrefixes({ 
                         baseURL,
-                        bucket
+                        bucket,
+                        prefix
                     }, 
                         set,
-                        p
                     ))
                 ).then(() => set);
 
@@ -113,6 +113,32 @@ const listPrefixes = ( { baseURL, bucket, prefix = "" }, set = new Set() ) => {
         });
 
 }
+
+const insert = ( res = {}, prefix, tail ) => {
+
+    if ( tail.length > 0 ) {
+
+        res[prefix] = insert(res[prefix], prefix + "/" + tail[0], tail.slice(1));
+        return res;
+
+    } else {
+
+        res[prefix] = res[prefix] ? res[prefix] : {};
+        return res;
+
+    }
+};
+
+const foldPrefixes = ( prefixes = [] )=> {
+
+    return reduce( ( res, prefix = "") => {
+
+        const [ head, ...tail ] = prefix.split("/");
+        return insert(res, head, tail );
+
+    }, {}, prefixes );
+
+};
 
 const listBucket = ( { baseURL, bucket, prefix = "" } ) => { 
 
@@ -146,5 +172,6 @@ module.exports = {
     listPrefixes,
     isValidRequest,
     listBucket,
-    xmlToJSON
+    xmlToJSON,
+    foldPrefixes
 };

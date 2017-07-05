@@ -1,6 +1,7 @@
 import { 
     parseXML,
     listPrefixes,
+    foldPrefixes,
     listBucket
 } from "./xml.utils";
 const fetch = require("node-fetch");
@@ -16,8 +17,9 @@ test("listPrefixes", () => {
     return listPrefixes({ baseURL, bucket })
         .then( value => {
 
-            console.log(value);
-            expect(value).toMatchSnapshot();
+            let asArray = [ ...value ];
+            asArray = asArray.sort();
+            expect(asArray).toMatchSnapshot();
 
         } );
     
@@ -28,9 +30,24 @@ test("listBucket", () => {
     return listBucket({ baseURL, bucket })
         .then( value => {
 
-            console.log(value);
             expect(value).toMatchSnapshot();
 
         } );
 
+} );
+
+test("foldPrefixes", () => {
+
+    const prefixes = [
+        "a/b/c",
+        "a/b",
+        "d/e",
+        "d/e/f",
+    ];
+
+    const res = foldPrefixes(prefixes);
+
+    expect(typeof res).toBe("object");
+
+    expect(res).toMatchSnapshot();
 } );

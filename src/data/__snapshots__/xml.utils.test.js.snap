@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`foldPrefixes 1`] = `
+Object {
+  "a": Object {
+    "a/b": Object {
+      "a/b/c": Object {},
+    },
+  },
+  "d": Object {
+    "d/e": Object {
+      "d/e/f": Object {},
+    },
+  },
+}
+`;
+
 exports[`listBucket 1`] = `
 Object {
   "contents": Array [
@@ -2449,7 +2464,46 @@ Object {
 `;
 
 exports[`listPrefixes 1`] = `
-Set {
+Array [
   "music/",
-}
+  "music/Gamma Ray/",
+  "music/Gamma Ray/(1990) Heading For Tomorrow/",
+  "music/Gamma Ray/(1991) Sigh No More/",
+  "music/Gamma Ray/(1993) Insanity and Genius/",
+  "music/Gamma Ray/(1995) Land of the Free/",
+  "music/Gamma Ray/(1997) Somewhere Out in Space/",
+  "music/Gamma Ray/(1999) Powerplant/",
+  "music/Gamma Ray/(2001) No World Order/",
+  "music/Gamma Ray/(2005) Majestic/",
+  "music/Gamma Ray/Gamma_Ray-Land_Of_The_Free_II-Promo-2007-QTXMp3/",
+  "music/Jay-Z/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(1996)Reasonable Doubt/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(1997)In My Lifetime, Vol. 1/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(1998)Vol. 2 ~ Hard Knock Life/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(1999)Vol. 3 ~ The Life",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(1999)Vol. 3 ~ The Life & Times Of S. Carter/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(2000)The Dynasty ~ Roc La Familia 2000/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(2001)The Blueprint/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(2002)The Best Of Both Worlds (with R. Kelly)/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(2002)The Blueprint² ~ The Gift & The Curse/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(2002)The Blueprint� ~ The Gift",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(2003)The Black Album/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(2004)Unfinished Business (with R. Kelly)/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(2006)Kingdom Come/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(2009)The Blueprint 3/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(2011)Watch the Throne (with Kanye West)~{Deluxe Version}/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/01. Studio Albums/(2013)Magna Carta Holy Grail (Deluxe Edition)/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/02. Live Albums/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/02. Live Albums/(2001)Jay-Z ~ Unplugged/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/03. Compilation Albums/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/03. Compilation Albums/(2002)Chapter One ~ Greatest Hits/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/03. Compilation Albums/(2003)Bring It On ~ The Best Of Jay-Z/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/03. Compilation Albums/(2003)The Blueprint 2.1/",
+  "music/Jay-Z/Discography@320kbps{gotfw}/{1996~2013}/03. Compilation Albums/(2006)Greatest Hits/",
+  "music/Me, Myself",
+  "music/Me, Myself & Us/",
+]
 `;

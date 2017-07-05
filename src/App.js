@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {
+    Bucket
+} from "views/Bucket";
 
 class App extends Component {
     render() {
@@ -13,6 +16,11 @@ class App extends Component {
                 <p className="App-intro">
                     To get started, edit <code>src/App.js</code> and save to reload.
                 </p>
+                <Bucket
+                    onList={console.log}
+                    onSave={console.log}
+                    onListDir={console.log}
+                />
             </div>
         );
     }
