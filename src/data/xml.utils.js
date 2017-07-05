@@ -78,7 +78,7 @@ const listPrefixes = ( { baseURL, bucket, prefix = "" }, set = new Set() ) => {
         .then( res => res.text() )
         .then(xml => {
 
-            // list prefix and remove 
+            // list prefix and remove
             // non valid ones : empty
             // or equal to provided prefix
             const document = parser.parseFromString(xml, "text/xml");
@@ -101,11 +101,11 @@ const listPrefixes = ( { baseURL, bucket, prefix = "" }, set = new Set() ) => {
             if ( prefixes.length > 0 ) {
 
                 return Promise.all(prefixes.map(
-                    prefix => listPrefixes({ 
+                    prefix => listPrefixes({
                         baseURL,
                         bucket,
                         prefix
-                    }, 
+                    },
                         set,
                     ))
                 ).then(() => set);
@@ -118,31 +118,38 @@ const listPrefixes = ( { baseURL, bucket, prefix = "" }, set = new Set() ) => {
 
 const insert = ( res = {}, prefix, tail ) => {
 
-    if ( tail.length > 0 ) {
 
-        res[prefix] = insert(res[prefix], prefix + "/" + tail[0], tail.slice(1));
-        return res;
+    if ( !res[prefix] ) {
 
-    } else {
-
-        res[prefix] = res[prefix] ? res[prefix] : {};
-        return res;
+        res[prefix] = {};
 
     }
+
+    if ( tail.length > 0 ) {
+
+        insert(
+            res[prefix],
+            prefix + "/" + tail[0],
+            tail.slice(1)
+        );
+
+    }
+
+    return res;
 };
 
 const foldPrefixes = ( prefixes = [] )=> {
 
     return reduce( ( res, prefix = "") => {
 
-        const [ head, ...tail ] = prefix.split("/");
+        const [ head, ...tail ] = prefix.split("/").filter( str => str !== "" );
         return insert(res, head, tail );
 
     }, {}, prefixes );
 
 };
 
-const listBucket = ( { baseURL, bucket, prefix = "" } ) => { 
+const listBucket = ( { baseURL, bucket, prefix = "" } ) => {
 
     const prefixQuery = prefix ?
         "&prefix=" + prefix :
@@ -155,7 +162,7 @@ const listBucket = ( { baseURL, bucket, prefix = "" } ) => {
 }
 
 /*
- * utility to use to text if a request is valid before 
+ * utility to use to text if a request is valid before
  * passing it to listPrefixes / listBucket
  * @param params: any - value to test
  *

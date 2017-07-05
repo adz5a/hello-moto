@@ -39,8 +39,8 @@ test("listBucket", () => {
 test("foldPrefixes", () => {
 
     const prefixes = [
-        "a/b/c",
         "a/b",
+        "a/b/c",
         "d/e",
         "d/e/f",
     ];
