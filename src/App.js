@@ -5,6 +5,10 @@ import {
     // Bucket,
     EnhancedBucket as Bucket
 } from "views/Bucket";
+import {
+    // BucketView
+    EnhancedBucketView as BucketView
+} from "views/BucketView";
 
 class App extends Component {
     render() {
@@ -22,6 +26,7 @@ class App extends Component {
                     onSave={console.log}
                     onListDir={console.log}
                 />
+                <BucketView />
             </div>
         );
     }

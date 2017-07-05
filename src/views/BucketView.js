@@ -11,14 +11,51 @@ import {
     LIST_CONTENT,
     SAVE
 } from "data/bucket";
+import keys from "lodash/keys";
 
 
-export function BucketView () {
+function renderList ( prefixes ) {
 
+    return keys(prefixes)
+        .map( prefix => {
+
+            const children = renderList(prefixes[prefix]);
+
+            console.log(prefix);
+            return (
+                <li key={prefix}>
+                    <span>{prefix}</span>
+                    { 
+                        children.length > 0 ?
+                            <ul>{children}</ul>:
+                            null
+                    }
+                </li>
+            )
+
+        });
+
+}
+
+
+
+export function BucketView ( { prefixes = {} } ) {
+
+    console.log(prefixes);
     return (
-        <section>
-            <ul><ul>
+        <section
+            style={{
+                textAlign: "left"
+            }}
+        >
+            <ul>{renderList(prefixes)}</ul>
         </section>
     );
 
 }
+
+const enhance = connect(
+    state => state.bucket
+);
+
+export const EnhancedBucketView = enhance(BucketView);

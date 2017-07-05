@@ -40,7 +40,8 @@ export function middleware ( store ) {
                             type,
                             data,
                             meta: fromMiddleware()
-                        }));
+                        }))
+                        .catch(console.error);
 
                     return next({
                         type: PROCESSING,

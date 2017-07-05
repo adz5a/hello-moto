@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducers 1`] = `
+Object {
+  "baseURL": "https://s3.eu-west-2.amazonaws.com",
+  "bucket": "imgs-yolo",
+  "prefixes": Object {
+    "content": Object {
+      "content/": Object {},
+    },
+  },
+}
+`;
