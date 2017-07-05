@@ -21,11 +21,10 @@ function renderList ( prefixes ) {
 
             const children = renderList(prefixes[prefix]);
 
-            console.log(prefix);
             return (
                 <li key={prefix}>
                     <span>{prefix}</span>
-                    { 
+                    {
                         children.length > 0 ?
                             <ul>{children}</ul>:
                             null
@@ -39,9 +38,8 @@ function renderList ( prefixes ) {
 
 
 
-export function BucketView ( { prefixes = {} } ) {
+export function BucketFolderView ( { prefixes = {} } ) {
 
-    console.log(prefixes);
     return (
         <section
             style={{
@@ -54,8 +52,39 @@ export function BucketView ( { prefixes = {} } ) {
 
 }
 
-const enhance = connect(
-    state => state.bucket
-);
 
-export const EnhancedBucketView = enhance(BucketView);
+function renderContent ( item ) {
+
+    return (
+        <li key={item.Key}>{ item.Key }</li>
+    );
+}
+
+
+export function BucketContentView ( {
+    contents = {
+        contents: []
+} } ) {
+
+    return (
+        <section
+            style={{
+                textAlign: "left"
+            }}
+        >
+            {
+                contents ?
+                    <ul>{ contents.contents.map(renderContent) }</ul>
+                    : <span>nothing to show</span>
+            }
+        </section>
+    );
+
+}
+
+
+const enhance = connect( state => state.bucket );
+
+
+export const EnhancedBucketFolderView = enhance(BucketFolderView);
+export const EnhancedBucketContentView = enhance(BucketContentView);

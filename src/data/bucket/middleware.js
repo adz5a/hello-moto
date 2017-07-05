@@ -5,7 +5,8 @@ import {
 } from "data/bucket";
 import  {
     listPrefixes,
-        foldPrefixes
+        foldPrefixes,
+        listBucket
 } from "data/xml.utils";
 import {
     isSafe,
@@ -51,6 +52,29 @@ export function middleware ( store ) {
 
                 }
 
+            case LIST_CONTENT:
+                if ( isSafe(action) ) {
+
+
+                    listBucket(data)
+                        .then( contents => ({
+                            type,
+                            data: {
+                                ...data,
+                                contents
+                            },
+                            meta: fromMiddleware()
+                        }))
+                        .then(store.dispatch);
+
+
+                    return next({
+                        type: PROCESSING,
+                        data: action,
+                        meta: fromMiddleware()
+                    });
+
+                }
 
 
             default:

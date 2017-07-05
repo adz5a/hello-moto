@@ -14,7 +14,7 @@ const defaultState = () => ({
     baseURL: null,
     bucket: null,
     prefixes: {},
-    content: []
+    contents: null
 });
 
 
@@ -33,12 +33,12 @@ export function reducer ( state = defaultState(), action ) {
                 bucket: data.bucket
             };
 
-        case LIST_DIRS:
+        case LIST_CONTENT:
             return {
                 ...state,
                 baseURL: data.baseURL,
                 bucket: data.bucket,
-                content: data.content
+                contents: data.contents
             };
 
         default:

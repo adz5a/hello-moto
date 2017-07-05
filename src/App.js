@@ -7,7 +7,8 @@ import {
 } from "views/Bucket";
 import {
     // BucketView
-    EnhancedBucketView as BucketView
+    EnhancedBucketFolderView as BucketFolderView,
+    EnhancedBucketContentView as BucketContentView
 } from "views/BucketView";
 
 class App extends Component {
@@ -26,7 +27,8 @@ class App extends Component {
                     onSave={console.log}
                     onListDir={console.log}
                 />
-                <BucketView />
+                <BucketFolderView />
+                <BucketContentView />
             </div>
         );
     }
