@@ -7,6 +7,7 @@ const ACTION = ACTIONFACTORY("bucket");
 export const LIST_DIRS = ACTION("list-dirs");
 export const LIST_CONTENT = ACTION("list-content");
 export const SAVE = ACTION("save");
+export const SAVE_ALL = ACTION("save-all");
 
 
 const defaultState = () => ({

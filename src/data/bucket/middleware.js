@@ -1,7 +1,8 @@
 import {
     LIST_DIRS,
     LIST_CONTENT,
-    SAVE
+    SAVE,
+    SAVE_ALL
 } from "data/bucket";
 import  {
     listPrefixes,
@@ -12,9 +13,89 @@ import {
     isSafe,
     PROCESSING,
     fromMiddleware
-} from "data/commons";
+} from "data/commons";
+import PouchDB from "pouchdb";
+import reduce from "lodash/fp/reduce";
+import forEach from "lodash/forEach";
+import keys from "lodash/fp/keys";
+import map from "lodash/fp/map";
+
+const isMusic = str => str.match(/\.mp3/) !== null;
+const isVideo = str => str.match(/\.mp4|avi/) !== null;
+const isImg = str => str.match(/\.jpg|png/) !== null;
+
+const byType = reduce(( dbs, item ) => {
+
+    if ( isMusic(item.Key) ) {
+
+        dbs.music.push(item);
+
+    } else if ( isVideo(item.Key) ){
+
+
+        dbs.videos.push(item);
+
+    } else if ( isImg(item) ) {
+
+        dbs.imgs.push(item);
+
+    }
+
+
+    return dbs;
+
+});
+
+const normalizeItems = map( item => ({
+    _id: item.Key,
+    item
+}));
+
+function saveBucketContent ( dbInstances, bucket ) {
+
+    if ( !bucket.contents ) {
+
+        return Promise.reject("Bucket content not loaded");
+
+    } else {
+
+
+        const dbs = byType({
+            imgs: [],
+            videos: [],
+            music: []
+        },
+            bucket.contents.contents
+        );
+
+        console.log(dbs);
+
+        const insertions = keys(dbs).map( key => {
+
+            const content = dbs[key];
+            console.log(content);
+            console.log(key);
+            console.log(dbInstances);
+            return dbInstances[key].bulkDocs(normalizeItems(content));
+
+        });
+
+
+        return Promise.all(insertions);
+    }
+
+}
+
 
 export function middleware ( store ) {
+
+
+    const dbs = {
+        imgs: new PouchDB("imgs"),
+        videos: new PouchDB("videos"),
+        music: new PouchDB("music"),
+    };
+
 
     return next => action => {
 
@@ -76,6 +157,21 @@ export function middleware ( store ) {
 
                 }
 
+            case SAVE_ALL:
+                if ( isSafe(action) ) {
+
+
+                    saveBucketContent(dbs, store.getState().bucket)
+                        .then(console.log)
+                        .catch(console.error);
+
+                    return next({
+                        type: PROCESSING,
+                        data: action,
+                        meta: fromMiddleware()
+                    });
+
+                }
 
             default:
                 return next(action);

@@ -9,7 +9,8 @@ import {
 import {
     LIST_DIRS,
     LIST_CONTENT,
-    SAVE
+    SAVE,
+    SAVE_ALL
 } from "data/bucket";
 
 const noop = () => {};
@@ -27,13 +28,12 @@ function parseForm ( keys, form ) {
 
 const parse = curry(parseForm)(["baseURL", "bucket"]);
 
-export function Bucket ( { 
-
+export function Bucket ({ 
+    onListDir = noop,
     onList = noop,
-        onSave = noop,
-        onListDir = noop
-
-} ) {
+    onSave = noop,
+    onSaveAll = noop
+}) {
 
     return (
         <form onSubmit={e => {
@@ -47,6 +47,7 @@ export function Bucket ( {
         <button type="submit" onClick={e => onListDir(parse(e.target.form))}>List Folders</button>
         <button type="submit" onClick={e => onList(parse(e.target.form))}>List Content</button>
         <button type="submit" onClick={e => onSave(parse(e.target.form))}>Save</button>
+        <button type="submit" onClick={e => onSaveAll(parse(e.target.form))}>Save All</button>
     </form>
     );
 
@@ -67,6 +68,14 @@ export const enhance = compose(
 
             return dispatch({
                 type: SAVE,
+                data
+            });
+
+        },
+        onSaveAll( data ) {
+
+            return dispatch({
+                type: SAVE_ALL,
                 data
             });
 
