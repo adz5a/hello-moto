@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`can render folders 1`] = `
+Array [
+  <li>
+    <span>
+        a
+    </span>
+    <ul>
+        <li>
+            <span>
+                a/b
+            </span>
+            <ul>
+                <li>
+                    <span>
+                        a/b/c
+                    </span>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</li>,
+]
+`;
