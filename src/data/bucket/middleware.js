@@ -68,14 +68,9 @@ function saveBucketContent ( dbInstances, bucket ) {
             bucket.contents.contents
         );
 
-        console.log(dbs);
-
         const insertions = keys(dbs).map( key => {
 
             const content = dbs[key];
-            console.log(content);
-            console.log(key);
-            console.log(dbInstances);
             return dbInstances[key].bulkDocs(normalizeItems(content));
 
         });
