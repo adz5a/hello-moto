@@ -14,12 +14,21 @@ import {
 import keys from "lodash/keys";
 
 
-function renderList ( prefixes ) {
+
+/*
+ * Returns a list of folders as jsxElement
+ * Recursively calls this function to list folders and
+ * subfolders
+ * @param prefixes - a list of { [ prefix ] : { [prefix/suffix]; ... } }
+ * @returns ReactElement
+ *
+ */
+export function folders ( prefixes ) {
 
     return keys(prefixes)
         .map( prefix => {
 
-            const children = renderList(prefixes[prefix]);
+            const children = folders(prefixes[prefix]);
 
             return (
                 <li key={prefix}>
@@ -46,7 +55,7 @@ export function BucketFolderView ( { prefixes = {} } ) {
                 textAlign: "left"
             }}
         >
-            <ul>{renderList(prefixes)}</ul>
+            <ul>{folders(prefixes)}</ul>
         </section>
     );
 
