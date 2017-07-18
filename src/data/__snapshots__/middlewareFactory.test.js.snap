@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`expect at least one argument each keys must be function 1`] = `"All keys must be functions, instead received non functions for : key"`;
+
+exports[`expect at least one argument each keys must be function 2`] = `"All keys must be functions, instead received non functions for : key"`;
+
+exports[`expect at least one argument each keys must be function 3`] = `"All keys must be functions, instead received non functions for : key"`;
+
+exports[`expect at least one argument each keys must be function 4`] = `"All keys must be functions, instead received non functions for : key"`;
+
+exports[`expect at least one argument each keys must be function 5`] = `"All keys must be functions, instead received non functions for : key"`;
+
+exports[`expect at least one argument each keys must be function 6`] = `"All keys must be functions, instead received non functions for : key"`;
+
+exports[`expect at least one argument must be a non null object 1`] = `"Expects an object :: { key: function }"`;
+
+exports[`expect at least one argument must be a non null object 2`] = `"Expects an object :: { key: function }"`;
+
+exports[`expect at least one argument must be a non null object 3`] = `"Expects an object :: { key: function }"`;
+
+exports[`expect at least one argument must be a non null object 4`] = `"Expects an object :: { key: function }"`;
+
+exports[`expect at least one argument must be a non null object 5`] = `"Expects an object :: { key: function }"`;
+
+exports[`expect at least one argument must be a non null object 6`] = `"Expects an object :: { key: function }"`;

@@ -1,0 +1,74 @@
+import isFunction from "lodash/isFunction";
+import {
+    ACTIONFACTORY,
+    fromMiddleware
+} from "data/commons";
+
+const MIDDLEWARE = ACTIONFACTORY("__middleware__");
+const PROCESSING = MIDDLEWARE("processing");
+const ERROR = MIDDLEWARE("error");
+
+
+
+export const tryCatch = (effect, wrapper) => {
+
+    try {
+        effect();
+    } catch ( e ) {
+
+        wrapper.value = e;
+        return wrapper;
+
+    };
+
+};
+
+export function MiddlewareFactory ( effectsMap ) {
+
+    if ( typeof effectsMap !== "object" || effectsMap === null ) {
+
+        throw new TypeError("Expects an object :: { key: function }");
+
+    }
+
+    const invalidKeys = Object.keys(effectsMap)
+        .filter(key => !isFunction(effectsMap[key]));
+
+    if ( invalidKeys.length > 0 ) {
+
+        throw new TypeError("All keys must be functions, instead received non functions for : " + invalidKeys.join(" "));
+
+    }
+
+
+    const effects = new Map(
+        Object.keys(effectsMap).map( key => [ key, effectsMap[key] ])
+    );
+
+    return function middleware ( store ) {
+
+        return next => action => {
+
+            const { type } = action;
+            if ( effects.has(type) ) {
+
+                const value = tryCatch(() => effects.get(type)(action.data));
+                
+
+                return next({
+                    type: PROCESSING,
+                    data: action,
+                    meta: fromMiddleware()
+                });
+
+            } else {
+
+                return next(action);
+
+            }
+
+        };
+
+    }
+
+}
