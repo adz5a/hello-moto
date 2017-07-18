@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Form } from "views/Bucket";
+import { Form, List } from "views/Bucket";
 
 class App extends Component {
     render() {
         return (
             <div>
-                <Form />
+                <Form onAdd={console.log} />
+                <List />
             </div>
         );
     }
