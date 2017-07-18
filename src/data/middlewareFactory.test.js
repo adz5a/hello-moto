@@ -136,21 +136,21 @@ describe("effects", () => {
         // return store.promise.then();
     });
 
-    // test("does not throw synchronously", () => {
+    test("does not throw synchronously", () => {
 
 
-    //     const { store, action, effect } = prep({ effect: () => {
+        const { store, action, effect } = prep({ effect: () => {
 
-    //         throw new Error("BOOM");
+            throw new Error("BOOM");
 
-    //     } });
+        } });
 
-    //     expect(() => store.dispatch({
-    //         type: action
-    //     })).not.toThrow();
+        expect(() => store.dispatch({
+            type: action
+        })).not.toThrow();
 
-    //     expect(effect).toHaveBeenCalledTimes(1);
-    // });
+        expect(effect).toHaveBeenCalledTimes(1);
+    });
     
 });
 
