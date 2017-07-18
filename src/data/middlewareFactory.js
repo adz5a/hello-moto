@@ -40,7 +40,10 @@ export const process = store => ( type, meta ) => promise => promise
         meta
     }));
 
-export function MiddlewareFactory ( effectsMap, id = Math.random().toString() ) {
+export function MiddlewareFactory ( effectsMap, {
+    id = Math.random().toString(),
+    onStart = null
+} ) {
 
     if ( typeof effectsMap !== "object" || effectsMap === null ) {
 
@@ -70,6 +73,24 @@ export function MiddlewareFactory ( effectsMap, id = Math.random().toString() ) 
     const errorWrapper = {};
     return function middleware ( store ) {
 
+
+        if ( typeof onStart === "function" ) {
+
+            tryCatch(() => onStart( action => {
+
+                store.dispatch({
+                    ...action,
+                    meta: {
+                        ...( action.meta || {} ),
+                        ...fromHere()
+                    }
+                });
+
+            }));
+
+        }
+
+
         return next => action => {
 
             const { type, meta = {}, data } = action;
@@ -97,11 +118,11 @@ export function MiddlewareFactory ( effectsMap, id = Math.random().toString() ) 
                         type: ERROR,
                         data: {
                             type,
-                            data: error
+                            data: { error, action }
                         },
                         meta: fromMiddleware({
                             ...meta,
-                            ...fromHere()
+                            ...fromHere(),
                         }),
                     }))
                     .then(store.dispatch);
