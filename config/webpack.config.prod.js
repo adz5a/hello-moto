@@ -96,6 +96,7 @@ module.exports = {
         "views": resolve(paths.appSrc, "views"),
         "data": resolve(paths.appSrc, "data"),
         "api": resolve(paths.appSrc, "api"),
+        "components": resolution(paths.addSrc, "components")
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).

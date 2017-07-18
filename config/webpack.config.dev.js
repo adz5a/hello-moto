@@ -97,6 +97,7 @@ module.exports = {
         "views": resolve(paths.appSrc, "views"),
         "data": resolve(paths.appSrc, "data"),
         "api": resolve(paths.appSrc, "api"),
+        "components": resolve(paths.appSrc, "components"),
 
     },
     plugins: [
