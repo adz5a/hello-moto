@@ -13,7 +13,8 @@ import {
     bucket,
     ADD_BUCKET,
     SAVE_BUCKET,
-    makeId
+    makeId,
+    LIST_CONTENT
 } from "data/bucket";
 import {
     connect
@@ -86,7 +87,7 @@ export function Form ( {
 
 }
 
-export function InertForm ( bucket ) {
+export function InertForm ( bucket, onList = noop ) {
 
     return (
         <form action="sign-up_submit"
@@ -94,6 +95,7 @@ export function InertForm ( bucket ) {
             acceptCharset="utf-8"
             className="dib"
             key={makeId(bucket)}
+            onSubmit={ e => e.preventDefault() }
         >
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                 <legend className="ph0 mh0 fw6">Bucket Form</legend>
@@ -109,6 +111,16 @@ export function InertForm ( bucket ) {
             <Button
                 value="Edit"
                 type="submit"
+                onClick={ () => {} }
+            />
+            <Button
+                value="List Items"
+                type="submit"
+                onClick={() => {
+
+                    onList(bucket);
+
+                }}
             />
         </form>
     );
@@ -131,18 +143,30 @@ const enhanceForm = compose(
 export const EnhancedForm = enhanceForm(Form);
 
 
-export function List ( { buckets } ) {
+export function List ( { buckets, onList = noop } ) {
 
     return (
         <div className="dib">
-            {keys(buckets).map( key => buckets[key] ).map(InertForm)}
+            {keys(buckets).map( key => buckets[key] ).map(bucket => InertForm(bucket, onList))}
         </div>
     )
 
 }
 
 export const enhanceList = compose(
-    connect( state => ({ buckets: state.buckets }) )
+    connect( 
+        state => ({ buckets: state.buckets }),
+        dispatch => ({
+            onList( bucket ) {
+
+                dispatch({
+                    type: LIST_CONTENT,
+                    data: bucket
+                });
+
+            }
+        })
+    )
 );
 
 export const EnhancedList = enhanceList(List);

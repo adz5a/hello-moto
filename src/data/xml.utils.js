@@ -149,12 +149,12 @@ const foldPrefixes = ( prefixes = [] )=> {
 
 };
 
-const listBucket = ( { baseURL, bucket, prefix = "" } ) => {
+const listBucket = ( { baseURL, name, prefix = "" } ) => {
 
     const prefixQuery = prefix ?
         "&prefix=" + prefix :
         ""
-    return fetch(`${baseURL}/${bucket}?list-type=2${prefixQuery}`)
+    return fetch(`${baseURL}/${name}?list-type=2${prefixQuery}`)
         .then( res => res.text() )
         .then(parseXML)
         .then(xmlToJSON);

@@ -5,12 +5,15 @@ import {
     // SAVE_BUCKET,
     // SAVE_ALL
     ADD_BUCKET,
-    makeId
+    makeId,
+    makeURL,
+    LIST_CONTENT,
+    contentType
 } from "data/bucket";
 import {
     // listPrefixes,
     // foldPrefixes,
-    // listBucket
+    listBucket
 } from "data/xml.utils";
 import { MiddlewareFactory } from "data/middlewareFactory";
 import keys from "lodash/keys";
@@ -18,21 +21,17 @@ import PouchDB from "pouchdb";
 
 
 PouchDB.plugin(require("pouchdb-find").default);
+
+
+
 const db = new PouchDB("__db__");
-console.log(PouchDB.prototype);
+
 db.createIndex({
     index: {
         fields: [ "type" ]
     }
 })
     .then(console.log);
-// db.createIndex({
-//     index: {
-//         fields: [ "type" ],
-//             name: "typeIndex"
-//     }
-// })
-//     .then(console.log);
 
 export const middleware = MiddlewareFactory({
     [ADD_BUCKET]: bucket => {
@@ -53,6 +52,25 @@ export const middleware = MiddlewareFactory({
                 }) 
             )
             .then( () => bucket );
+    },
+    [LIST_CONTENT]: bucket => {
+
+        return listBucket(bucket)
+            .then(( { contents } ) => {
+
+                const url = makeURL(bucket);
+                return contents.map( item => ({
+                    type: "link",
+                    link: {
+                        url: `${url}${item.Key}`,
+                        contentType: contentType(item.Key),
+                        origin: { bucket }
+                    }
+                }))
+
+            })
+
+
     }
 }, {
     onStart( dispatch ) {
@@ -64,7 +82,6 @@ export const middleware = MiddlewareFactory({
         })
             .then( ( { docs = [] } ) => {
 
-                console.log(docs);
                 docs.forEach( doc => {
 
                     dispatch({

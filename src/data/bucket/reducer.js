@@ -30,7 +30,28 @@ export const bucket = flow([
 
 
 export const makeId = bucket => bucket.baseURL + "/" + bucket.name;
+export const makeURL = makeId;
 
+export const contentType = url => {
+    const extension = url.split(".");
+
+    switch ( extension[extension.length - 1]) {
+
+        case "jpg":
+        case "png":
+            return "image";
+            
+        case "mp3":
+            return "music";
+
+        case "mp4":
+            return "video";
+
+        default:
+            return null;
+
+    }
+};
 export function reducer ( state = defaultState(), action ) {
 
     const { type, data } = action;
