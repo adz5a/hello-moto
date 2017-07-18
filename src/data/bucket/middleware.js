@@ -4,10 +4,10 @@ import {
     SAVE,
     SAVE_ALL
 } from "data/bucket";
-import  {
+import {
     listPrefixes,
-        foldPrefixes,
-        listBucket
+    foldPrefixes,
+    listBucket
 } from "data/xml.utils";
 import {
     isSafe,
