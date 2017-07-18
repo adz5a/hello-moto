@@ -7,7 +7,12 @@ import {
 import noop from "lodash/noop";
 import curry from "lodash/curry";
 import { bucket } from "data/bucket";
-
+import {
+    connect
+} from "react-redux";
+import {
+    compose
+} from "recompose";
 const parseForm = ( names = [] ) => form => {
 
 
@@ -58,6 +63,10 @@ export function Form ( {
             <Button
                 value="Add Bucket"
                 type="submit"
+            />
+            <Button
+                value="Save Bucket"
+                type="button"
             />
         </form>
     );

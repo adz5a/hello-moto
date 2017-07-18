@@ -13,6 +13,8 @@ export const LIST_DIRS = ACTION("list-dirs");
 export const LIST_CONTENT = ACTION("list-content");
 export const SAVE = ACTION("save");
 export const SAVE_ALL = ACTION("save-all");
+export const ADD_BUCKET = ACTION("add-bucket");
+export const SAVE_BUCKET = ACTION("save-bucket");
 
 
 const defaultState = () => ({
@@ -31,29 +33,19 @@ export const bucket = flow([
     }),
 ]);
 
+
+const makeId = bucket => bucket.baseURL + "/" + bucket.name;
+
 export function reducer ( state = defaultState(), action ) {
 
     const { type, data } = action;
-
     switch ( type ) {
 
-
-        case LIST_DIRS:
+        case ADD_BUCKET:
             return {
                 ...state,
-                prefixes: data.prefixes,
-                baseURL: data.baseURL,
-                bucket: data.bucket
+                [ makeId(data) ]: data
             };
-
-        case LIST_CONTENT:
-            return {
-                ...state,
-                baseURL: data.baseURL,
-                bucket: data.bucket,
-                contents: data.contents
-            };
-
         default:
             return state;
 
