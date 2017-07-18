@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
+import React, { 
+    // Component
+} from 'react';
 import {
     InputWithLabel,
-    Input,
+    // Input,
     Button
 } from "components/Form";
 import noop from "lodash/noop";
-import curry from "lodash/curry";
+// import curry from "lodash/curry";
 import { bucket } from "data/bucket";
 import {
     connect

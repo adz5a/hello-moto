@@ -68,7 +68,6 @@ export function MiddlewareFactory ( effectsMap, id = Math.random().toString() ) 
     const errorWrapper = {};
     return function middleware ( store ) {
 
-        const _process = process(store);
         return next => action => {
 
             const { type, meta = {} } = action;
