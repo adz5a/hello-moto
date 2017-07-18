@@ -1,6 +1,7 @@
 import {
     ACTIONFACTORY
 } from "./../commons";
+import defaults from "lodash/fp/defaults";
 
 const ACTION = ACTIONFACTORY("bucket");
 
@@ -18,6 +19,10 @@ const defaultState = () => ({
     contents: null
 });
 
+const bucket = defaults({
+    baseURL: null,
+    name: null
+});
 
 export function reducer ( state = defaultState(), action ) {
 
