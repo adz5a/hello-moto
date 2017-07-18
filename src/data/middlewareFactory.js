@@ -38,7 +38,7 @@ export const process = store => ( type, meta ) => promise => promise
         meta
     }));
 
-export function MiddlewareFactory ( effectsMap ) {
+export function MiddlewareFactory ( effectsMap, id = Math.random().toString() ) {
 
     if ( typeof effectsMap !== "object" || effectsMap === null ) {
 
@@ -60,6 +60,10 @@ export function MiddlewareFactory ( effectsMap ) {
         Object.keys(effectsMap).map( key => [ key, effectsMap[key] ])
     );
 
+    const isFromHere = action => action.meta && action.meta.from === id;
+    const fromHere = () => ({
+        from: id
+    });
 
     const errorWrapper = {};
     return function middleware ( store ) {
@@ -68,7 +72,7 @@ export function MiddlewareFactory ( effectsMap ) {
         return next => action => {
 
             const { type, meta = {} } = action;
-            if ( effects.has(type) ) {
+            if ( !isFromHere(action) && effects.has(type) ) {
 
                 const value = tryCatch(
                     () => effects.get(type)(action.data),
@@ -83,7 +87,8 @@ export function MiddlewareFactory ( effectsMap ) {
                     .then(data => ({
                         type,
                         meta: fromMiddleware({
-                            ...meta
+                            ...meta,
+                            ...fromHere()
                         }),
                         data
                     }))
@@ -94,15 +99,18 @@ export function MiddlewareFactory ( effectsMap ) {
                             data: error
                         },
                         meta: fromMiddleware({
-                            ...meta
+                            ...meta,
+                            ...fromHere()
                         }),
                     }))
+                    .then(store.dispatch);
 
                     return next({
                         type: PROCESSING,
                         data: action,
                         meta: fromMiddleware({
-                            promise
+                            promise,
+                            ...fromHere()
                         })
                     });
 
