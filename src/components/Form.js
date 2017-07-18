@@ -40,6 +40,19 @@ export function Input ( { type, name } ) {
 
 }
 
+export function Span ( { children, className = "" } ) {
+
+    return (
+        <span
+            className={"b pa2 input-reset ba bg-transparent" + " " + className}
+            
+        >
+            {children}
+        </span>
+    );
+
+}
+
 export function InputWithLabel ( {
     type,
     name,
@@ -62,12 +75,12 @@ export function InputWithLabel ( {
 
 }
 
-export function Button ( { type, value } ) {
+export function Button ( { type, value, className = "" } ) {
 
     return(
         <input
             type={type || "button"}
-            className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6"
+            className={"b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6" + " " + className}
             value={value}
         />
     );

@@ -5,7 +5,7 @@ import {
     combineReducers
 } from 'redux';
 import {
-    reducer as bucket,
+    reducer as buckets,
     middleware as bucketMiddleware
 } from "data/bucket";
 
@@ -19,7 +19,7 @@ export function createStore ( {
 
 
     const reducer = combineReducers({
-        bucket
+        buckets
     });
 
     if ( process.env.NODE_ENV !== "production" ) {

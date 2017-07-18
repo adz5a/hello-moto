@@ -18,11 +18,6 @@ export const SAVE_BUCKET = ACTION("save-bucket");
 
 
 const defaultState = () => ({
-    saved: false,
-    baseURL: null,
-    bucket: null,
-    prefixes: {},
-    contents: null
 });
 
 export const bucket = flow([
@@ -34,7 +29,7 @@ export const bucket = flow([
 ]);
 
 
-const makeId = bucket => bucket.baseURL + "/" + bucket.name;
+export const makeId = bucket => bucket.baseURL + "/" + bucket.name;
 
 export function reducer ( state = defaultState(), action ) {
 

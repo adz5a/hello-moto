@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
-import { Form, List } from "views/Bucket";
+import { 
+    // Form,
+    EnhancedForm as Form,
+    // List,
+    EnhancedList as List
+} from "views/Bucket";
 
 class App extends Component {
     render() {
         return (
-            <div>
-                <Form onAdd={console.log} />
+            <div
+                style={{
+                    display: "flex",
+
+                }}
+            >
+                <div className="dib"><Form /></div>
                 <List />
             </div>
         );
