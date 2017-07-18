@@ -12,14 +12,16 @@ const ERROR = MIDDLEWARE("error");
 
 export const tryCatch = (effect, wrapper) => {
 
+    let val
     try {
-        effect();
+        val = effect();
     } catch ( e ) {
 
         wrapper.value = e;
         return wrapper;
 
     };
+    return val;
 
 };
 
@@ -70,11 +72,11 @@ export function MiddlewareFactory ( effectsMap, id = Math.random().toString() ) 
 
         return next => action => {
 
-            const { type, meta = {} } = action;
+            const { type, meta = {}, data } = action;
             if ( !isFromHere(action) && effects.has(type) ) {
 
                 const value = tryCatch(
-                    () => effects.get(type)(action.data),
+                    () => effects.get(type)(data),
                     errorWrapper
                 );
 

@@ -12,6 +12,7 @@ import noop from "lodash/noop";
 import {
     bucket,
     ADD_BUCKET,
+    SAVE_BUCKET,
     makeId
 } from "data/bucket";
 import {
@@ -37,7 +38,8 @@ const parseForm = ( names = [] ) => form => {
 const parse = parseForm(["baseURL", "name"]);
 
 export function Form ( {
-    onAdd = noop
+    onAdd = noop,
+    onSave = noop
 } ) {
 
     return (
@@ -47,8 +49,8 @@ export function Form ( {
             onSubmit={ e => {
 
                 e.preventDefault();
-                const data = parse(e.target);
-                onAdd(bucket(data));
+                // const data = parse(e.target);
+                // onAdd(bucket(data));
 
             }}
             className="dib"
@@ -73,10 +75,11 @@ export function Form ( {
             <Button
                 value="Add Bucket"
                 type="submit"
-            />
-            <Button
-                value="Save Bucket"
-                type="button"
+                onClick={e => {
+
+                    onAdd(parse(e.target.form));
+
+                }}
             />
         </form>
     );
@@ -121,27 +124,15 @@ const enhanceForm = compose(
                 data
             });
 
-        }
+        },
     }))
 );
 
 export const EnhancedForm = enhanceForm(Form);
 
-export function BucketItem ( bucket ) {
-
-    return (
-        <li key={makeId(bucket)}>
-            <p>
-                <Span>{bucket.name}</Span>
-            </p>
-        </li>
-    );
-
-}
 
 export function List ( { buckets } ) {
 
-    console.log(buckets);
     return (
         <div className="dib">
             {keys(buckets).map( key => buckets[key] ).map(InertForm)}

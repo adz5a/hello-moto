@@ -4,6 +4,7 @@ import {
     // SAVE,
     // SAVE_BUCKET,
     // SAVE_ALL
+    ADD_BUCKET
 } from "data/bucket";
 import {
     // listPrefixes,
@@ -12,4 +13,9 @@ import {
 } from "data/xml.utils";
 import { MiddlewareFactory } from "data/middlewareFactory";
 
-export const middleware = MiddlewareFactory({});
+export const middleware = MiddlewareFactory({
+    [ADD_BUCKET]: data => {
+        console.log(data);
+        return data;
+    }
+});
