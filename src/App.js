@@ -5,18 +5,25 @@ import { 
     // List,
     EnhancedList as List
 } from "views/Bucket";
+import {
+    // LinkList,
+    EnhancedLinkList as LinkList
+} from "views/LinkList";
 
 class App extends Component {
     render() {
         return (
-            <div
-                style={{
-                    display: "flex",
+            <div>
+                <div
+                    style={{
+                        display: "flex",
 
-                }}
-            >
-                <div className="dib"><Form /></div>
-                <List />
+                    }}
+                >
+                    <div className="dib"><Form /></div>
+                    <List />
+                </div>
+                <LinkList />
             </div>
         );
     }

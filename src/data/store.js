@@ -8,6 +8,9 @@ import {
     reducer as buckets,
     middleware as bucketMiddleware
 } from "data/bucket";
+import {
+    reducer as links
+} from "data/link";
 
 
 
@@ -19,7 +22,8 @@ export function createStore ( {
 
 
     const reducer = combineReducers({
-        buckets
+        buckets,
+        links
     });
 
     if ( process.env.NODE_ENV !== "production" ) {

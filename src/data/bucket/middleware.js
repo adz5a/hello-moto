@@ -33,7 +33,24 @@ db.createIndex({
 })
     .then(console.log);
 
-export const middleware = MiddlewareFactory({
+export function loadBuckets ( db ) {
+
+
+    return db
+        .find({
+            selector: {
+                type: "bucket"
+            },
+        })
+        .then( ( { docs = [] } ) => {
+
+            return docs.map( doc => doc.bucket );
+
+        });
+
+}
+
+const effects = {
     [ADD_BUCKET]: bucket => {
 
         const id = makeId(bucket);
@@ -60,42 +77,33 @@ export const middleware = MiddlewareFactory({
 
                 const url = makeURL(bucket);
                 return contents.map( item => ({
-                    type: "link",
-                    link: {
-                        url: `${url}${item.Key}`,
-                        contentType: contentType(item.Key),
-                        origin: { bucket }
-                    }
+                    url: `${url}${item.Key}`,
+                    contentType: contentType(item.Key),
+                    bucket
                 }))
 
             })
 
 
     }
-}, {
+};
+
+const init = {
     onStart( dispatch ) {
 
-        db.find({
-            selector: {
-                type: "bucket"
-            },
-        })
-            .then( ( { docs = [] } ) => {
+        loadBuckets(db)
+            .then( buckets => buckets.forEach( bucket => {
 
-                docs.forEach( doc => {
+                dispatch({
+                    type: ADD_BUCKET,
+                    data: bucket
+                });
 
-                    dispatch({
-                        type: ADD_BUCKET,
-                        data: doc.bucket
-                    });
-
-                })
-
-            }, error => {
-
-                console.error(error);
-
-            });
+            }))
+            .catch(console.error);
+        ;
 
     }
-});
+};
+
+export const middleware = MiddlewareFactory(effects, init);

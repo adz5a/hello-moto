@@ -52,6 +52,7 @@ export const contentType = url => {
 
     }
 };
+
 export function reducer ( state = defaultState(), action ) {
 
     const { type, data } = action;
