@@ -5,16 +5,20 @@ import {
     // SAVE_BUCKET,
     // SAVE_ALL
     ADD_BUCKET,
-    makeId,
-    makeURL,
     LIST_CONTENT,
-    contentType
-} from "data/bucket";
+} from "./actions";
+import {
+        makeId,
+        makeURL,
+} from "./data";
 import {
     // listPrefixes,
     // foldPrefixes,
     listBucket
 } from "data/xml.utils";
+import {
+    fromURL
+} from "data/link";
 import { MiddlewareFactory } from "data/middlewareFactory";
 import keys from "lodash/keys";
 import PouchDB from "pouchdb";
@@ -34,7 +38,6 @@ db.createIndex({
     .then(console.log);
 
 export function loadBuckets ( db ) {
-
 
     return db
         .find({
@@ -77,11 +80,14 @@ const effects = {
 
                 const url = makeURL(bucket);
                 return contents.map( item => ({
-                    url: `${url}${item.Key}`,
-                    contentType: contentType(item.Key),
+                    ...fromURL(url + "/" + item.Key),
                     bucket
                 }))
 
+            })
+            .catch( error => {
+                console.error(error);
+                return error;
             })
 
 
