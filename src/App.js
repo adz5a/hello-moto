@@ -5,18 +5,19 @@ import { 
     // List,
     EnhancedList as List
 } from "views/Bucket";
+import { Drop } from "components/Drop";
 
 class App extends Component {
     render() {
         return (
             <div
                 style={{
-                    display: "flex",
-
                 }}
             >
-                <div className="dib"><Form /></div>
+                <div className="dib"><Form />
+            </div>
                 <List />
+                <Drop />
             </div>
         );
     }
