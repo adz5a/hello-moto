@@ -2,6 +2,7 @@ import React from "react";
 import {
     bucket as bucketFactory,
     makeId,
+    DELETE_ALL
 } from "data/bucket";
 import {
     joinClasses as join,
@@ -20,17 +21,34 @@ import {
 import {
     connect
 } from "react-redux";
+import map from "lodash/map";
 
+function preventDefault ( e ) {
+
+    e.preventDefault();
+
+}
 
 const Yolo = () => <div>yolo</div>;
 
-export function BucketList ( { buckets = [] } ) {
+export function BucketList ( { 
+    buckets = [],
+    onDeleteAll = noop
+} ) {
 
     return (
         <section
             className="flex flex-column items-center"
         >
 
+        <form onSubmit={preventDefault}>
+            <input
+                value="Delete All"
+                type="submit"
+                className={join(linkStyle, "reset-input")}
+                onClick={onDeleteAll}
+            />
+        </form>
             {
                 buckets.map(
                     bucket => <BucketQuickDescription 
@@ -46,8 +64,16 @@ export function BucketList ( { buckets = [] } ) {
 
 export const enhanceBucketList = connect(
     state => ({
-        buckets: keys(state.buckets)
-            .map(bucket => state.buckets[bucket])
+        buckets: map(state.buckets)
+    }),
+    dispatch => ({
+        onDeleteAll() {
+
+            return dispatch({
+                type: DELETE_ALL
+            });
+
+        }
     })
 );
 

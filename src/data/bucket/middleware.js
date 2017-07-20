@@ -6,7 +6,8 @@ import {
     // SAVE_ALL
     ADD_BUCKET,
     LIST_CONTENT,
-    DELETE
+    DELETE,
+    DELETE_ALL
 } from "./actions";
 import {
         makeId,
@@ -109,6 +110,26 @@ const effects = {
 
             }, console.error )
             .then( () => bucket );
+
+    },
+
+
+    [DELETE_ALL]: () => {
+
+        return db
+            .find({
+                selector: {
+                    type: "bucket"
+                }
+            })
+            .then( ({ docs }) => {
+
+                return db.bulkDocs(
+                    docs.map( doc => ({...doc, _deleted: true }) )
+                );
+
+
+            } );
 
     }
 };

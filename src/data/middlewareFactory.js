@@ -25,20 +25,6 @@ export const tryCatch = (effect, wrapper) => {
 
 };
 
-export const process = store => ( type, meta ) => promise => promise
-    .then(data => ({
-        type,
-        meta,
-        data
-    }))
-    .catch( error => ({
-        type: ERROR,
-        data: {
-            type,
-            data: error
-        },
-        meta
-    }));
 
 export function MiddlewareFactory ( effectsMap, {
     id = Math.random().toString(),
@@ -114,17 +100,28 @@ export function MiddlewareFactory ( effectsMap, {
                         }),
                         data
                     }))
-                    .catch( error => ({
-                        type: ERROR,
-                        data: {
-                            type,
-                            data: { error, action }
-                        },
-                        meta: fromMiddleware({
-                            ...meta,
-                            ...fromHere(),
-                        }),
-                    }))
+                    .catch( error => {
+
+                        console.log(process);
+                        if ( process.env.NODE_ENV !== "production" ) {
+
+                            console.error(error);
+
+                        }
+
+                        return {
+                            type: ERROR,
+                            data: {
+                                type,
+                                data: { error, action }
+                            },
+                            meta: fromMiddleware({
+                                ...meta,
+                                ...fromHere(),
+                            })
+                        };
+
+                    })
                     .then(store.dispatch);
 
                     return next({

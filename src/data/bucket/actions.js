@@ -11,3 +11,4 @@ export const SAVE_ALL = ACTION("save-all");
 export const ADD_BUCKET = ACTION("add-bucket");
 export const SAVE_BUCKET = ACTION("save-bucket");
 export const DELETE = ACTION("delete");
+export const DELETE_ALL = ACTION("delete_all");
