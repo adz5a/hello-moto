@@ -1,29 +1,30 @@
 import React, { Component } from 'react';
-import { 
-    // Form,
-    EnhancedForm as Form,
-    // List,
-    EnhancedList as List
-} from "views/Bucket";
 import {
-    // LinkList,
-    EnhancedLinkList as LinkList
-} from "views/LinkList";
+    BrowserRouter as Router,
+    Route
+} from "react-router-dom";
+import {
+    View as Bucket
+} from "views/bucket";
+
 
 class App extends Component {
     render() {
         return (
             <div>
-                <div
-                    style={{
-                        display: "flex",
-
-                    }}
-                >
-                    <div className="dib"><Form /></div>
-                    <List />
-                </div>
-                <LinkList />
+                <Router>
+                    <div>
+                        <Route 
+                            path="/"
+                            exact
+                            component={() => <div>hello world</div>}
+                        />
+                        <Route 
+                            path="/bucket"
+                            component={Bucket}
+                        />
+                    </div>
+                </Router>
             </div>
         );
     }

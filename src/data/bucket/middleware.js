@@ -6,6 +6,7 @@ import {
     // SAVE_ALL
     ADD_BUCKET,
     LIST_CONTENT,
+    DELETE
 } from "./actions";
 import {
         makeId,
@@ -90,6 +91,24 @@ const effects = {
                 return error;
             })
 
+
+    },
+
+
+    [DELETE]: bucket => {
+
+        return db.find({
+            selector: {
+                type: "bucket",
+                _id: makeId(bucket)
+            }
+        })
+            .then( docs => {
+
+                console.log(docs);
+
+            }, console.error )
+            .then( () => bucket );
 
     }
 };

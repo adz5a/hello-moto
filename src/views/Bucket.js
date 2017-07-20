@@ -1,4 +1,4 @@
-import React, { 
+import React, {
     // Component
 } from 'react';
 import {
@@ -10,11 +10,12 @@ import {
 import noop from "lodash/noop";
 // import curry from "lodash/curry";
 import {
-    bucket,
+    bucket as bucketFactory,
     ADD_BUCKET,
     SAVE_BUCKET,
     makeId,
-    LIST_CONTENT
+    LIST_CONTENT,
+    DELETE
 } from "data/bucket";
 import {
     connect
@@ -87,14 +88,17 @@ export function Form ( {
 
 }
 
-export function InertForm ( bucket, onList = noop ) {
+export function InertForm ( {
+    bucket = bucketFactory(),
+    onList = noop,
+    onDelete = noop
+} ) {
 
     return (
         <form action="sign-up_submit"
             method="get"
             acceptCharset="utf-8"
             className="dib"
-            key={makeId(bucket)}
             onSubmit={ e => e.preventDefault() }
         >
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
@@ -122,10 +126,20 @@ export function InertForm ( bucket, onList = noop ) {
 
                 }}
             />
+            <Button
+                value="Delete"
+                type="submit"
+                onClick={() => {
+
+                    onDelete(bucket);
+
+                }}
+            />
         </form>
     );
 
 }
+
 
 const enhanceForm = compose(
     connect(null, dispatch => ({
@@ -140,6 +154,7 @@ const enhanceForm = compose(
     }))
 );
 
+
 export const EnhancedForm = enhanceForm(Form);
 
 
@@ -147,20 +162,34 @@ export function List ( { buckets, onList = noop } ) {
 
     return (
         <div className="dib">
-            {keys(buckets).map( key => buckets[key] ).map(bucket => InertForm(bucket, onList))}
+            {keys(buckets).map( key => buckets[key] ).map(bucket => <InertForm
+                key={makeId(bucket)}
+                bucket={bucket}
+            />)}
         </div>
     )
 
 }
 
 export const enhanceList = compose(
-    connect( 
+    connect(
         state => ({ buckets: state.buckets }),
         dispatch => ({
             onList( bucket ) {
 
-                dispatch({
+                return dispatch({
                     type: LIST_CONTENT,
+                    data: bucket
+                });
+
+            },
+
+
+            onDelete( bucket ) {
+
+                console.log("yolo");
+                return dispatch({
+                    type: DELETE,
                     data: bucket
                 });
 

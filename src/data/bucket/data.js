@@ -10,6 +10,11 @@ export const bucket = flow([
     }),
 ]);
 
-export const makeId = bucket => bucket.baseURL + "/" + bucket.name;
 
-export const makeURL = makeId;
+export const makeURL = bucket => bucket.baseURL + "/" + bucket.name
+
+export const makeId = flow([
+    makeURL,
+    encodeURIComponent,
+    btoa
+]);

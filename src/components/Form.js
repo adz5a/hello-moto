@@ -28,6 +28,12 @@ import React, { Component } from 'react';
 
 // }
 
+export const joinClasses = (...classes) => classes.join(" ");
+
+export const resetInput = "input-reset";
+export const controlStyle = "b pa2 input-reset ba bg-transparent";
+export const linkStyle = joinClasses(controlStyle, "dim", "link", "black");
+
 export function Input ( { type, name } ) {
 
     return (

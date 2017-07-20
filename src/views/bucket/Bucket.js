@@ -1,0 +1,73 @@
+import React, { } from 'react';
+import {
+    joinClasses as join,
+    controlStyle,
+    resetInput,
+    linkStyle
+} from "components/Form";
+import {
+    Link,
+    Route
+} from "react-router-dom";
+import {
+    bucket as bucketFactory,
+    makeId,
+} from "data/bucket";
+import { connect } from "react-redux";
+import noop from "lodash/noop";
+import {
+    // BucketList,
+    EnhancedBucketList as BucketList
+} from "./List";
+
+const viewStyle = {
+    maxWidth: "45em",
+    // border: "solid 1px",
+    marginLeft: "auto",
+    marginRight: "auto",
+    marginTop: "2em"
+};
+
+const Yolo = () => <div>yolo</div>;
+
+
+function HomeHeader ( { match } ) {
+
+    return (
+        <section
+            className={join("tr")}
+        >
+            <Link 
+                className={linkStyle}
+                to={match.url + "/new"}
+            >
+                Create New
+            </Link>
+        </section>
+    );
+
+}
+
+
+export function View ( { match, ...props } ) {
+
+    console.log(match);
+    console.log(props);
+    return (
+        <section
+            style={viewStyle}
+        >
+            <Route
+                path={match.url}
+                exact
+                component={() => <HomeHeader match={match}/>}
+            />
+            <Route 
+                path={match.url}
+                exact
+                component={BucketList}
+            />
+        </section>
+    );
+
+}
