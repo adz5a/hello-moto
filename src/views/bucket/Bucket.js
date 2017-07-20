@@ -19,6 +19,9 @@ import {
     // BucketList,
     EnhancedBucketList as BucketList
 } from "./List";
+import {
+    Add
+} from "./Add";
 
 const viewStyle = {
     maxWidth: "45em",
@@ -37,7 +40,7 @@ function HomeHeader ( { match } ) {
         <section
             className={join("tr")}
         >
-            <Link 
+            <Link
                 className={linkStyle}
                 to={match.url + "/new"}
             >
@@ -51,8 +54,6 @@ function HomeHeader ( { match } ) {
 
 export function View ( { match, ...props } ) {
 
-    console.log(match);
-    console.log(props);
     return (
         <section
             style={viewStyle}
@@ -62,10 +63,14 @@ export function View ( { match, ...props } ) {
                 exact
                 component={() => <HomeHeader match={match}/>}
             />
-            <Route 
+            <Route
                 path={match.url}
                 exact
                 component={BucketList}
+            />
+            <Route
+                path={match.url +"/new"}
+                component={Add}
             />
         </section>
     );
