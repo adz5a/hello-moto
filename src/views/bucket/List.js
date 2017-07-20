@@ -16,7 +16,9 @@ import {
 import noop from "lodash/noop";
 import keys from "lodash/keys";
 import { 
-    compose
+    compose,
+    renderComponent,
+    branch
 } from "recompose";
 import {
     connect
@@ -31,6 +33,14 @@ function preventDefault ( e ) {
 
 const Yolo = () => <div>yolo</div>;
 
+function Text ( { text } ) {
+
+    return <span className={controlStyle}>{text}</span>
+
+}
+
+const centerFlex ="flex flex-column items-center";
+
 export function BucketList ( { 
     buckets = [],
     onDeleteAll = noop
@@ -38,17 +48,20 @@ export function BucketList ( {
 
     return (
         <section
-            className="flex flex-column items-center"
+            className={centerFlex}
         >
-
-        <form onSubmit={preventDefault}>
-            <input
-                value="Delete All"
-                type="submit"
-                className={join(linkStyle, "reset-input")}
-                onClick={onDeleteAll}
-            />
-        </form>
+        {
+            buckets.length > 0 ?
+                <form onSubmit={preventDefault}>
+                    <input
+                        value="Delete All"
+                        type="submit"
+                        className={join(linkStyle, "reset-input")}
+                        onClick={onDeleteAll}
+                    />
+                </form>
+                    : null
+        }
             {
                 buckets.map(
                     bucket => <BucketQuickDescription 
@@ -62,19 +75,37 @@ export function BucketList ( {
 
 }
 
-export const enhanceBucketList = connect(
-    state => ({
-        buckets: map(state.buckets)
-    }),
-    dispatch => ({
-        onDeleteAll() {
+function EmptyBucketList () {
 
-            return dispatch({
-                type: DELETE_ALL
-            });
+    return (
+        <section
+            className={centerFlex}
+        >
+            <Text text={"You don't seem to have any bucket :("} />
+        </section>
+    );
 
-        }
-    })
+}
+
+export const enhanceBucketList = compose(
+    connect(
+        state => ({
+            buckets: map(state.buckets)
+        }),
+        dispatch => ({
+            onDeleteAll() {
+
+                return dispatch({
+                    type: DELETE_ALL
+                });
+
+            }
+        })
+    ),
+    branch(
+        ({ buckets }) => buckets.length === 0,
+        renderComponent(EmptyBucketList)
+    )
 );
 
 export const EnhancedBucketList = enhanceBucketList(BucketList);
