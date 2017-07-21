@@ -6,15 +6,17 @@ import {
 } from "data/bucket";
 import {
     joinClasses as join,
-    controlStyle,
-    resetInput,
-    linkStyle
+    preventDefault
 } from "components/Form";
+import {
+    defaultBordered,
+    linkStyle,
+} from "components/styles";
 import {
     Link
 } from "react-router-dom";
 import noop from "lodash/noop";
-import keys from "lodash/keys";
+// import keys from "lodash/keys";
 import { 
     compose,
     renderComponent,
@@ -25,17 +27,10 @@ import {
 } from "react-redux";
 import map from "lodash/map";
 
-function preventDefault ( e ) {
-
-    e.preventDefault();
-
-}
-
-const Yolo = () => <div>yolo</div>;
 
 function Text ( { text } ) {
 
-    return <span className={controlStyle}>{text}</span>
+    return <span className={defaultBordered}>{text}</span>
 
 }
 

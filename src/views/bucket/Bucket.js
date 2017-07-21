@@ -1,20 +1,22 @@
 import React, { } from 'react';
 import {
     joinClasses as join,
-    controlStyle,
-    resetInput,
-    linkStyle
+    // controlStyle,
+    // resetInput,
 } from "components/Form";
+import {
+        linkStyle
+} from "components/styles";
 import {
     Link,
     Route
 } from "react-router-dom";
 import {
-    bucket as bucketFactory,
-    makeId,
+    // bucket as bucketFactory,
+    // makeId,
 } from "data/bucket";
-import { connect } from "react-redux";
-import noop from "lodash/noop";
+// import { connect } from "react-redux";
+// import noop from "lodash/noop";
 import {
     // BucketList,
     EnhancedBucketList as BucketList
@@ -30,8 +32,6 @@ const viewStyle = {
     marginRight: "auto",
     marginTop: "2em"
 };
-
-const Yolo = () => <div>yolo</div>;
 
 
 function HomeHeader ( { match } ) {

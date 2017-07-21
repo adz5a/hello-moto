@@ -10,8 +10,8 @@ import {
     DELETE_ALL
 } from "./actions";
 import {
-        makeId,
-        makeURL,
+    makeId,
+    makeURL,
 } from "./data";
 import {
     // listPrefixes,
@@ -22,7 +22,7 @@ import {
     fromURL
 } from "data/link";
 import { MiddlewareFactory } from "data/middlewareFactory";
-import keys from "lodash/keys";
+// import keys from "lodash/keys";
 import PouchDB from "pouchdb";
 import findPlugin from "pouchdb-find";
 

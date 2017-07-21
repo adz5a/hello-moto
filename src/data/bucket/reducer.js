@@ -2,12 +2,12 @@ import {
     makeId,
 } from "./data";
 import {
-    LIST_DIRS,
-    LIST_CONTENT,
-    SAVE,
-    SAVE_ALL,
+    // LIST_DIRS,
+    // LIST_CONTENT,
+    // SAVE,
+    // SAVE_ALL,
     ADD_BUCKET,
-    SAVE_BUCKET,
+    // SAVE_BUCKET,
     DELETE_ALL
 } from "./actions";
 
