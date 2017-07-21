@@ -43,30 +43,28 @@ const centerFlex ="flex flex-column items-center";
 
 export function BucketList ( { 
     buckets = [],
-    onDeleteAll = noop
+    onDeleteAll = noop,
+    match = {}
 } ) {
 
     return (
         <section
             className={centerFlex}
         >
-        {
-            buckets.length > 0 ?
-                <form onSubmit={preventDefault}>
-                    <input
-                        value="Delete All"
-                        type="submit"
-                        className={join(linkStyle, "reset-input")}
-                        onClick={onDeleteAll}
-                    />
-                </form>
-                    : null
-        }
+            <form onSubmit={preventDefault}>
+                <input
+                    value="Delete All"
+                    type="submit"
+                    className={join(linkStyle, "reset-input")}
+                    onClick={onDeleteAll}
+                />
+            </form>
             {
                 buckets.map(
                     bucket => <BucketQuickDescription 
                         key={makeId(bucket)}
                         bucket={bucket}
+                        match={match}
                     />
                 )
             }
