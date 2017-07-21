@@ -82,10 +82,10 @@ const effects = {
             .then(( { contents } ) => {
 
                 const url = makeURL(bucket);
-                return contents.map( item => ({
-                    ...fromURL(url + "/" + item.Key),
+                return {
+                    links: contents.map( item => fromURL(url + "/" + item.Key)),
                     bucket
-                }))
+                }
 
             })
             .catch( error => {
