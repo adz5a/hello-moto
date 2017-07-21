@@ -9,7 +9,8 @@ import {
 } from "components/styles";
 import {
     Link,
-    Route
+    Route,
+    Switch
 } from "react-router-dom";
 import {
     // bucket as bucketFactory,
@@ -24,6 +25,13 @@ import {
 import {
     Add
 } from "./Add";
+import {
+    // LinkList,
+    EnhancedLinkList as LinkList
+} from "./LinkList";
+import {
+    Edit
+} from "./Edit";
 
 const viewStyle = {
     maxWidth: "45em",
@@ -68,10 +76,20 @@ export function View ( { match, ...props } ) {
                 exact
                 component={BucketList}
             />
-            <Route
-                path={match.url +"/new"}
-                component={Add}
-            />
+            <Switch>
+                <Route
+                    path={match.url +"/new"}
+                    component={Add}
+                />
+                <Route
+                    path={match.url +"/:bucketId/list"}
+                    component={LinkList}
+                />
+                <Route
+                    path={match.url +"/:bucketId/edit"}
+                    component={Edit}
+                />
+            </Switch>
         </section>
     );
 
