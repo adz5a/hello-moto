@@ -20,7 +20,7 @@ import {
 import {
     // BucketList,
     EnhancedBucketList as BucketList
-} from "./List";
+} from "./BucketList";
 import {
     Add
 } from "./Add";

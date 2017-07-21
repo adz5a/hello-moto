@@ -1,4 +1,4 @@
-export * from "./List";
+export * from "./BucketList";
 export * from "./Add";
 export * from "./Components";
 export * from "./Edit";
