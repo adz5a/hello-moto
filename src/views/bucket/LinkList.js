@@ -19,6 +19,7 @@ import {
     centerFlex,
     joinClasses as join
 } from "components/styles";
+import noop from "lodash/noop";
 // import { makeId } from "data/link";
 
 // const renderList = links => map(links, ( link, _) => (
@@ -34,25 +35,7 @@ export function LinkList ( { bucket = bucketFactory(), ...props } ) {
     return (
         <section>
             <Text text={bucket.name}/>
-            <EmptyLinkList />
-        </section>
-    );
-
-}
-
-
-export function EmptyLinkList () {
-
-    return (
-        <section className={centerFlex}>
-
-            <input
-                className={inputStyle}
-                type="button"
-                onClick={() => {}}
-                value="Get bucket content"
-            />
-
+            <EnhancedEmptyLinkList bucket={bucket} />
         </section>
     );
 
@@ -87,3 +70,39 @@ const enhanceLinkList = compose(
 );
 
 export const EnhancedLinkList = enhanceLinkList(LinkList);
+
+
+export function EmptyLinkList ( {
+    onRequestContent = noop,
+    bucket = bucketFactory()
+} ) {
+
+    return (
+        <section className={centerFlex}>
+
+            <input
+                className={inputStyle}
+                type="button"
+                onClick={() => onRequestContent(bucket)}
+                value="Get bucket content"
+            />
+
+        </section>
+    );
+
+}
+
+const enhanceEmptyLinkList = connect(null,
+    dispatch => ({
+        onRequestContent( bucket ) {
+
+            return dispatch({
+                type: LIST_CONTENT,
+                data: bucket
+            });
+
+        }
+    })
+);
+
+export const EnhancedEmptyLinkList = enhanceEmptyLinkList(EmptyLinkList);
