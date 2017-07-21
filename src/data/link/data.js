@@ -1,7 +1,12 @@
-import flow from "lodash/flow";
 import defaults from "lodash/fp/defaults";
+import flow from "lodash/flow";
 
-export const makeId = link => link.url;
+export const makeId = flow([
+    link => link.url,
+    encodeURIComponent,
+    btoa
+]);
+
 export const link = flow([
     defaults({ 
         url: null, // should not be null
