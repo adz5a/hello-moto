@@ -28,3 +28,7 @@ music
 *.ldb
 *.old
 *.log
+
+
+__db__
+__db__*
