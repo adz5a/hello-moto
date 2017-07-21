@@ -4,7 +4,6 @@ import App from './App';
 import { Provider } from "react-redux";
 import { createStore } from "data/store";
 
-jest.mock("pouch-db", () => require("pouch-db-memory");
 
 function Wrapper ( { children } ) {
 
