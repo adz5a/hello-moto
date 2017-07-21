@@ -4,14 +4,21 @@ import { connect } from "react-redux";
 import { 
     compose,
     mapProps,
-    withProps
+    withProps,
+    lifecycle
 } from "recompose";
 import {
     DefaultBorderedText as Text
 } from "components/Text";
 import {
-    bucket as bucketFactory
+    bucket as bucketFactory,
+    LIST_CONTENT
 } from "data/bucket"
+import {
+    inputStyle,
+    centerFlex,
+    joinClasses as join
+} from "components/styles";
 // import { makeId } from "data/link";
 
 // const renderList = links => map(links, ( link, _) => (
@@ -27,10 +34,30 @@ export function LinkList ( { bucket = bucketFactory(), ...props } ) {
     return (
         <section>
             <Text text={bucket.name}/>
+            <EmptyLinkList />
         </section>
     );
 
 }
+
+
+export function EmptyLinkList () {
+
+    return (
+        <section className={centerFlex}>
+
+            <input
+                className={inputStyle}
+                type="button"
+                onClick={() => {}}
+                value="Get bucket content"
+            />
+
+        </section>
+    );
+
+}
+
 
 const enhanceLinkList = compose(
     connect(
@@ -50,13 +77,13 @@ const enhanceLinkList = compose(
     mapProps(
         props => {
 
-            console.log(props);         
             return {
-                bucket: props.buckets[props.bucketId]
+                bucket: props.buckets[props.bucketId],
+                dispatch: props.dispatch
             };
 
         }  
-    )
+    ),
 );
 
 export const EnhancedLinkList = enhanceLinkList(LinkList);
