@@ -4,12 +4,25 @@ import App from './App';
 import { Provider } from "react-redux";
 import { createStore } from "data/store";
 
+jest.mock("pouch-db", () => require("pouch-db-memory");
+
+function Wrapper ( { children } ) {
+
+    return (
+        <Provider store={createStore()}>
+            { children }
+        </Provider>
+    );
+
+}
+
+
 it('renders without crashing', () => {
     const div = document.createElement('div');
     ReactDOM.render(
-        <Provider store={createStore()}>
+        <Wrapper>
             <App />
-        </Provider>,
+        </Wrapper>,
         div
     );
 });

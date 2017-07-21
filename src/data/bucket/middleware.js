@@ -24,9 +24,10 @@ import {
 import { MiddlewareFactory } from "data/middlewareFactory";
 import keys from "lodash/keys";
 import PouchDB from "pouchdb";
+import findPlugin from "pouchdb-find";
 
 
-PouchDB.plugin(require("pouchdb-find").default);
+PouchDB.plugin(findPlugin);
 
 
 
