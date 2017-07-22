@@ -6,6 +6,9 @@ import {
 import {
     View as Bucket
 } from "views/bucket";
+import {
+    View as Home
+} from "views/home/Home";
 
 
 class App extends Component {
@@ -16,7 +19,7 @@ class App extends Component {
                     <Route
                         path="/"
                         exact
-                        component={() => <div>hello world</div>}
+                        component={Home}
                     />
                     <Route
                         path="/bucket"
