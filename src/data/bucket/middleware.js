@@ -25,7 +25,6 @@ import {
 } from "data/link";
 import { MiddlewareFactory } from "data/middlewareFactory";
 // import keys from "lodash/keys";
-import PouchDB from "pouchdb";
 import get from "lodash/fp/get";
 import map from "lodash/map";
 import { 
@@ -39,7 +38,7 @@ import {
 
 // const db = new PouchDB("__db__");
 
-const createTypeIndex = createIndex(db, [ "type" ])
+createIndex(db, [ "type" ])
     .then(status => console.info("db type index status : ", status));
 
 

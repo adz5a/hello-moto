@@ -1,4 +1,3 @@
-import { LIST_CONTENT } from "data/bucket";
 import reduce from "lodash/fp/reduce";
 import {
     makeId,

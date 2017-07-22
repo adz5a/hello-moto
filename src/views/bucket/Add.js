@@ -11,7 +11,7 @@ import {
     connect
 } from "react-redux";
 import {
-    bucket as bucketFactory,
+    // bucket as bucketFactory,
     fromURLAndName,
     ADD_BUCKET
 } from "data/bucket";
