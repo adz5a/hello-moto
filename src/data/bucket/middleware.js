@@ -46,7 +46,6 @@ const createTypeIndex = createIndex(db, [ "type" ])
 
 
 const loadBuckets = loadType("bucket");
-const loadLinks = loadType("link");
 
 const effects = {
     [ADD_BUCKET]: bucket => {
@@ -208,8 +207,6 @@ const init = {
             }))
             .catch(console.error);
 
-        loadLinks(db)
-            .then(console.log);
 
     }
 };

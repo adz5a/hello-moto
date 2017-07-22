@@ -3,7 +3,9 @@ import reduce from "lodash/fp/reduce";
 import {
     makeId,
 } from "./data";
-
+import {
+    LOAD_LINKS
+} from "./actions";
 
 export const updateLinkList = reduce( (state = {}, link) => {
 
@@ -19,9 +21,10 @@ export function reducer ( state = defaultState(), action ) {
     const { type, data } = action;
     switch ( type ) {
 
-        case LIST_CONTENT:{
 
-            return updateLinkList({ ...state }, data.links);
+        case LOAD_LINKS:{
+
+            return state;
 
         }
 

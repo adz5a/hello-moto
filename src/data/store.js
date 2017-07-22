@@ -9,7 +9,8 @@ import {
     middleware as bucketMiddleware
 } from "data/bucket";
 import {
-    reducer as links
+    reducer as links,
+    middleware as linkMiddleware
 } from "data/link";
 
 
@@ -35,6 +36,10 @@ export function createStore ( {
     }
 
     return  createReduxStore(reducer, /* preloadedState, */ composeEnhancers(
-        applyMiddleware(...[ bucketMiddleware, ...middlewares ])
+        applyMiddleware(...[
+            linkMiddleware,
+            bucketMiddleware,
+            ...middlewares
+        ])
     ));
 }

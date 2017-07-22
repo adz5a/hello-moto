@@ -18,6 +18,7 @@ export function fromMiddleware ( meta = {} ) {
 
 // checks if a side effect can be performed on this 
 // action
+// TODO: is this still in use ?
 export function isSafe ( action = {} ) {
 
     const { meta } = action;
