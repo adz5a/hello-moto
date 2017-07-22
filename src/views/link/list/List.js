@@ -18,6 +18,7 @@ import map from "lodash/map";
 import fmap from "lodash/fp/map";
 import xs from "xstream";
 import noop from "lodash/noop";
+import { lazyList } from "components/lazyList";
 
 const shorten = len => str => str.length > len ?
     str.slice(0, len) + "..." :
@@ -68,7 +69,6 @@ export function ListFooter ( { links = {}, total, displayed, listMore = noop } )
 
 export function LinkList ( { links = {} } ) {
 
-
     return (
         <section className={"flex flex-column"}>
             {renderLink(links)}
@@ -101,52 +101,10 @@ export function ListContent ( { total, displayed, items, listMore } ) {
 }
 
 
-export const List = componentFromStream( prop$ => {
-
-    const { handler: listMore, stream: more } = createEventHandler(); 
-
-    const more$ = xs.from(more).debug();
-    const reset = links => {
-
-        const items = map(links);
-        const total = items.length;
-        // console.log("lol", links, items, total);
+export const enhanceList = lazyList({
+    selector: props => props.links,
+    chunkSize: 15
+});
 
 
-        return {
-            total,
-            displayed: total < listBumper ? total : listBumper,
-            items
-        };
-
-    }
-
-    const update = ( { total, displayed, items }, _ ) => {
-        const limit = displayed + listBumper > total ?
-            total :
-            displayed + listBumper;
-        return {
-            total,
-            displayed: limit,
-            items
-        };
-
-    };
-
-    return prop$
-        .map( ({ links } ) => {
-
-            return more$.fold(
-                update,
-                reset(links)
-            );
-
-        })
-        .flatten()
-        .map(
-            props => <ListContent
-                listMore={listMore}
-                {...props}
-            />
-        );
-} );
+export const List = enhanceList(ListContent);
