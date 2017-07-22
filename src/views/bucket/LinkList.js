@@ -1,7 +1,9 @@
 import React, { } from 'react';
 import map from "lodash/map";
+import fmap from "lodash/fp/map";
+import keys from "lodash/keys";
 import { connect } from "react-redux";
-import { 
+import {
     compose,
     mapProps,
     withProps,
@@ -71,7 +73,7 @@ const enhanceLinkList = compose(
                 dispatch: props.dispatch
             };
 
-        }  
+        }
     ),
 );
 
@@ -113,6 +115,16 @@ const enhanceEmptyLinkList = connect(null,
 
 export const EnhancedEmptyLinkList = enhanceEmptyLinkList(EmptyLinkList);
 
+const renderLinks = fmap( link => (
+    <p
+        key={link.id}
+        className={"flex justify-between"}
+    >
+        <Text>{link.url.split("/").pop()}</Text>
+        <Text>{link.contentType}</Text>
+    </p>
+)
+)
 export function List ( { bucket } ) {
 
     const { links = [], status } = bucket.links;
@@ -121,10 +133,20 @@ export function List ( { bucket } ) {
         <section
             className="mt5"
         >
-            <Input 
-                type="button"
-                value="Load More Items"
-            />
+            <section>
+                <Input
+                    type="button"
+                    value="Load More Items"
+                />
+            </section>
+            <section
+                className={"flex flex-column pl3 mt5"}
+            >
+                <header>
+                    <Text>{"Items"}</Text>
+                </header>
+                {renderLinks(links)}
+            </section>
         </section>
     );
 
