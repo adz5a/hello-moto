@@ -5,7 +5,8 @@ import {
     // resetInput,
 } from "components/Form";
 import {
-        linkStyle
+    linkStyle,
+    viewStyle
 } from "components/styles";
 import {
     Link,
@@ -33,13 +34,14 @@ import {
     Edit
 } from "./Edit";
 
-const viewStyle = {
-    maxWidth: "45em",
-    // border: "solid 1px",
-    marginLeft: "auto",
-    marginRight: "auto",
-    marginTop: "2em"
-};
+// const viewStyle = {
+//     // minWidth: "45em",
+//     maxWidth: "80%",
+//     // border: "solid 1px",
+//     marginLeft: "auto",
+//     marginRight: "auto",
+//     marginTop: "2em"
+// };
 
 
 function HomeHeader ( { match } ) {
@@ -64,7 +66,7 @@ export function View ( { match, ...props } ) {
 
     return (
         <section
-            style={viewStyle}
+            className={viewStyle}
         >
             <Route
                 path={match.url}
