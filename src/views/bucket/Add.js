@@ -12,6 +12,7 @@ import {
 } from "react-redux";
 import {
     bucket as bucketFactory,
+    fromURLAndName,
     ADD_BUCKET
 } from "data/bucket";
 
@@ -60,7 +61,7 @@ const enhanceCreateForm = connect(
             return dispatch({
 
                 type: ADD_BUCKET,
-                data: bucketFactory(bucket)
+                data: fromURLAndName(bucket)
 
             });
 

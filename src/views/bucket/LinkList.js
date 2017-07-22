@@ -2,6 +2,7 @@ import React, { } from 'react';
 import map from "lodash/map";
 import fmap from "lodash/fp/map";
 import keys from "lodash/keys";
+import get from "lodash/fp/get";
 import { connect } from "react-redux";
 import {
     compose,
@@ -16,7 +17,8 @@ import {
 } from "components/Text";
 import {
     bucket as bucketFactory,
-    LIST_CONTENT
+    LIST_CONTENT,
+    LIST_NEXT_CONTENT
 } from "data/bucket"
 import {
     inputStyle,
@@ -123,11 +125,14 @@ const renderLinks = fmap( link => (
         <Text>{link.url.split("/").pop()}</Text>
         <Text>{link.contentType}</Text>
     </p>
-)
-)
-export function List ( { bucket } ) {
+));
 
-    const { links = [], status } = bucket.links;
+
+const canContinue = get("status.continuationToken", null);
+
+export function List ( { bucket, listNext } ) {
+
+    const { links = {}, status } = bucket.links;
     console.log(links, status)
     return (
         <section
@@ -137,15 +142,23 @@ export function List ( { bucket } ) {
                 <Input
                     type="button"
                     value="Load More Items"
+                    onClick={listNext}
                 />
             </section>
             <section
                 className={"flex flex-column pl3 mt5"}
             >
                 <header>
-                    <Text>{"Items"}</Text>
+                    <Text>{"Items " + Object.keys(links).length}</Text>
                 </header>
                 {renderLinks(links)}
+            </section>
+            <section>
+                <Input
+                    type="button"
+                    value="Load More Items"
+                    onClick={listNext}
+                />
             </section>
         </section>
     );
@@ -156,6 +169,19 @@ export const enhanceList = compose(
     branch(
         props => !props.bucket || !props.bucket.links,
         renderComponent(EnhancedEmptyLinkList)
+    ),
+    connect(),
+    withProps(
+        props => ({
+            listNext() {
+
+                return props.dispatch({
+                    type: LIST_NEXT_CONTENT,
+                    data: props.bucket
+                });
+
+            }
+        })
     )
 );
 
