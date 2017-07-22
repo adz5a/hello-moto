@@ -18,7 +18,8 @@ import {
 import {
     bucket as bucketFactory,
     LIST_CONTENT,
-    LIST_NEXT_CONTENT
+    LIST_NEXT_CONTENT,
+    SAVE_ALL
 } from "data/bucket"
 import {
     inputStyle,
@@ -130,15 +131,21 @@ const renderLinks = fmap( link => (
 
 const canContinue = get("status.continuationToken", null);
 
-export function List ( { bucket, listNext } ) {
+export function List ( { bucket, listNext = noop, saveAll = noop } ) {
 
     const { links = {}, status } = bucket.links;
-    console.log(links, status)
     return (
         <section
             className="mt5"
         >
-            <section>
+            <section
+                className="flex justify-between"
+            >
+                <Input
+                    type="button"
+                    value="Save All"
+                    onClick={saveAll}
+                />
                 <Input
                     type="button"
                     value="Load More Items"
@@ -170,13 +177,23 @@ export const enhanceList = compose(
         props => !props.bucket || !props.bucket.links,
         renderComponent(EnhancedEmptyLinkList)
     ),
-    connect(),
+    connect( state => ({
+        buckets: state.buckets
+    })),
     withProps(
         props => ({
             listNext() {
 
                 return props.dispatch({
                     type: LIST_NEXT_CONTENT,
+                    data: props.bucket
+                });
+
+            },
+            saveAll() {
+
+                return props.dispatch({
+                    type: SAVE_ALL,
                     data: props.bucket
                 });
 
