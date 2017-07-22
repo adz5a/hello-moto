@@ -5,7 +5,9 @@ import {
     compose,
     mapProps,
     withProps,
-    lifecycle
+    lifecycle,
+    branch,
+    renderComponent
 } from "recompose";
 import {
     DefaultBorderedText as Text
@@ -19,6 +21,10 @@ import {
     centerFlex,
     joinClasses as join
 } from "components/styles";
+import {
+    Input
+} from "components/Form";
+
 import noop from "lodash/noop";
 // import { makeId } from "data/link";
 
@@ -30,12 +36,12 @@ import noop from "lodash/noop";
 
 export function LinkList ( { bucket = bucketFactory(), ...props } ) {
 
-    console.log(bucket);
-    console.log(props);
+    // console.log(bucket);
+    // console.log(props);
     return (
         <section>
             <Text text={bucket.name}/>
-            <EnhancedEmptyLinkList bucket={bucket} />
+            <EnhancedList bucket={bucket} />
         </section>
     );
 
@@ -106,3 +112,29 @@ const enhanceEmptyLinkList = connect(null,
 );
 
 export const EnhancedEmptyLinkList = enhanceEmptyLinkList(EmptyLinkList);
+
+export function List ( { bucket } ) {
+
+    const { links = [], status } = bucket.links;
+    console.log(links, status)
+    return (
+        <section
+            className="mt5"
+        >
+            <Input 
+                type="button"
+                value="Load More Items"
+            />
+        </section>
+    );
+
+}
+
+export const enhanceList = compose(
+    branch(
+        props => !props.bucket || !props.bucket.links,
+        renderComponent(EnhancedEmptyLinkList)
+    )
+);
+
+export const EnhancedList = enhanceList(List);

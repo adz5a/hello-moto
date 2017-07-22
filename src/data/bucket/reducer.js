@@ -10,9 +10,7 @@ import {
     // SAVE_BUCKET,
     DELETE_ALL
 } from "./actions";
-import {
-    reducer as updateLinks 
-} from "data/link";
+import reduce from "lodash/fp/reduce";
 
 
 
@@ -34,18 +32,19 @@ export function reducer ( state = defaultState(), action ) {
             return defaultState();
         case LIST_CONTENT:{
 
-            const { bucket, links } = data;
+            const { bucket } = data;
+
             if ( state[bucket.id] ) {
 
                 return {
                     ...state,
                     [bucket.id]: {
                         ...bucket,
-                        links: updateLinks(bucket.links, action)
+                        links: links(bucket.links, action)
                     }
                 };
 
-            }
+            } else return state;
 
         }
         default:
@@ -53,4 +52,42 @@ export function reducer ( state = defaultState(), action ) {
 
     }
 
+}
+
+const defaultLinks = () => ({
+    links: {},
+    status: null
+});
+
+
+const mergeLinks = reduce(( links, link ) => {
+
+    links[link.id] = link;
+    return links;
+
+})
+
+
+export function links ( state = defaultLinks (), action ) {
+
+    const { type, data } = action;
+
+    switch ( type ) {
+
+        case LIST_CONTENT:{
+
+            const { links, status } = data;
+
+            return {
+                ...state,
+                links: mergeLinks({ ...state.links }, links),
+                status
+            };
+
+        }
+
+        default:
+            return state;
+
+    }
 }

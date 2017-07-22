@@ -11,6 +11,7 @@ export const link = flow([
     defaults({ 
         url: null, // should not be null
         contentType: null, // can be null
+        id: null
     }),
 ]);
 
@@ -44,5 +45,6 @@ export const contentTypeFromURL = url => {
 
 export const fromURL = url => ({
     url,
-    contentType: contentTypeFromURL(url)
+    contentType: contentTypeFromURL(url),
+    id: makeId( { url } )
 })

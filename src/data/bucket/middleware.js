@@ -79,12 +79,13 @@ const effects = {
     [LIST_CONTENT]: bucket => {
 
         return listBucket(bucket)
-            .then(( { contents } ) => {
+            .then(( { contents, ...status } ) => {
 
                 const url = makeURL(bucket);
                 return {
                     links: contents.map( item => fromURL(url + "/" + item.Key)),
-                    bucket
+                    bucket,
+                    status
                 }
 
             })
