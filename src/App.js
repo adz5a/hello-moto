@@ -11,21 +11,31 @@ import {
 class App extends Component {
     render() {
         return (
-            <div>
-                <Router>
-                    <div>
-                        <Route 
-                            path="/"
-                            exact
-                            component={() => <div>hello world</div>}
-                        />
-                        <Route 
-                            path="/bucket"
-                            component={Bucket}
-                        />
-                    </div>
-                </Router>
-            </div>
+            <Router>
+                <div>
+                    <Route
+                        path="/"
+                        exact
+                        component={() => <div>hello world</div>}
+                    />
+                    <Route
+                        path="/bucket"
+                        component={Bucket}
+                    />
+                    <Route
+                        path="/link"
+                        component={Bucket}
+                    />
+                    <Route
+                        path="/images"
+                        component={Bucket}
+                    />
+                    <Route
+                        path="/music"
+                        component={Bucket}
+                    />
+                </div>
+            </Router>
         );
     }
 }
