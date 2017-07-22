@@ -26,15 +26,14 @@ import {
 import { MiddlewareFactory } from "data/middlewareFactory";
 // import keys from "lodash/keys";
 import PouchDB from "pouchdb";
-import findPlugin from "pouchdb-find";
 import get from "lodash/fp/get";
 import map from "lodash/map";
-
-PouchDB.plugin(findPlugin);
-
+import { db } from "data/db";
 
 
-const db = new PouchDB("__db__");
+
+
+// const db = new PouchDB("__db__");
 
 db.createIndex({
     index: {
