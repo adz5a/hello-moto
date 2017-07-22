@@ -8,7 +8,8 @@ import {
     LIST_CONTENT,
     DELETE,
     DELETE_ALL,
-    LIST_NEXT_CONTENT
+    LIST_NEXT_CONTENT,
+    SAVE_ALL 
 } from "./actions";
 import {
     makeId,
@@ -27,7 +28,7 @@ import { MiddlewareFactory } from "data/middlewareFactory";
 import PouchDB from "pouchdb";
 import findPlugin from "pouchdb-find";
 import get from "lodash/fp/get";
-
+import map from "lodash/map";
 
 PouchDB.plugin(findPlugin);
 
@@ -41,6 +42,21 @@ db.createIndex({
     }
 })
     .then(status => console.info("db type index status : ", status));
+
+
+export const loadType = type => db => db
+    .find({
+        selector: {
+            type
+        }
+    })
+    .then( ({ docs = [], ...rest }) => {
+
+        // console.log(type, docs, rest);
+        return map( docs, doc => doc[type] );
+
+    } ) 
+
 
 export function loadBuckets ( db ) {
 
@@ -78,6 +94,8 @@ const effects = {
             )
             .then( () => bucket );
     },
+
+
     [LIST_CONTENT]: bucket => {
 
         return listBucket(bucket)
@@ -171,11 +189,41 @@ const effects = {
 
             } );
 
+    },
+
+
+    [SAVE_ALL]: ( bucket ) => {
+
+        const { links } = bucket;
+
+        // console.log(links);
+
+
+        return db
+            .bulkDocs(map( 
+                links.links,
+                link => ({
+                    _id: link.id,
+                    type: "link",
+                    link
+                })
+            ))
+            .then( res => {
+
+                console.log(res);
+                return res;
+
+            });
+
     }
 };
 
+
 const init = {
     onStart( dispatch ) {
+
+        const loadBuckets = loadType("bucket");
+        const loadLinks = loadType("link");
 
         loadBuckets(db)
             .then( buckets => buckets.forEach( bucket => {
@@ -187,7 +235,9 @@ const init = {
 
             }))
             .catch(console.error);
-        ;
+
+        loadLinks(db)
+            .then(console.log);
 
     }
 };
