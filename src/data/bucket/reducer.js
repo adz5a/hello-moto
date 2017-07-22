@@ -4,6 +4,7 @@ import {
 import {
     // LIST_DIRS,
     LIST_CONTENT,
+    LIST_NEXT_CONTENT,
     // SAVE,
     // SAVE_ALL,
     ADD_BUCKET,
@@ -30,12 +31,15 @@ export function reducer ( state = defaultState(), action ) {
             };
         case DELETE_ALL:
             return defaultState();
+
+        case LIST_NEXT_CONTENT:
         case LIST_CONTENT:{
 
             const { bucket } = data;
 
             if ( state[bucket.id] ) {
 
+                console.log("yolo");
                 return {
                     ...state,
                     [bucket.id]: {
@@ -68,12 +72,13 @@ const mergeLinks = reduce(( links, link ) => {
 })
 
 
-export function links ( state = defaultLinks (), action ) {
+export function links ( state = defaultLinks(), action ) {
 
     const { type, data } = action;
 
     switch ( type ) {
 
+        case LIST_NEXT_CONTENT:
         case LIST_CONTENT:{
 
             const { links, status } = data;

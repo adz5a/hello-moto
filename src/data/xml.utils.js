@@ -149,13 +149,29 @@ const foldPrefixes = ( prefixes = [] )=> {
 
 };
 
-const listBucket = ( { baseURL, name, prefix = "" } ) => {
+const listBucket = ( { baseURL, name } = {}, { prefix = "", continuationToken = "" } = {} ) => {
 
     const prefixQuery = prefix ?
-        "&prefix=" + prefix :
-        ""
-    return fetch(`${baseURL}/${name}?list-type=2${prefixQuery}`)
-        .then( res => res.text() )
+        "&prefix=" + encodeURIComponent(prefix) :
+        "";
+    const continuationQuery = continuationToken ?
+        "&continuation-token=" + encodeURIComponent(continuationToken) :
+        "";
+
+    return fetch(`${baseURL}/${name}?list-type=2${prefixQuery}${continuationQuery}`)
+        .then( res => {
+
+            if ( res.ok ) {
+
+                return res.text();
+
+            } else {
+
+                return Promise.reject(res.text());
+
+            }
+
+        })
         .then(parseXML)
         .then(xmlToJSON);
 

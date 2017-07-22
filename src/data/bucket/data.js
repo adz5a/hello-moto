@@ -18,3 +18,13 @@ export const makeId = flow([
     encodeURIComponent,
     btoa
 ]);
+
+export const fromURLAndName = ( { baseURL, name } ) => {
+
+    const _default = bucket({ baseURL, name });
+    return {
+        ..._default,
+        id: makeId(_default)
+    };
+
+}

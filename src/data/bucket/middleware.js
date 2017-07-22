@@ -7,7 +7,8 @@ import {
     ADD_BUCKET,
     LIST_CONTENT,
     DELETE,
-    DELETE_ALL
+    DELETE_ALL,
+    LIST_NEXT_CONTENT
 } from "./actions";
 import {
     makeId,
@@ -25,6 +26,7 @@ import { MiddlewareFactory } from "data/middlewareFactory";
 // import keys from "lodash/keys";
 import PouchDB from "pouchdb";
 import findPlugin from "pouchdb-find";
+import get from "lodash/fp/get";
 
 
 PouchDB.plugin(findPlugin);
@@ -93,6 +95,42 @@ const effects = {
                 console.error(error);
                 return error;
             })
+
+
+    },
+
+
+    [LIST_NEXT_CONTENT]: bucket => {
+
+        const token = get("status.nextContinuationToken");
+        const { links } = bucket;
+
+        console.log(links);
+        if ( token(links) === null ) {
+
+            return Promise.reject(new Error("need continuation token"));
+
+        } else {
+
+            return listBucket(bucket, {
+                continuationToken: token(links)
+            })
+                .then(( { contents, ...status } ) => {
+
+                    const url = makeURL(bucket);
+                    return {
+                        links: contents.map( item => fromURL(url + "/" + item.Key)),
+                        bucket,
+                        status
+                    }
+
+                })
+                .catch( error => {
+                    console.error(error);
+                    throw error;
+                });
+
+        }
 
 
     },
