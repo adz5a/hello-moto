@@ -38,7 +38,7 @@ db.createIndex({
         fields: [ "type" ]
     }
 })
-    .then(console.log);
+    .then(status => console.info("db type index status : ", status));
 
 export function loadBuckets ( db ) {
 
