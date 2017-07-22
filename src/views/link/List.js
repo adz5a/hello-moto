@@ -14,16 +14,22 @@ import {
 import { connect } from "react-redux";
 import fmap from "lodash/fp/map";
 
+const shorten = len => str => str.length > len ?
+    str.slice(0, len) + "..." :
+    str;
+
+const short25 = shorten(25);
+
 const ls = join(linkStyle, "ma3");
 // const vs = join(viewStyle, "justify-around");
 
 
 export const renderLink = fmap(
-    link => <p 
+    link => <p
         key={link.id}
         className="flex justify-between"
     >
-        <Text>{link.url.split("/").pop()}</Text>
+        <Text>{short25(link.url.split("/").pop())}</Text>
         <Text>{link.contentType}</Text>
     </p>
 );
