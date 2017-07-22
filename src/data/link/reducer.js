@@ -24,8 +24,7 @@ export function reducer ( state = defaultState(), action ) {
 
         case LOAD_LINKS:{
 
-            return state;
-
+            return updateLinkList({ ...state }, data);
         }
 
         default:

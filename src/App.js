@@ -9,6 +9,9 @@ import {
 import {
     View as Home
 } from "views/home/Home";
+import {
+    View as Link
+} from "views/link/List";
 
 
 class App extends Component {
@@ -27,7 +30,7 @@ class App extends Component {
                     />
                     <Route
                         path="/link"
-                        component={Bucket}
+                        component={Link}
                     />
                     <Route
                         path="/images"
