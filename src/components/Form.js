@@ -1,5 +1,7 @@
+import React from "react";
 import {
-    joinClasses
+    joinClasses,
+    inputStyle
 } from "./styles";
 
 export { joinClasses }
@@ -21,5 +23,16 @@ export function parseForm ( names = [], form ) {
 export function preventDefault ( e ) {
 
     e.preventDefault();
+
+}
+
+export function Input ( { className, ...props } ) {
+
+    return (
+        <input 
+            {...props}
+            className={joinClasses(inputStyle, className)}
+        />
+    );
 
 }
