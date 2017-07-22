@@ -1,5 +1,6 @@
 import PouchDB from "pouchdb";
 import findPlugin from "pouchdb-find";
+import map from "lodash/map";
 
 PouchDB.plugin(findPlugin);
 
@@ -19,5 +20,26 @@ if ( !__name__ ) {
     __name__ = defaultName;
 
 }
+
+export const loadType = type => db => db
+    .find({
+        selector: {
+            type
+        }
+    })
+    .then( ({ docs = [], ...rest }) => {
+
+        // console.log(type, docs, rest);
+        return map( docs, doc => doc[type] );
+
+    } );
+
+
+export const createIndex = (db, fields = []) => db
+    .createIndex({
+        index: {
+            fields
+        }
+    });
 
 export const db = new PouchDB(__name__);

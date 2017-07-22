@@ -28,50 +28,25 @@ import { MiddlewareFactory } from "data/middlewareFactory";
 import PouchDB from "pouchdb";
 import get from "lodash/fp/get";
 import map from "lodash/map";
-import { db } from "data/db";
+import { 
+    db,
+    loadType,
+    createIndex
+} from "data/db";
 
 
 
 
 // const db = new PouchDB("__db__");
 
-db.createIndex({
-    index: {
-        fields: [ "type" ]
-    }
-})
+const createTypeIndex = createIndex(db, [ "type" ])
     .then(status => console.info("db type index status : ", status));
 
 
-export const loadType = type => db => db
-    .find({
-        selector: {
-            type
-        }
-    })
-    .then( ({ docs = [], ...rest }) => {
-
-        // console.log(type, docs, rest);
-        return map( docs, doc => doc[type] );
-
-    } ) 
 
 
-export function loadBuckets ( db ) {
-
-    return db
-        .find({
-            selector: {
-                type: "bucket"
-            },
-        })
-        .then( ( { docs = [] } ) => {
-
-            return docs.map( doc => doc.bucket );
-
-        });
-
-}
+const loadBuckets = loadType("bucket");
+const loadLinks = loadType("link");
 
 const effects = {
     [ADD_BUCKET]: bucket => {
@@ -221,8 +196,6 @@ const effects = {
 const init = {
     onStart( dispatch ) {
 
-        const loadBuckets = loadType("bucket");
-        const loadLinks = loadType("link");
 
         loadBuckets(db)
             .then( buckets => buckets.forEach( bucket => {
