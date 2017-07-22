@@ -14,28 +14,25 @@ import {
 import {
     DefaultBorderedText as Text
 } from "components/Text";
-import map from "lodash/map";
-import fmap from "lodash/fp/map";
-import xs from "xstream";
 import noop from "lodash/noop";
 import { lazyList } from "components/lazyList";
+import fmap from "lodash/fp/map";
+import { css } from "glamor";
 
-const shorten = len => str => str.length > len ?
-    str.slice(0, len) + "..." :
-    str;
-
-const short25 = shorten(25);
-
-const listBumper = 10;
+const imgStyle = css({
+    width: "30%",
+    height: "auto"
+});
 
 
-export const renderLink = fmap(
-    link => <p
-        key={link.id}
-        className="flex justify-between"
+export const renderImg = fmap(
+    img => <p
+        key={img.id}
+        className={imgStyle}
     >
-        <Text>{short25(link.url.split("/").pop())}</Text>
-        <Text>{link.contentType}</Text>
+        <img
+            src={img.url}
+        />
     </p>
 );
 
@@ -51,7 +48,7 @@ export function ListHeader ( { total = 0 } ) {
 }
 
 
-export function ListFooter ( { links = {}, total, displayed, listMore = noop } ) {
+export function ListFooter ( { total, displayed, listMore = noop } ) {
 
     return (
         <footer className={centerFlex}>
@@ -67,11 +64,11 @@ export function ListFooter ( { links = {}, total, displayed, listMore = noop } )
 }
 
 
-export function LinkList ( { links = {} } ) {
+export function ImageList ( { images = {} } ) {
 
     return (
-        <section className={"flex flex-column"}>
-            {renderLink(links)}
+        <section className={"flex justify-around flex-wrap"}>
+            {renderImg(images)}
         </section>
     );
 
@@ -80,15 +77,13 @@ export function LinkList ( { links = {} } ) {
 
 export function ListContent ( { total, displayed, items, listMore } ) {
 
-    // console.log("HERE");
-    // console.log(displayed);
     return (
         <div
             className={"flex flex-column pl3 mt5"}
         >
             <ListHeader total={total}/>
-            <LinkList 
-                links={items.slice(0, displayed)}
+            <ImageList 
+                images={items.slice(0, displayed)}
             />
             <ListFooter 
                 listMore={listMore}
@@ -103,6 +98,7 @@ export function ListContent ( { total, displayed, items, listMore } ) {
 
 export const enhanceList = lazyList({
     selector: props => props.links,
+    filter: links => typeof links.url === "string",
     chunkSize: 15
 });
 

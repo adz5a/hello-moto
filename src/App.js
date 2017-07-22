@@ -12,6 +12,9 @@ import {
 import {
     View as Link
 } from "views/link/List";
+import {
+    View as Gallery
+} from "views/images/Gallery";
 
 
 class App extends Component {
@@ -34,7 +37,7 @@ class App extends Component {
                     />
                     <Route
                         path="/images"
-                        component={Bucket}
+                        component={Gallery}
                     />
                     <Route
                         path="/music"
