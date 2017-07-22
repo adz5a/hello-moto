@@ -3,16 +3,21 @@ import {
     viewStyle,
     linkStyle,
     joinClasses as join,
-    centerFlex
+    // centerFlex,
+    // inputStyle
 } from "components/styles";
 import {
-    Link
+    // Link
 } from "react-router-dom";
 import {
     DefaultBorderedText as Text
 } from "components/Text";
 import { connect } from "react-redux";
-import fmap from "lodash/fp/map";
+import{
+} from "recompose";
+// import fmap from "lodash/fp/map";
+// import map from "lodash/map";
+import { List } from "./list/List";
 
 const shorten = len => str => str.length > len ?
     str.slice(0, len) + "..." :
@@ -20,19 +25,9 @@ const shorten = len => str => str.length > len ?
 
 const short25 = shorten(25);
 
-const ls = join(linkStyle, "ma3");
 // const vs = join(viewStyle, "justify-around");
 
 
-export const renderLink = fmap(
-    link => <p
-        key={link.id}
-        className="flex justify-between"
-    >
-        <Text>{short25(link.url.split("/").pop())}</Text>
-        <Text>{link.contentType}</Text>
-    </p>
-);
 
 export function View () {
 
@@ -47,49 +42,9 @@ export function View () {
 }
 
 
-export function List ( { links = {}, ...rest } ) {
-
-    // console.log(links, rest);
-    return (
-        <section
-            className={"flex flex-column pl3 mt5"}
-        >
-            <ListHeader links={links}/>
-            <LinkList links={links}/>
-        </section>
-    );
-
-}
-
-
-export function ListHeader ( { links = {} } ) {
-
-    return (
-        <header>
-            <Text>{"Items " + Object.keys(links).length}</Text>
-        </header>
-    );
-
-}
-
-
-export function LinkList ( { links = {} } ) {
-
-
-    return (
-        <section className={"flex flex-column"}>
-            {renderLink(links)}
-        </section>
-    );
-
-}
-
-
-export const enhanceList = connect(
-    state => ({
-        links: state.links
-    })
+const enhanceList = connect(
+    state => ({ links: state.links })
 );
 
 
-export const EnhancedList = enhanceList(List);
+const EnhancedList = enhanceList(List);
