@@ -3,6 +3,7 @@ import {
     ACTIONFACTORY,
     fromMiddleware
 } from "data/commons";
+import filter from "lodash/filter";
 
 const MIDDLEWARE = ACTIONFACTORY("__middleware__");
 const PROCESSING = MIDDLEWARE("processing");
@@ -29,7 +30,7 @@ export const tryCatch = (effect, wrapper) => {
 export function MiddlewareFactory ( effectsMap, {
     id = Math.random().toString(),
     onStart = null
-} ) {
+} = {} ) {
 
     if ( typeof effectsMap !== "object" || effectsMap === null ) {
 
@@ -37,8 +38,7 @@ export function MiddlewareFactory ( effectsMap, {
 
     }
 
-    const invalidKeys = Object.keys(effectsMap)
-        .filter(key => !isFunction(effectsMap[key]));
+    const invalidKeys = filter(effectsMap, eff => !isFunction(eff));
 
     if ( invalidKeys.length > 0 ) {
 
