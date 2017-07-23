@@ -8,29 +8,36 @@ const effects = {};
 const init = {
     onStart () {
 
-        window.deleteById = id => db
-            .find({
-                selector: {
-                    _id: id
-                }
-            })
-            .then( res => {
+        if ( process.env.NODE_ENV !== "production" ) {
 
-                const docs = res.docs;
-                if ( docs.length > 0 ) {
+            global.deleteById = id => db
+                .find({
+                    selector: {
+                        _id: id
+                    }
+                })
+                .then( res => {
 
-                    return db.bulkDocs(docs.map( doc => ({
-                        ...doc,
-                        _deleted: true
-                    })));
+                    const docs = res.docs;
+                    if ( docs.length > 0 ) {
 
-                } else {
+                        return db.bulkDocs(docs.map( doc => ({
+                            ...doc,
+                            _deleted: true
+                        })));
 
-                    throw new Error("this doc does not exist");
+                    } else {
 
-                }
+                        throw new Error("this doc does not exist");
 
-            });
+                    }
+
+                });
+
+
+            global.destroyDB = () => db.destroy();
+
+        }
 
     }
 };
