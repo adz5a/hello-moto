@@ -1,39 +1,56 @@
 import React from "react";
-import { componentFromStream } from "components/stream";
-import { createEventHandler } from "recompose";
 import {
-    viewStyle,
-    linkStyle,
+    // viewStyle,
+    // linkStyle,
     joinClasses as join,
     centerFlex,
     inputStyle
 } from "components/styles";
 import {
-    Link
+    Link,
+    withRouter
 } from "react-router-dom";
 import {
     DefaultBorderedText as Text
 } from "components/Text";
 import noop from "lodash/noop";
 import { lazyList } from "components/lazyList";
-import fmap from "lodash/fp/map";
+// import fmap from "lodash/fp/map";
+import map from "lodash/map";
 import { css } from "glamor";
+import FavIcon from "react-icons/lib/md/favorite";
+import FavIconEmpty from "react-icons/lib/md/favorite-outline";
 
-const imgStyle = css({
-    width: "30%",
-    height: "auto"
+const imgStyle = join(css({
+        width: "30%",
+        height: "auto"
+}), "pb2", "pt2");
+
+
+const iconStyle = css({
+    borderColor: "red",
+    width: "2em",
+    height: "1.4em"
 });
 
-
-export const renderImg = fmap(
-    img => <p
+export const renderImg = ( baseURL, images ) => map(
+    images,
+    img => <div
         key={img.id}
         className={imgStyle}
     >
-        <img
-            src={img.url}
-        />
-    </p>
+        <Link 
+            to={baseURL + "/" + img.id}
+            className="link"
+        >
+            <img
+                src={img.url}
+            />
+        </Link>
+        <div className={centerFlex}>
+            <FavIconEmpty className={join(iconStyle, "grow", "pointer")}/>
+        </div>
+    </div>
 );
 
 
@@ -64,25 +81,28 @@ export function ListFooter ( { total, displayed, listMore = noop } ) {
 }
 
 
-export function ImageList ( { images = {} } ) {
+export function ImageList ( { images = {}, match } ) {
 
     return (
         <section className={"flex justify-around flex-wrap"}>
-            {renderImg(images)}
+            {renderImg(match.url, images)}
         </section>
     );
 
 }
 
 
+const EnhancedImageList = withRouter(ImageList);
+
 export function ListContent ( { total, displayed, items, listMore } ) {
 
+    console.log(listMore);
     return (
         <div
             className={"flex flex-column pl3 mt5"}
         >
             <ListHeader total={total}/>
-            <ImageList 
+            <EnhancedImageList 
                 images={items.slice(0, displayed)}
             />
             <ListFooter 

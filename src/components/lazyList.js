@@ -48,16 +48,24 @@ export const lazyList = ( {
     return prop$
         .map( ownerProps=> {
 
-            return more$.fold(
-                update,
-                reset(ownerProps)
-            );
+            return more$
+                .fold(
+                    update,
+                    reset(ownerProps)
+                )
+            // merge props back
+            // if names conflicts, new ones will 
+            // erase old ones
+                .map( newProps => ({
+                    ...ownerProps,
+                    ...newProps,
+                    listMore
+                }));
 
         })
         .flatten()
         .map(
             props => <Component
-                listMore={listMore}
                 {...props}
             />
         );
