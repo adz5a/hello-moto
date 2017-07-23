@@ -23,7 +23,7 @@ export function reducer ( state = defaultState(), action ) {
             return updateTags({ ...state }, data);
 
         case CREATE_TAG:
-            return updateTags({ ...state }, data);
+            return updateTags({ ...state }, [data]);
 
         default:
             return state;
