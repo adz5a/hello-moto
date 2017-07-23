@@ -15,6 +15,9 @@ import {
 import {
     View as Gallery
 } from "views/images/Gallery";
+import {
+    View as Tag
+} from "views/tag/Tag";
 
 
 class App extends Component {
@@ -40,8 +43,8 @@ class App extends Component {
                         component={Gallery}
                     />
                     <Route
-                        path="/music"
-                        component={Bucket}
+                        path="/tag"
+                        component={Tag}
                     />
                 </div>
             </Router>

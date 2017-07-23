@@ -1,4 +1,5 @@
-import reduce from "lodash/fp/reduce";
+// import reduce from "lodash/fp/reduce";
+import { updateById } from "data/commons";
 import {
     makeId,
 } from "./data";
@@ -6,12 +7,7 @@ import {
     LOAD_LINKS
 } from "./actions";
 
-export const updateLinkList = reduce( (state = {}, link) => {
-
-    state[makeId(link)] = link;
-    return state;
-
-});
+export const updateLinkList = updateById(makeId);
 
 export const defaultState = () => ({});
 

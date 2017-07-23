@@ -12,6 +12,10 @@ import {
     reducer as links,
     middleware as linkMiddleware
 } from "data/link";
+import {
+    reducer as tags,
+    middleware as tagMiddleware
+} from "data/tag";
 
 
 
@@ -24,6 +28,7 @@ export function createStore ( {
 
     const reducer = combineReducers({
         buckets,
+        tags,
         links
     });
 
@@ -39,6 +44,7 @@ export function createStore ( {
         applyMiddleware(...[
             linkMiddleware,
             bucketMiddleware,
+            tagMiddleware,
             ...middlewares
         ])
     ));

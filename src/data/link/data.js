@@ -1,11 +1,39 @@
 import defaults from "lodash/fp/defaults";
 import flow from "lodash/flow";
 
-export const makeId = flow([
-    link => link.url,
+export const makeIdFromURL = flow([
     encodeURIComponent,
     btoa
 ]);
+
+
+export const makeId = ( link ) => {
+
+    const tl = typeof link;
+    if ( tl === "object" && link !== null ) {
+
+        if ( link.id ) {
+
+            return link.id;
+
+        } else {
+
+            return makeIdFromURL(link.url);
+
+        }
+        
+    } else if ( tl === "string" ) {
+
+        return makeIdFromURL(tl);
+
+    } else {
+
+        return null;
+
+    }
+
+}
+
 
 export const link = flow([
     defaults({ 
