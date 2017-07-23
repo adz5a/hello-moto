@@ -25,7 +25,7 @@ export const contentTypeFromURL = url => {
 
     const extension = url.split(".");
 
-    switch ( extension[extension.length - 1]) {
+    switch ( extension[extension.length - 1] ) {
 
         case "jpg":
         case "png":
@@ -42,6 +42,11 @@ export const contentTypeFromURL = url => {
 
     }
 };
+
+
+export const isImage = link => link.contentType === "image";
+export const isVideo = link => link.contentType === "video";
+export const isMusic = link => link.contentType === "music";
 
 export const fromURL = url => ({
     url,

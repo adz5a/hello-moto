@@ -16,6 +16,7 @@ import{
 // import fmap from "lodash/fp/map";
 // import map from "lodash/map";
 import { List } from "./list/List";
+import { Home } from "./Home";
 
 
 // const vs = join(viewStyle, "justify-around");
@@ -28,6 +29,7 @@ export function View () {
         <section
             className={viewStyle}
         >
+            <Home />
             <EnhancedList />
         </section>
     );
