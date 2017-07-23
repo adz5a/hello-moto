@@ -1,5 +1,6 @@
 import {
-    LOAD_TAGS
+    LOAD_TAGS,
+    CREATE_TAG,
 } from "./actions";
 import { updateById } from "data/commons";
 import { makeId } from "./data";
@@ -21,6 +22,8 @@ export function reducer ( state = defaultState(), action ) {
         case LOAD_TAGS:
             return updateTags({ ...state }, data);
 
+        case CREATE_TAG:
+            return updateTags({ ...state }, data);
 
         default:
             return state;
