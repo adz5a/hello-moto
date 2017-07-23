@@ -102,7 +102,7 @@ export function MiddlewareFactory ( effectsMap, {
                     }))
                     .catch( error => {
 
-                        console.log(process);
+                        // console.log(process);
                         if ( process.env.NODE_ENV !== "production" ) {
 
                             console.error(error);

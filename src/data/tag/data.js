@@ -10,9 +10,28 @@ export const factory = defaults({
 });
 
 
+export const makeIdFromString = string => btoa(encodeURIComponent(string || null));
 export const makeId = tag => {
 
-    return btoa(encodeURIComponent(tag.name || null));
+    const t = typeof tag;
+
+    if ( t === "object" && tag !== null ) {
+
+        if ( tag.id ) {
+
+            return tag.id;
+
+        } else {
+
+            return makeIdFromString(tag.name);
+
+        }
+
+    } else {
+
+        return makeIdFromString(String(tag));
+
+    }
 
 };
 

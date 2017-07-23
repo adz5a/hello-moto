@@ -9,9 +9,11 @@ import {
     parseForm
 } from "components/Form";
 import noop from "lodash/noop";
+import map from "lodash/map";
 import {
     fromObject,
-    CREATE_TAG
+    CREATE_TAG,
+    DELETE_ALL
 } from "data/tag";
 import { connect } from "react-redux";
 
@@ -19,8 +21,7 @@ import { connect } from "react-redux";
 export function FormView ( { onAdd = noop } ) {
 
     return (
-        <form action="sign-up_submit "
-            method="get"
+        <form 
             acceptCharset="utf-8"
             className="dib pv4"
             onSubmit={ e => e.preventDefault() }
@@ -73,6 +74,69 @@ export const enhanceFormView = connect(
 export const Form = enhanceFormView(FormView);
 
 
+export function DeleteFormView ( { onDelete = noop } ) {
+
+    return (
+        <form
+            acceptCharset="utf-8"
+            className="dib pv4"
+            onSubmit={ e => e.preventDefault() }
+        >
+            <input
+                type="submit"
+                className={inputStyle}
+                value="Delete All"
+                onClick={onDelete}
+            />
+        </form>
+    );
+
+}
+
+
+const enhanceDeleteFormView = connect(
+    null,
+    dispatch => ({
+        onDelete () {
+
+            return dispatch({
+                type: DELETE_ALL
+            });
+
+        }
+    })
+);
+
+
+export const DeleteForm = enhanceDeleteFormView(DeleteFormView);
+
+
+export function TagListView ( { tags = [] } ) {
+
+    return (
+        <ul>
+            { 
+                map(tags,  
+                    tag => <li
+                        key={tag.id}
+                    >
+                        {tag.name}
+                    </li>
+                )
+            }
+        </ul>
+);
+
+}
+
+
+export const enhanceTagListView = connect(
+    state => ({ tags: state.tags })
+);
+
+
+export const TagList = enhanceTagListView(TagListView);
+
 
 export function View () {
 
@@ -80,6 +144,8 @@ export function View () {
         <section
             className={join(viewStyle, centerFlex)}
         >
+            <TagList />
+            <DeleteForm />
             <Form />
         </section>
     );

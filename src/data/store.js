@@ -16,6 +16,9 @@ import {
     reducer as tags,
     middleware as tagMiddleware
 } from "data/tag";
+import {
+    middleware as dbMiddleware 
+} from "data/db";
 
 
 
@@ -45,6 +48,7 @@ export function createStore ( {
             linkMiddleware,
             bucketMiddleware,
             tagMiddleware,
+            dbMiddleware,
             ...middlewares
         ])
     ));
