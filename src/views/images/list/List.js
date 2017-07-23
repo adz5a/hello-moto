@@ -18,7 +18,7 @@ import { lazyList } from "components/lazyList";
 // import fmap from "lodash/fp/map";
 import map from "lodash/map";
 import { css } from "glamor";
-import FavIcon from "react-icons/lib/md/favorite";
+// import FavIcon from "react-icons/lib/md/favorite";
 import FavIconEmpty from "react-icons/lib/md/favorite-outline";
 import AddTagIcon from "react-icons/lib/md/queue";
 
@@ -46,6 +46,7 @@ export const renderImg = ( baseURL, images ) => map(
         >
             <img
                 src={img.url}
+                alt={img.url}
             />
         </Link>
         <div className={"flex justify-around"}>
@@ -98,7 +99,6 @@ const EnhancedImageList = withRouter(ImageList);
 
 export function ListContent ( { total, displayed, items, listMore } ) {
 
-    console.log(listMore);
     return (
         <div
             className={"flex flex-column pl3 mt5"}

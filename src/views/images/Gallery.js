@@ -24,7 +24,6 @@ import { List } from "./list/List";
 
 export function View () {
 
-    console.log("yolo");
     return (
         <section
             className={viewStyle}
