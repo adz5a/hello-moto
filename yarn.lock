@@ -2653,7 +2653,7 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "^2.0.0"
 
-fbjs@^0.8.1, fbjs@^0.8.9:
+fbjs@^0.8.1, fbjs@^0.8.8, fbjs@^0.8.9:
   version "0.8.12"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.12.tgz#10b5d92f76d45575fd63a217d4ea02bea2f8ed04"
   dependencies:
@@ -2936,6 +2936,15 @@ ghutils@~3.2.0:
 github-from-package@0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/github-from-package/-/github-from-package-0.0.0.tgz#97fb5d96bfde8973313f20e8288ef9a167fa64ce"
+
+glamor@^2.20.30:
+  version "2.20.30"
+  resolved "https://registry.yarnpkg.com/glamor/-/glamor-2.20.30.tgz#dbd97e8dd6dfc63e870f18dfeac5f60cfa97888f"
+  dependencies:
+    babel-runtime "^6.18.0"
+    fbjs "^0.8.8"
+    object-assign "^4.1.0"
+    prop-types "^15.5.8"
 
 glob-base@^0.3.0:
   version "0.3.0"
@@ -5822,7 +5831,13 @@ promise@7.1.1, promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.10, prop-types@^15.5.4:
+prop-types@15.5.8:
+  version "15.5.8"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.8.tgz#6b7b2e141083be38c8595aa51fc55775c7199394"
+  dependencies:
+    fbjs "^0.8.9"
+
+prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.8:
   version "15.5.10"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
   dependencies:
@@ -5976,6 +5991,18 @@ react-error-overlay@^1.0.9:
     react-dev-utils "^3.0.2"
     settle-promise "1.0.0"
     source-map "0.5.6"
+
+react-icon-base@2.0.7:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/react-icon-base/-/react-icon-base-2.0.7.tgz#0bd18736bd6ce79ca6d69ce8387a07fb8d4ceffe"
+  dependencies:
+    prop-types "15.5.8"
+
+react-icons@^2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-2.2.5.tgz#f942501c21a4cc0456ce2bbee5032c93f6051dcf"
+  dependencies:
+    react-icon-base "2.0.7"
 
 react-redux@^5.0.5:
   version "5.0.5"
@@ -6917,7 +6944,7 @@ sw-toolbox@^3.4.0:
     path-to-regexp "^1.0.1"
     serviceworker-cache-polyfill "^4.0.0"
 
-symbol-observable@^1.0.3, symbol-observable@^1.0.4:
+symbol-observable@^1.0.2, symbol-observable@^1.0.3, symbol-observable@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.0.4.tgz#29bf615d4aa7121bdd898b22d4b3f9bc4e2aa03d"
 
@@ -7563,6 +7590,12 @@ xml-char-classes@^1.0.0:
 xml-name-validator@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/xml-name-validator/-/xml-name-validator-2.0.1.tgz#4d8b8f1eccd3419aa362061becef515e1e559635"
+
+xstream@^10.9.0:
+  version "10.9.0"
+  resolved "https://registry.yarnpkg.com/xstream/-/xstream-10.9.0.tgz#db7934cec2da01360d43abbbc879b84524397b55"
+  dependencies:
+    symbol-observable "^1.0.2"
 
 "xtend@>=4.0.0 <4.1.0-0", xtend@^4.0.0, xtend@^4.0.1, xtend@~4.0.0, xtend@~4.0.1:
   version "4.0.1"

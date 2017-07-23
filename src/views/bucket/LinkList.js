@@ -1,14 +1,13 @@
 import React, { } from 'react';
-import map from "lodash/map";
+// import map from "lodash/map";
 import fmap from "lodash/fp/map";
-import keys from "lodash/keys";
-import get from "lodash/fp/get";
+// import keys from "lodash/keys";
 import { connect } from "react-redux";
 import {
     compose,
     mapProps,
     withProps,
-    lifecycle,
+    // lifecycle,
     branch,
     renderComponent
 } from "recompose";
@@ -24,7 +23,7 @@ import {
 import {
     inputStyle,
     centerFlex,
-    joinClasses as join
+    // joinClasses as join
 } from "components/styles";
 import {
     Input
@@ -129,11 +128,11 @@ const renderLinks = fmap( link => (
 ));
 
 
-const canContinue = get("status.continuationToken", null);
+// const canContinue = get("status.continuationToken", null);
 
 export function List ( { bucket, listNext = noop, saveAll = noop } ) {
 
-    const { links = {}, status } = bucket.links;
+    const { links = {}, } = bucket.links;
     return (
         <section
             className="mt5"

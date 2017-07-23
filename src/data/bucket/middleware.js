@@ -25,54 +25,26 @@ import {
 } from "data/link";
 import { MiddlewareFactory } from "data/middlewareFactory";
 // import keys from "lodash/keys";
-import PouchDB from "pouchdb";
-import findPlugin from "pouchdb-find";
 import get from "lodash/fp/get";
 import map from "lodash/map";
+import { 
+    db,
+    loadType,
+    createIndex
+} from "data/db";
 
-PouchDB.plugin(findPlugin);
 
 
 
-const db = new PouchDB("__db__");
+// const db = new PouchDB("__db__");
 
-db.createIndex({
-    index: {
-        fields: [ "type" ]
-    }
-})
+createIndex(db, [ "type" ])
     .then(status => console.info("db type index status : ", status));
 
 
-export const loadType = type => db => db
-    .find({
-        selector: {
-            type
-        }
-    })
-    .then( ({ docs = [], ...rest }) => {
-
-        // console.log(type, docs, rest);
-        return map( docs, doc => doc[type] );
-
-    } ) 
 
 
-export function loadBuckets ( db ) {
-
-    return db
-        .find({
-            selector: {
-                type: "bucket"
-            },
-        })
-        .then( ( { docs = [] } ) => {
-
-            return docs.map( doc => doc.bucket );
-
-        });
-
-}
+const loadBuckets = loadType("bucket");
 
 const effects = {
     [ADD_BUCKET]: bucket => {
@@ -222,8 +194,6 @@ const effects = {
 const init = {
     onStart( dispatch ) {
 
-        const loadBuckets = loadType("bucket");
-        const loadLinks = loadType("link");
 
         loadBuckets(db)
             .then( buckets => buckets.forEach( bucket => {
@@ -236,8 +206,6 @@ const init = {
             }))
             .catch(console.error);
 
-        loadLinks(db)
-            .then(console.log);
 
     }
 };

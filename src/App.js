@@ -6,26 +6,45 @@ import {
 import {
     View as Bucket
 } from "views/bucket";
+import {
+    View as Home
+} from "views/home/Home";
+import {
+    View as Link
+} from "views/link/List";
+import {
+    View as Gallery
+} from "views/images/Gallery";
 
 
 class App extends Component {
     render() {
         return (
-            <div>
-                <Router>
-                    <div>
-                        <Route 
-                            path="/"
-                            exact
-                            component={() => <div>hello world</div>}
-                        />
-                        <Route 
-                            path="/bucket"
-                            component={Bucket}
-                        />
-                    </div>
-                </Router>
-            </div>
+            <Router>
+                <div>
+                    <Route
+                        path="/"
+                        exact
+                        component={Home}
+                    />
+                    <Route
+                        path="/bucket"
+                        component={Bucket}
+                    />
+                    <Route
+                        path="/link"
+                        component={Link}
+                    />
+                    <Route
+                        path="/images"
+                        component={Gallery}
+                    />
+                    <Route
+                        path="/music"
+                        component={Bucket}
+                    />
+                </div>
+            </Router>
         );
     }
 }
