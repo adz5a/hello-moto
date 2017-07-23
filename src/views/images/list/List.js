@@ -20,6 +20,7 @@ import map from "lodash/map";
 import { css } from "glamor";
 import FavIcon from "react-icons/lib/md/favorite";
 import FavIconEmpty from "react-icons/lib/md/favorite-outline";
+import AddTagIcon from "react-icons/lib/md/queue";
 
 const imgStyle = join(css({
         width: "30%",
@@ -47,8 +48,9 @@ export const renderImg = ( baseURL, images ) => map(
                 src={img.url}
             />
         </Link>
-        <div className={centerFlex}>
+        <div className={"flex justify-around"}>
             <FavIconEmpty className={join(iconStyle, "grow", "pointer")}/>
+            <AddTagIcon className={join(iconStyle, "grow", "pointer")}/>
         </div>
     </div>
 );
