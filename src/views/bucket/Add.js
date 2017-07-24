@@ -11,12 +11,12 @@ import {
     connect
 } from "react-redux";
 import {
-    // bucket as bucketFactory,
-    fromURLAndName,
-    ADD_BUCKET
-} from "data/bucket";
+    INSERT_DOC,
+} from "data/db";
+import { Map } from "immutable";
 
-function CreateForm ( { onAdd = noop } ) {
+
+function FormView ( { onAdd = noop } ) {
 
     return (
         <form action="sign-up_submit "
@@ -53,15 +53,18 @@ function CreateForm ( { onAdd = noop } ) {
 }
 
 
-const enhanceCreateForm = connect(
+const enhanceFormView = connect(
     null,
     dispatch => ({
         onAdd( bucket ) {
 
             return dispatch({
 
-                type: ADD_BUCKET,
-                data: fromURLAndName(bucket)
+                type: INSERT_DOC,
+                data: Map({
+                    type: "bucket",
+                    data: Map(bucket)
+                })
 
             });
 
@@ -69,14 +72,14 @@ const enhanceCreateForm = connect(
     })
 );
 
-const EnhancedCreateForm = enhanceCreateForm(CreateForm);
+export const Form = enhanceFormView(FormView);
 
 
 export function Add () {
 
     return (
         <section className={centerFlex}>
-            <EnhancedCreateForm />
+            <Form />
         </section>
     );
 

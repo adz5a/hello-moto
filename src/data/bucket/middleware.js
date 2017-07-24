@@ -38,8 +38,6 @@ import {
 
 // const db = new PouchDB("__db__");
 
-createIndex(db, [ "type" ])
-    .then(status => console.info("db type index status : ", status));
 
 
 
@@ -47,147 +45,147 @@ createIndex(db, [ "type" ])
 const loadBuckets = loadType("bucket");
 
 const effects = {
-    [ADD_BUCKET]: bucket => {
+    // [ADD_BUCKET]: bucket => {
 
-        const id = makeId(bucket);
+    //     const id = makeId(bucket);
 
-        return db.get(id)
-            .then( 
-                doc => db.put({
-                    ...doc,
-                    type: "bucket",
-                    bucket
-                }), 
-                () => db.put({
-                    _id: id,
-                    type: "bucket",
-                    bucket
-                }) 
-            )
-            .then( () => bucket );
-    },
-
-
-    [LIST_CONTENT]: bucket => {
-
-        return listBucket(bucket)
-            .then(( { contents, ...status } ) => {
-
-                const url = makeURL(bucket);
-                return {
-                    links: contents.map( item => fromURL(url + "/" + item.Key)),
-                    bucket,
-                    status
-                }
-
-            })
-            .catch( error => {
-                console.error(error);
-                return error;
-            })
+    //     return db.get(id)
+    //         .then( 
+    //             doc => db.put({
+    //                 ...doc,
+    //                 type: "bucket",
+    //                 bucket
+    //             }), 
+    //             () => db.put({
+    //                 _id: id,
+    //                 type: "bucket",
+    //                 bucket
+    //             }) 
+    //         )
+    //         .then( () => bucket );
+    // },
 
 
-    },
+    // [LIST_CONTENT]: bucket => {
+
+    //     return listBucket(bucket)
+    //         .then(( { contents, ...status } ) => {
+
+    //             const url = makeURL(bucket);
+    //             return {
+    //                 links: contents.map( item => fromURL(url + "/" + item.Key)),
+    //                 bucket,
+    //                 status
+    //             }
+
+    //         })
+    //         .catch( error => {
+    //             console.error(error);
+    //             return error;
+    //         })
 
 
-    [LIST_NEXT_CONTENT]: bucket => {
-
-        const token = get("status.nextContinuationToken");
-        const { links } = bucket;
-
-        console.log(links);
-        if ( token(links) === null ) {
-
-            return Promise.reject(new Error("need continuation token"));
-
-        } else {
-
-            return listBucket(bucket, {
-                continuationToken: token(links)
-            })
-                .then(( { contents, ...status } ) => {
-
-                    const url = makeURL(bucket);
-                    return {
-                        links: contents.map( item => fromURL(url + "/" + item.Key)),
-                        bucket,
-                        status
-                    }
-
-                })
-                .catch( error => {
-                    console.error(error);
-                    throw error;
-                });
-
-        }
+    // },
 
 
-    },
+    // [LIST_NEXT_CONTENT]: bucket => {
+
+    //     const token = get("status.nextContinuationToken");
+    //     const { links } = bucket;
+
+    //     console.log(links);
+    //     if ( token(links) === null ) {
+
+    //         return Promise.reject(new Error("need continuation token"));
+
+    //     } else {
+
+    //         return listBucket(bucket, {
+    //             continuationToken: token(links)
+    //         })
+    //             .then(( { contents, ...status } ) => {
+
+    //                 const url = makeURL(bucket);
+    //                 return {
+    //                     links: contents.map( item => fromURL(url + "/" + item.Key)),
+    //                     bucket,
+    //                     status
+    //                 }
+
+    //             })
+    //             .catch( error => {
+    //                 console.error(error);
+    //                 throw error;
+    //             });
+
+    //     }
 
 
-    [DELETE]: bucket => {
-
-        return db.find({
-            selector: {
-                type: "bucket",
-                _id: makeId(bucket)
-            }
-        })
-            .then( docs => {
-
-                console.log(docs);
-
-            }, console.error )
-            .then( () => bucket );
-
-    },
+    // },
 
 
-    [DELETE_ALL]: () => {
+    // [DELETE]: bucket => {
 
-        return db
-            .find({
-                selector: {
-                    type: "bucket"
-                }
-            })
-            .then( ({ docs }) => {
+    //     return db.find({
+    //         selector: {
+    //             type: "bucket",
+    //             _id: makeId(bucket)
+    //         }
+    //     })
+    //         .then( docs => {
 
-                return db.bulkDocs(
-                    docs.map( doc => ({...doc, _deleted: true }) )
-                );
+    //             console.log(docs);
 
+    //         }, console.error )
+    //         .then( () => bucket );
 
-            } );
-
-    },
+    // },
 
 
-    [SAVE_ALL]: ( bucket ) => {
+    // [DELETE_ALL]: () => {
 
-        const { links } = bucket;
+    //     return db
+    //         .find({
+    //             selector: {
+    //                 type: "bucket"
+    //             }
+    //         })
+    //         .then( ({ docs }) => {
 
-        // console.log(links);
+    //             return db.bulkDocs(
+    //                 docs.map( doc => ({...doc, _deleted: true }) )
+    //             );
 
 
-        return db
-            .bulkDocs(map( 
-                links.links,
-                link => ({
-                    _id: link.id,
-                    type: "link",
-                    link
-                })
-            ))
-            .then( res => {
+    //         } );
 
-                console.log(res);
-                return res;
+    // },
 
-            });
 
-    }
+    // [SAVE_ALL]: ( bucket ) => {
+
+    //     const { links } = bucket;
+
+    //     // console.log(links);
+
+
+    //     return db
+    //         .bulkDocs(map( 
+    //             links.links,
+    //             link => ({
+    //                 _id: link.id,
+    //                 type: "link",
+    //                 link
+    //             })
+    //         ))
+    //         .then( res => {
+
+    //             console.log(res);
+    //             return res;
+
+    //         });
+
+    // }
 };
 
 
@@ -195,16 +193,16 @@ const init = {
     onStart( dispatch ) {
 
 
-        loadBuckets(db)
-            .then( buckets => buckets.forEach( bucket => {
+        // loadBuckets(db)
+        //     .then( buckets => buckets.forEach( bucket => {
 
-                dispatch({
-                    type: ADD_BUCKET,
-                    data: bucket
-                });
+        //         dispatch({
+        //             type: ADD_BUCKET,
+        //             data: bucket
+        //         });
 
-            }))
-            .catch(console.error);
+        //     }))
+        //     .catch(console.error);
 
 
     }
