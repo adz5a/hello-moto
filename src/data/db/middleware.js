@@ -10,10 +10,15 @@ import {
 } from "./actions";
 import {
     // toJS,
-    Map
+    Map,
+    List,
+    fromJS
 } from "immutable";
 import constant from "lodash/constant";
+import omit from "lodash/fp/omit";
 
+
+const omitRev = omit(["_rev"]);
 const deleteById = id => db
     .find({
         selector: {
@@ -78,15 +83,24 @@ const effects = {
 
     [FIND_DOC]: ({ query }) => {
 
-        console.log("yay");
+        
         const raw = unwrapMap(query);
 
         console.log(raw);
 
-        db
-            .find(query)
-            .then(console.log, console.error)
-        return { query };
+        return db
+            .find(raw)
+            .then(
+                ( { docs = [] } ) => {
+
+                    return {
+                        query,
+                        response: List(docs.map( doc => fromJS(omitRev(doc)) ))
+                    };
+
+                }
+            );
+
 
     }
 

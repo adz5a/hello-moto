@@ -9,7 +9,11 @@ import {
 import {
     combineReducers
 } from "redux";
-import { Map, Set } from "immutable";
+import {
+    Map,
+    Set,
+    List
+} from "immutable";
 
 
 const emptyMap = Map();
@@ -88,10 +92,23 @@ function store ( store = emptyMap, action ) {
 
     switch ( type ) {
 
-        case INSERT_DOC:
-           
-            const id = data.get("_id");
-            return store.set(id, data);
+        case INSERT_DOC:{
+
+            const doc = data;
+            return store.set(doc.get("_id"), doc);
+
+        }
+
+        case FIND_DOC:{
+
+            const { response = List() } = data;
+
+            return response.reduce(
+                ( store, doc ) => store.set(doc.get("_id"), doc),
+                store
+            );
+
+        }
 
         default:
             return store;

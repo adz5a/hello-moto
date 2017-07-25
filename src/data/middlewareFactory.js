@@ -79,10 +79,10 @@ export function MiddlewareFactory ( effectsMap, {
         return next => action => {
 
             const { type, meta = {}, data } = action;
-            console.log(effects);
+
             if ( !isFromHere(action) && effects.has(type) ) {
 
-                console.log(type);
+
                 const value = tryCatch(
                     () => effects.get(type)(data),
                     errorWrapper
