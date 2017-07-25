@@ -21,7 +21,7 @@ import {
 // import noop from "lodash/noop";
 import {
     // BucketList,
-    EnhancedBucketList as BucketList
+    BucketList
 } from "./BucketList";
 import {
     Add

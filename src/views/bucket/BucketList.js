@@ -1,10 +1,5 @@
 import React from "react";
 import {
-    fromObject as bucketFactory,
-    makeId,
-    DELETE_ALL
-} from "data/bucket";
-import {
     joinClasses as join,
     preventDefault
 } from "components/Form";
@@ -13,11 +8,12 @@ import {
     linkStyle,
 } from "components/styles";
 import {
-    Link
+    Link,
+    withRouter
 } from "react-router-dom";
 import noop from "lodash/noop";
 // import keys from "lodash/keys";
-import { 
+import {
     compose,
     renderComponent,
     branch
@@ -25,7 +21,11 @@ import {
 import {
     connect
 } from "react-redux";
-import map from "lodash/map";
+// import map from "lodash/map";
+import {
+    Map,
+    // is
+} from "immutable";
 
 
 function Text ( { text } ) {
@@ -36,8 +36,8 @@ function Text ( { text } ) {
 
 const centerFlex ="flex flex-column items-center";
 
-export function BucketList ( { 
-    buckets = [],
+export function BucketListView ( {
+    buckets = Map(),
     onDeleteAll = noop,
     match = {}
 } ) {
@@ -55,13 +55,15 @@ export function BucketList ( {
                 />
             </form>
             {
-                buckets.map(
-                    bucket => <BucketQuickDescription 
-                        key={makeId(bucket)}
-                        bucket={bucket}
-                        match={match}
-                    />
-                )
+                buckets
+                    .toArray()
+                    .map(
+                        bucket => <BucketQuickDescription
+                            key={bucket.get("id")}
+                            bucket={bucket}
+                            match={match}
+                        />
+                    )
             }
         </section>
     );
@@ -83,33 +85,29 @@ function EmptyBucketList () {
 export const enhanceBucketList = compose(
     connect(
         state => ({
-            buckets: map(state.buckets)
+            buckets: state.db.store
+            .filter( doc => doc.get("type") === "bucket")
+            .map( doc => doc.get("data") )
         }),
-        dispatch => ({
-            onDeleteAll() {
-
-                return dispatch({
-                    type: DELETE_ALL
-                });
-
-            }
-        })
     ),
     branch(
-        ({ buckets }) => buckets.length === 0,
+        ({ buckets }) => buckets.size === 0,
         renderComponent(EmptyBucketList)
-    )
+    ),
+    withRouter
 );
 
-export const EnhancedBucketList = enhanceBucketList(BucketList);
+export const BucketList = enhanceBucketList(BucketListView);
 
 export function BucketQuickDescription ( {
-    bucket = bucketFactory(),
+    bucket = Map(),
     match  = {},
     onDelete = noop
 } ) {
 
-    const bucketId = makeId(bucket);
+    const bucketId = bucket.get("id", null);
+    const baseURL = bucket.get("baseURL", null);
+    const name = bucket.get("name", null);
 
     return (
         <form action="sign-up_submit "
@@ -122,11 +120,11 @@ export function BucketQuickDescription ( {
                 <legend className="ph0 mh0 fw6">Bucket</legend>
                 <div className="mt3">
                     <label className="db fw4 lh-copy f6">{"Base URL"}</label>
-                    <span className={join(linkStyle, "dib")}>{bucket.baseURL}</span>
+                    <span className={join(linkStyle, "dib")}>{baseURL}</span>
                 </div>
                 <div className="mt3">
                     <label className="db fw4 lh-copy f6">{"Bucket Name"}</label>
-                    <span className={join(linkStyle, "dib")}>{bucket.name}</span>
+                    <span className={join(linkStyle, "dib")}>{name}</span>
                 </div>
             </fieldset>
             <Link
