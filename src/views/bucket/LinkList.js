@@ -15,7 +15,7 @@ import {
     DefaultBorderedText as Text
 } from "components/Text";
 import {
-    bucket as bucketFactory,
+    fromObject as bucketFactory,
     LIST_CONTENT,
     LIST_NEXT_CONTENT,
     SAVE_ALL

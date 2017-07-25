@@ -7,12 +7,21 @@ import {
 } from "immutable";
 
 
-export const bucket = flow([
+/*
+ * Takes an object and return an immutable data structure
+ * correspond to that object.
+ *
+ */
+export const fromObject = flow([
     omitBy( value => typeof value !== "string" || value.length === 0 ),
     defaults({
         baseURL: null,
         name: null
     }),
+    bucket => fromJS({
+        ...bucket,
+        id: makeId(bucket)
+    })
 ]);
 
 
@@ -24,30 +33,7 @@ export const makeId = flow([
     btoa
 ]);
 
-export const fromURLAndName = ( { baseURL, name } ) => {
-
-    const _default = bucket({ baseURL, name });
-    return {
-        ..._default,
-        id: makeId(_default)
-    };
-
-}
-
-/*
- * Takes an object and return an immutable data structure
- * correspond to that object.
- *
- */
-export const fromObject = ( { baseURL, name } = {} ) => {
-
-    const _default = bucket({ baseURL, name });
-    return fromJS({
-        ..._default,
-        id: makeId(_default)
-    });
-
-};
+export const fromURLAndName = fromObject;
 
 export const toDoc = bucket => {
 

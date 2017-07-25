@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    bucket as bucketFactory,
+    fromObject as bucketFactory,
     makeId,
     DELETE_ALL
 } from "data/bucket";
