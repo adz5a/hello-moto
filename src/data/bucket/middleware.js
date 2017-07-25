@@ -28,8 +28,8 @@ import { MiddlewareFactory } from "data/middlewareFactory";
 // import get from "lodash/fp/get";
 // import map from "lodash/map";
 import { 
-    db,
-    loadType,
+    // db,
+    // loadType,
     // createIndex
 } from "data/db";
 
@@ -42,7 +42,7 @@ import {
 
 
 
-const loadBuckets = loadType("bucket");
+// const loadBuckets = loadType("bucket");
 
 const effects = {
     // [ADD_BUCKET]: bucket => {

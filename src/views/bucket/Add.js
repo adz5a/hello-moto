@@ -6,7 +6,7 @@ import noop from "lodash/noop";
 import {
     centerFlex,
     inputStyle,
-    defaultBordered
+    // defaultBordered
 } from "components/styles";
 import {
     connect
@@ -19,17 +19,13 @@ import {
     toDoc
 } from "data/bucket";
 import {
-    Map,
-    fromJS
-} from "immutable";
-import {
     compose,
-    createEventHandler
+    // createEventHandler
 } from "recompose";
 import {
     componentFromStream
 } from "components/stream";
-import xs from "xstream";
+// import xs from "xstream";
 
 
 
@@ -84,34 +80,31 @@ function FormView ( { 
 
 export const enhanceWithStream = Component => componentFromStream( prop$ => {
 
-    const { handler: sendNextAdd, stream } = createEventHandler();
-      
-    const add$ = xs.fromObservable(stream);
-
-    const updateStatus = ( isAdding = false ) => !isAdding;
+    //  TODO : 
+    //  introduce an "addStream" and a "changeStream"
+    //  those can be used to display a spinner while
+    //  a bucket is being created.
+    //  This is why I leave it here atm...
 
     return prop$
         .map( ownProps => {
 
             const { dispatch } = ownProps;
 
-            return add$
-                .fold(updateStatus, false)
-                .map( isAdding => ({ 
-                    onAdd: bucket => {
+            return {
+                onAdd: bucket => {
 
-                        // console.log(bucket);
-                        return dispatch({
-                            type: INSERT_DOC,
-                            data: toDoc(bucket)
-                        });
+                    // console.log(bucket);
+                    return dispatch({
+                        type: INSERT_DOC,
+                        data: toDoc(bucket)
+                    });
 
 
-                    }
-                }) );
+                }
+            };
 
         })
-        .flatten()
         .map( props  => {
 
             return (

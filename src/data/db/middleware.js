@@ -1,7 +1,7 @@
 import { MiddlewareFactory } from "data/middlewareFactory";
 import { db } from "data/db";
 import {
-    loadType,
+    // loadType,
     createIndex
 } from "./data";
 

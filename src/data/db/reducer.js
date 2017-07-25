@@ -61,7 +61,10 @@ const removeTask = ( tasks, action ) => {
 function tasks ( tasks = defaultTasks, action ) {
 
 
-    const { type, data } = action;
+    const {
+        type,
+        // data
+    } = action;
 
 
     switch ( type ) {
@@ -86,7 +89,6 @@ function store ( store = emptyMap, action ) {
     switch ( type ) {
 
         case INSERT_DOC:
-            console.log(data);
            
             const id = data.get("_id");
             return store.set(id, data);
