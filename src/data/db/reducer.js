@@ -86,7 +86,10 @@ function store ( store = emptyMap, action ) {
     switch ( type ) {
 
         case INSERT_DOC:
-            return store.set(data.get("_id"), data);
+            console.log(data);
+           
+            const id = data.get("_id");
+            return store.set(id, data);
 
         default:
             return store;
@@ -94,6 +97,7 @@ function store ( store = emptyMap, action ) {
     }
 
 }
+
 
 export const reducer = combineReducers({
     tasks,

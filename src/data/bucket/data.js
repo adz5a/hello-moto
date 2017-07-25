@@ -1,7 +1,10 @@
 import omitBy from "lodash/fp/omitBy"
 import flow from "lodash/flow";
 import defaults from "lodash/fp/defaults";
-import { fromJS } from "immutable";
+import {
+    fromJS,
+    Map
+} from "immutable";
 
 
 export const bucket = flow([
@@ -44,4 +47,30 @@ export const fromObject = ( { baseURL, name } = {} ) => {
         id: makeId(_default)
     });
 
-}
+};
+
+export const toDoc = bucket => {
+
+    if ( !Map.isMap(bucket) ) {
+
+        return fromJS({
+
+            _id: bucket.id,
+            data: bucket,
+            type: "bucket"
+
+        });
+
+    } else {
+
+        return Map({
+
+            _id: bucket.get("id"),
+            data: bucket,
+            type: "bucket"
+
+        });
+
+    }
+
+};

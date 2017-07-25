@@ -21,7 +21,7 @@ const defaultState = () => ({
 
 export function reducer ( state = defaultState(), action ) {
 
-    const { type,  } = action;
+    const { type, } = action;
     switch ( type ) {
 
         // case ADD_BUCKET:
