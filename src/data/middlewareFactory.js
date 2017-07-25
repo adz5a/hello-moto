@@ -62,13 +62,12 @@ export function MiddlewareFactory ( effectsMap, {
 
         if ( typeof onStart === "function" ) {
 
-            tryCatch(() => onStart( action => {
+            setTimeout(tryCatch, 0, () => onStart( action => {
 
-                store.dispatch({
+                return store.dispatch({
                     ...action,
                     meta: {
-                        ...( action.meta || {} ),
-                        ...fromHere()
+                        startup: true
                     }
                 });
 
@@ -80,8 +79,10 @@ export function MiddlewareFactory ( effectsMap, {
         return next => action => {
 
             const { type, meta = {}, data } = action;
+            console.log(effects);
             if ( !isFromHere(action) && effects.has(type) ) {
 
+                console.log(type);
                 const value = tryCatch(
                     () => effects.get(type)(data),
                     errorWrapper

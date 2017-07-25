@@ -47,10 +47,10 @@ export function createStore ( {
 
     return  createReduxStore(reducer, /* preloadedState, */ composeEnhancers(
         applyMiddleware(...[
-            linkMiddleware,
-            bucketMiddleware,
-            tagMiddleware,
+            // linkMiddleware,
             dbMiddleware,
+            bucketMiddleware,
+            // tagMiddleware,
             ...middlewares
         ])
     ));

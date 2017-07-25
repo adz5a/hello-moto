@@ -5,7 +5,8 @@ import {
     createIndex
 } from "./data";
 import {
-    INSERT_DOC
+    INSERT_DOC,
+    FIND_DOC
 } from "./actions";
 import {
     // toJS,
@@ -36,25 +37,29 @@ const deleteById = id => db
         }
 
     });
- 
+
 
 const destroy = db => db.destroy();
 
+const unwrapMap = data => {
+
+    if ( Map.isMap(data) ) {
+
+        return data.toJS();
+
+    } else {
+
+        return data;
+
+    }
+
+}
 
 const effects = {
 
     [INSERT_DOC]: doc => {
 
-        let rawDoc;
-        if ( Map.isMap(doc) ) {
-
-            rawDoc = doc.toJS();
-
-        } else {
-
-            rawDoc = doc;
-
-        }
+        const rawDoc = unwrapMap(doc);
 
 
         return db
@@ -68,6 +73,20 @@ const effects = {
 
                 }
             );
+
+    },
+
+    [FIND_DOC]: ({ query }) => {
+
+        console.log("yay");
+        const raw = unwrapMap(query);
+
+        console.log(raw);
+
+        db
+            .find(query)
+            .then(console.log, console.error)
+        return { query };
 
     }
 
