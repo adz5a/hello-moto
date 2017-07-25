@@ -1,6 +1,7 @@
 import omitBy from "lodash/fp/omitBy"
 import flow from "lodash/flow";
 import defaults from "lodash/fp/defaults";
+import { fromJS } from "immutable";
 
 
 export const bucket = flow([
@@ -27,5 +28,20 @@ export const fromURLAndName = ( { baseURL, name } ) => {
         ..._default,
         id: makeId(_default)
     };
+
+}
+
+/*
+ * Takes an object and return an immutable data structure
+ * correspond to that object.
+ *
+ */
+export const fromObject = ( { baseURL, name } = {} ) => {
+
+    const _default = bucket({ baseURL, name });
+    return fromJS({
+        ..._default,
+        id: makeId(_default)
+    });
 
 }

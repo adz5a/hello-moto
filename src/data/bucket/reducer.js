@@ -1,5 +1,5 @@
 import {
-    makeId,
+    // makeId,
 } from "./data";
 import {
     // LIST_DIRS,
@@ -7,9 +7,9 @@ import {
     LIST_NEXT_CONTENT,
     // SAVE,
     // SAVE_ALL,
-    ADD_BUCKET,
+    // ADD_BUCKET,
     // SAVE_BUCKET,
-    DELETE_ALL
+    // DELETE_ALL
 } from "./actions";
 import reduce from "lodash/fp/reduce";
 
@@ -21,7 +21,7 @@ const defaultState = () => ({
 
 export function reducer ( state = defaultState(), action ) {
 
-    const { type, data } = action;
+    const { type,  } = action;
     switch ( type ) {
 
         // case ADD_BUCKET:

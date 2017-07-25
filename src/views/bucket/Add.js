@@ -5,7 +5,8 @@ import {
 import noop from "lodash/noop";
 import {
     centerFlex,
-    inputStyle 
+    inputStyle,
+    defaultBordered
 } from "components/styles";
 import {
     connect
@@ -13,17 +14,42 @@ import {
 import {
     INSERT_DOC,
 } from "data/db";
-import { Map } from "immutable";
+import {
+    fromObject
+} from "data/bucket";
+import {
+    Map,
+    fromJS
+} from "immutable";
+import {
+    compose,
+    createEventHandler
+} from "recompose";
+import {
+    componentFromStream
+} from "components/stream";
+import xs from "xstream";
 
 
-function FormView ( { onAdd = noop } ) {
 
+function FormView ( { 
+    onAdd = noop,
+    onChange = noop,
+    showSaved = false,
+    showSpinner = false
+} ) {
+
+    // console.log(showSpinner);
+
+    const spinnerStyle = showSpinner ? defaultBordered : "dn";
+    const savedStyle = showSaved ? defaultBordered : "dn";
     return (
         <form action="sign-up_submit "
             method="get"
             acceptCharset="utf-8"
             className="dib pv4"
             onSubmit={ e => e.preventDefault() }
+            onChange={() => console.log("changing")}
         >
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                 <legend className="ph0 mh0 fw6">Create New Bucket</legend>
@@ -43,10 +69,14 @@ function FormView ( { onAdd = noop } ) {
                 onClick={( e ) => {
 
                     e.preventDefault();
-                    onAdd(parseForm(["baseURL", "name"], e.target.form));
+                    const { baseURL, name } = onAdd(parseForm(["baseURL", "name"], e.target.form));
+
+                    return onAdd(fromObject({ baseURL, name }));
 
                 }}
             />
+            <span className={savedStyle}>Saved !</span>
+            <span className={spinnerStyle}>Saving... </span>
         </form>
     );
 
@@ -58,12 +88,14 @@ const enhanceFormView = connect(
     dispatch => ({
         onAdd( bucket ) {
 
+            const data = fromObject(bucket);
             return dispatch({
 
                 type: INSERT_DOC,
                 data: Map({
+                    _id: data.id,
                     type: "bucket",
-                    data: Map(bucket)
+                    data: Map(data)
                 })
 
             });
@@ -72,8 +104,63 @@ const enhanceFormView = connect(
     })
 );
 
-export const Form = enhanceFormView(FormView);
 
+
+export const enhanceWithStream = Component => componentFromStream( prop$ => {
+
+    const { handler: sendNextAdd, stream } = createEventHandler();
+    console.log(stream);
+      
+    const add$ = xs.fromObservable(stream);
+
+    const updateStatus = ( isAdding = false ) => !isAdding;
+
+    const toDoc = bucket => Map({
+        _id: bucket.id,
+        type: "bucket",
+        data: Map(bucket)
+    });
+
+    return prop$
+        .map( ownProps => {
+
+            const { onAdd: _onAdd } = ownProps;
+
+
+            const onAdd = data => {
+
+                console.log(data);
+                return sendNextAdd(_onAdd(data));
+
+            };
+
+
+            return add$
+                .fold(updateStatus, false)
+                .map( isAdding => ({ 
+                    showSpinner: isAdding,
+                    onAdd: _onAdd
+                }) );
+
+        })
+        .flatten()
+        .map( props  => {
+
+            return (
+                <Component
+                    { ...props }
+                />
+            );
+
+        } );
+
+
+} );
+
+export const Form = compose(
+    enhanceFormView,
+    enhanceWithStream
+)(FormView);
 
 export function Add () {
 

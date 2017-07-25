@@ -6,8 +6,8 @@ import {
 import filter from "lodash/filter";
 
 const MIDDLEWARE = ACTIONFACTORY("__middleware__");
-const PROCESSING = MIDDLEWARE("processing");
-const ERROR = MIDDLEWARE("error");
+export const PROCESSING = MIDDLEWARE("processing");
+export const ERROR = MIDDLEWARE("error");
 
 
 

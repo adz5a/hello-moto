@@ -4,33 +4,33 @@ import {
     // SAVE,
     // SAVE_BUCKET,
     // SAVE_ALL
-    ADD_BUCKET,
-    LIST_CONTENT,
-    DELETE,
-    DELETE_ALL,
-    LIST_NEXT_CONTENT,
-    SAVE_ALL 
+    // ADD_BUCKET,
+    // LIST_CONTENT,
+    // DELETE,
+    // DELETE_ALL,
+    // LIST_NEXT_CONTENT,
+    // SAVE_ALL 
 } from "./actions";
 import {
-    makeId,
-    makeURL,
+    // makeId,
+    // makeURL,
 } from "./data";
 import {
     // listPrefixes,
     // foldPrefixes,
-    listBucket
+    // listBucket
 } from "data/xml.utils";
 import {
-    fromURL
+    // fromURL
 } from "data/link";
 import { MiddlewareFactory } from "data/middlewareFactory";
 // import keys from "lodash/keys";
-import get from "lodash/fp/get";
-import map from "lodash/map";
+// import get from "lodash/fp/get";
+// import map from "lodash/map";
 import { 
     db,
     loadType,
-    createIndex
+    // createIndex
 } from "data/db";
 
 
