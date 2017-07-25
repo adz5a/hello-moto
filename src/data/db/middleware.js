@@ -4,8 +4,14 @@ import {
     // loadType,
     createIndex
 } from "./data";
-
-
+import {
+    INSERT_DOC
+} from "./actions";
+import {
+    // toJS,
+    Map
+} from "immutable";
+import constant from "lodash/constant";
 
 const deleteById = id => db
     .find({
@@ -35,7 +41,37 @@ const deleteById = id => db
 const destroy = db => db.destroy();
 
 
-const effects = {};
+const effects = {
+
+    [INSERT_DOC]: doc => {
+
+        let rawDoc;
+        if ( Map.isMap(doc) ) {
+
+            rawDoc = doc.toJS();
+
+        } else {
+
+            rawDoc = doc;
+
+        }
+
+
+        return db
+            .put(rawDoc)
+            .then(
+                constant(doc),
+                err => {
+
+                    console.error(err);
+                    throw err;
+
+                }
+            );
+
+    }
+
+};
 
 
 const init = {
