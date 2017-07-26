@@ -3,7 +3,9 @@ import {
     FIND_DOC,
     INSERT_DOC,
     INSERTED_DOC,
-    FOUND_DOC
+    FOUND_DOC,
+    DELETE_DOC,
+    DELETED_DOC
 } from "./actions";
 import {
     PROCESSING
