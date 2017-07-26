@@ -93,15 +93,45 @@ const find = find$ => find$
     });
 
 
+const delete_ = delete$ => delete$
+    .map( action => {
+
+        const data = unwrapMap(action.data);
+
+        const { _id } = data;
+
+        return db.get(_id)
+            .then(doc => db.remove(doc))
+            .then( res => {
+
+                if ( res.ok ) {
+
+
+                    return {
+                        type: DELETED_DOC,
+                        data: { _id: res.id }
+                    };
+
+
+                } else throw res;
+
+            });
+
+    })
+    .map(xs.fromPromise)
+    .flatten();
+
 const creator = action$ => {
 
     const insert$ = insert(action$.filter(withType(INSERT_DOC)));
     const find$ = find(action$.filter(withType(FIND_DOC)));
+    const delete$ = delete_(action$.filter(withType(DELETE_DOC)));
 
     return xs
         .merge(
             insert$,
-            find$
+            find$,
+            delete$
         )
         .debug();
 
