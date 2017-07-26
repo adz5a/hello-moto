@@ -1,19 +1,10 @@
-import {
-
-} from "./actions";
-import {
-
-} from "./data";
-import {
-
-} from "data/xml.utils";
-import {
-    // fromURL
-} from "data/link";
-import { MiddlewareFactory } from "data/middlewareFactory";
+import xs from "xstream";
+import delay from "xstream/extra/delay";
+import { createStreamMiddleware } from "data/streamMiddleware";
 import {
     FIND_DOC
 } from "data/db";
+import { fromJS } from "immutable";
 
 
 
@@ -26,7 +17,6 @@ import {
 
 // const loadBuckets = loadType("bucket");
 
-const effects = {};
 
 
 const init = {
@@ -48,4 +38,20 @@ const init = {
     }
 };
 
-export const middleware = MiddlewareFactory(effects, init);
+const creator = action$ => {
+
+    const onStart$ = xs.of({
+        type: FIND_DOC,
+        data: {
+            query: fromJS({
+                selector: {
+                    type: "bucket"
+                }
+            })
+        }
+    })
+    .compose(delay(1));
+
+    return onStart$;
+};
+export const middleware = createStreamMiddleware(creator, "bucket");

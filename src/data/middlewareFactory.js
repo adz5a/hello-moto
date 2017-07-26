@@ -1,10 +1,10 @@
 import isFunction from "lodash/isFunction";
 import {
     ACTIONFACTORY,
-    fromMiddleware
 } from "data/commons";
 import filter from "lodash/filter";
 
+const fromMiddleware = x => x;
 const MIDDLEWARE = ACTIONFACTORY("__middleware__");
 export const PROCESSING = MIDDLEWARE("processing");
 export const ERROR = MIDDLEWARE("error");

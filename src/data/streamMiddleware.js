@@ -2,7 +2,7 @@ import { createEventHandler } from "components/recompose";
 import xs from "xstream";
 
 
-export function createStreamMiddleware ( creator ) {
+export function createStreamMiddleware ( creator, name = null ) {
 
     return function middleware ( store ) {
 
@@ -20,10 +20,15 @@ export function createStreamMiddleware ( creator ) {
                 },
                 complete () {
 
-                    console.info("this middleware just terminated");
+                    if ( name ) {
+
+                        console.info("this middleware just terminated : " + name);
+
+                    }
 
                 }
             });
+
 
         return next => action => {
 

@@ -7,6 +7,7 @@ const ACTION = ACTIONFACTORY("__db__");
 export const FETCH_DOC_BY_ID = ACTION("fetch-by-id");
 
 export const FIND_DOC = ACTION("find-doc"); // uses db.find
+export const FOUND_DOC = ACTION("found-doc"); // uses db.find
 
 // uses db.put
 // should error if docs with same id already exists

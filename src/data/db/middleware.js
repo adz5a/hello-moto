@@ -9,7 +9,8 @@ import {
 import {
     INSERT_DOC,
     FIND_DOC,
-    INSERTED_DOC
+    INSERTED_DOC,
+    FOUND_DOC
 } from "./actions";
 import {
     // toJS,
@@ -63,51 +64,6 @@ const unwrapMap = data => {
 
 }
 
-const effects = {
-
-    [INSERT_DOC]: doc => {
-
-        const rawDoc = unwrapMap(doc);
-
-
-        return db
-            .put(rawDoc)
-            .then(
-                constant(doc),
-                err => {
-
-                    console.error(err);
-                    throw err;
-
-                }
-            );
-
-    },
-
-    [FIND_DOC]: ({ query }) => {
-
-        
-        const raw = unwrapMap(query);
-
-        console.log(raw);
-
-        return db
-            .find(raw)
-            .then(
-                ( { docs = [] } ) => {
-
-                    return {
-                        query,
-                        response: List(docs.map( doc => fromJS(omitRev(doc)) ))
-                    };
-
-                }
-            );
-
-
-    }
-
-};
 
 
 const init = {
@@ -128,29 +84,79 @@ const init = {
 
 const withType = type => action => action.type === type;
 
-export const middleware = MiddlewareFactory(effects, init);
 
-export const dbMiddleware = createStreamMiddleware(
-    action$ => action$
-    .filter(withType(INSERT_DOC))
-    .map( ( { data: doc } ) => {
+const insert = insert$ => insert$
+        .map( ( { data: doc } ) => {
 
-        const raw = unwrapMap(doc);
+            const raw = unwrapMap(doc);
+
+            return db
+                .put(raw)
+                .then(constant(doc));
+
+        })
+        .map(xs.fromPromise)
+        .flatten()
+        .debug()
+        .map(doc => {
+
+            return {
+                type: INSERTED_DOC,
+                data: doc
+            };
+
+        });
+
+
+const find = find$ => find$
+    .map( ({ data }) => {
+
+
+        const { query } = data;
+        const raw = unwrapMap(query);
+
 
         return db
-            .put(raw)
-            .then(constant(doc));
+            .find(raw)
+            .then(
+                ( { docs = [] } ) => {
+
+                    return {
+                        query,
+                        response: List(docs.map( doc => fromJS(omitRev(doc)) ))
+                    };
+
+                }
+            );
 
     })
     .map(xs.fromPromise)
     .flatten()
     .debug()
-    .map(doc => {
+    .map( data => {
 
         return {
-            type: INSERTED_DOC,
-            data: doc
+            type: FOUND_DOC,
+            data
         };
 
     })
+
+const creator = action$ => {
+
+    const insert$ = insert(action$.filter(withType(INSERT_DOC)));
+    const find$ = find(action$.filter(withType(FIND_DOC)));
+
+    return xs
+        .merge(
+            insert$,
+            find$
+        )
+        .debug();
+};
+
+
+export const dbMiddleware = createStreamMiddleware(
+    creator,
+    "db"
 );
