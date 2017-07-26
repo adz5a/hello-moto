@@ -7,40 +7,7 @@ import {
 import { fromJS } from "immutable";
 
 
-
-
-// const db = new PouchDB("__db__");
-
-
-
-
-
-// const loadBuckets = loadType("bucket");
-
-
-
-const init = {
-    onStart( dispatch ) {
-
-
-        dispatch({
-            type: FIND_DOC,
-            data: {
-                query: {
-                    selector: {
-                        type: "bucket"
-                    }
-                }
-            }
-        });
-
-
-    }
-};
-
-const creator = action$ => {
-
-    const onStart$ = xs.of({
+const onStart = () => xs.of({
         type: FIND_DOC,
         data: {
             query: fromJS({
@@ -52,6 +19,11 @@ const creator = action$ => {
     })
     .compose(delay(1));
 
-    return onStart$;
+
+const creator = action$ => {
+
+    
+
+    return onStart();
 };
 export const middleware = createStreamMiddleware(creator, "bucket");

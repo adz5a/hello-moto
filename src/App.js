@@ -9,15 +9,6 @@ import {
 import {
     View as Home
 } from "views/home/Home";
-import {
-    View as Link
-} from "views/link/List";
-import {
-    View as Gallery
-} from "views/images/Gallery";
-import {
-    View as Tag
-} from "views/tag/Tag";
 
 
 class App extends Component {
@@ -33,18 +24,6 @@ class App extends Component {
                     <Route
                         path="/bucket"
                         component={Bucket}
-                    />
-                    <Route
-                        path="/link"
-                        component={Link}
-                    />
-                    <Route
-                        path="/images"
-                        component={Gallery}
-                    />
-                    <Route
-                        path="/tag"
-                        component={Tag}
                     />
                 </div>
             </Router>

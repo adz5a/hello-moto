@@ -2,7 +2,8 @@ import {
     FETCH_DOC_BY_ID,
     FIND_DOC,
     INSERT_DOC,
-    INSERTED_DOC
+    INSERTED_DOC,
+    FOUND_DOC
 } from "./actions";
 import {
     PROCESSING
@@ -112,7 +113,7 @@ function store ( store = emptyMap, action ) {
 
         }
 
-        case FIND_DOC:{
+        case FOUND_DOC:{
 
             const { response = List() } = data;
 
