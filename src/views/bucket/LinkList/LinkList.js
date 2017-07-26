@@ -27,7 +27,7 @@ import {
 } from "data/xml.utils";
 import xs from "xstream";
 import dropRepeats from "xstream/extra/dropRepeats";
-
+import { contentType } from "data/link";
 
 export function LinkListView ( { 
     bucket = Map(),
@@ -76,10 +76,33 @@ export const enhanceLinkList = compose(
             .map( props => props.bucket )
             .compose(dropRepeats(is))
             .filter( bucket => bucket !== undefined )
-            .map( bucket => listBucket({
-                baseURL: bucket.get("baseURL"),
-                name: bucket.get("name")
-            }) )
+            .map( bucket => {
+
+                return listBucket({
+                    baseURL: bucket.get("baseURL"),
+                    name: bucket.get("name")
+                })
+                    .then(({ contents, nextContinuationToken }) => {
+
+                        const baseURL = bucket.get("baseURL");
+                        return {
+                            nextContinuationToken,
+                            contents: contents.map(item => {
+
+                                const url = baseURL + "/" + item.Key;
+                                return {
+                                    url,
+                                    size: item.Size,
+                                    lastModified: item.LastModified,
+                                    contentType: contentType({ url })
+                                };
+
+                            })
+                        };
+
+                    });
+
+            } )
             .map(xs.fromPromise)
             .flatten()
             .map(({ contents, nextContinuationToken }) => {
@@ -93,7 +116,16 @@ export const enhanceLinkList = compose(
 
 
         return xs.combine(props$, bucket$)
-            .map( ([props, list ]) => <Component {...{ ...props, list }}/> );
+            .map( ([props, bucketData ]) => {
+
+
+                const finalProps = {
+                    ...props,
+                    ...bucketData
+                };
+
+                return <Component {...finalProps}/>
+            } );
     })
 );
 

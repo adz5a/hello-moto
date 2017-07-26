@@ -61,7 +61,7 @@ export const EmptyList = enhanceEmptyList(EmptyListView);
 
 const renderLinks = fmap( link => (
     <p
-        key={link.id}
+        key={link.url}
         className={"flex justify-between"}
     >
         <Text>{link.url.split("/").pop()}</Text>
@@ -70,9 +70,15 @@ const renderLinks = fmap( link => (
 ));
 
 
-export function ListView ( { bucket, listNext = noop, saveAll = noop } ) {
+export function ListView ( { 
+    bucket,
+    listNext = noop,
+    saveAll = noop,
+    contents = []
+} ) {
 
-    const { links = {}, } = bucket.links;
+    console.log(contents);
+    const links = contents
     return (
         <section
             className="mt5"
@@ -95,9 +101,9 @@ export function ListView ( { bucket, listNext = noop, saveAll = noop } ) {
                 className={"flex flex-column pl3 mt5"}
             >
                 <header>
-                    <Text>{"Items " + Object.keys(links).length}</Text>
+                    <Text>{"Items " + contents.length}</Text>
                 </header>
-                {renderLinks(links)}
+                {renderLinks(contents)}
             </section>
             <section>
                 <Input
@@ -114,32 +120,9 @@ export function ListView ( { bucket, listNext = noop, saveAll = noop } ) {
 
 export const enhanceList = compose(
     branch(
-        props => !props.bucket || !props.bucket.links,
+        props => !props.bucket,
         renderComponent(EmptyList)
     ),
-    connect( state => ({
-        buckets: state.buckets
-    })),
-    withProps(
-        props => ({
-            listNext() {
-
-                // return props.dispatch({
-                //     type: LIST_NEXT_CONTENT,
-                //     data: props.bucket
-                // });
-
-            },
-            saveAll() {
-
-                // return props.dispatch({
-                //     type: SAVE_ALL,
-                //     data: props.bucket
-                // });
-
-            }
-        })
-    )
 );
 
 
