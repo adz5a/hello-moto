@@ -1,7 +1,8 @@
 import {
     FETCH_DOC_BY_ID,
     FIND_DOC,
-    INSERT_DOC
+    INSERT_DOC,
+    INSERTED_DOC
 } from "./actions";
 import {
     PROCESSING
@@ -67,18 +68,30 @@ function tasks ( tasks = defaultTasks, action ) {
 
     const {
         type,
-        // data
+        data
     } = action;
 
 
     switch ( type ) {
 
-        case PROCESSING:
-            return addTask(tasks, action);
+        case INSERT_DOC:
+
+            return tasks.update(
+                INSERT_DOC,
+                emptySet,
+                set => set.add(data)
+            );
+
+
+        case INSERTED_DOC:
+            return tasks.update(
+                INSERT_DOC,
+                emptySet,
+                set => set.remove(data)
+            );
 
         default:
-            return removeTask(tasks, action);
-
+            return tasks;
 
     }
 
@@ -92,7 +105,7 @@ function store ( store = emptyMap, action ) {
 
     switch ( type ) {
 
-        case INSERT_DOC:{
+        case INSERTED_DOC:{
 
             const doc = data;
             return store.set(doc.get("_id"), doc);

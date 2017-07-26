@@ -17,8 +17,9 @@ import {
     middleware as tagMiddleware
 } from "data/tag";
 import {
-    middleware as dbMiddleware,
-    reducer as db
+    // middleware as dbMiddleware,
+    reducer as db,
+    dbMiddleware
 } from "data/db";
 
 

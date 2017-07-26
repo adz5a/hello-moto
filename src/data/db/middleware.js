@@ -1,4 +1,6 @@
+import xs from "xstream";
 import { MiddlewareFactory } from "data/middlewareFactory";
+import { createStreamMiddleware } from "data/streamMiddleware";
 import { db } from "data/db";
 import {
     // loadType,
@@ -6,7 +8,8 @@ import {
 } from "./data";
 import {
     INSERT_DOC,
-    FIND_DOC
+    FIND_DOC,
+    INSERTED_DOC
 } from "./actions";
 import {
     // toJS,
@@ -123,5 +126,31 @@ const init = {
     }
 };
 
+const withType = type => action => action.type === type;
 
 export const middleware = MiddlewareFactory(effects, init);
+
+export const dbMiddleware = createStreamMiddleware(
+    action$ => action$
+    .filter(withType(INSERT_DOC))
+    .map( ( { data: doc } ) => {
+
+        const raw = unwrapMap(doc);
+
+        return db
+            .put(raw)
+            .then(constant(doc));
+
+    })
+    .map(xs.fromPromise)
+    .flatten()
+    .debug()
+    .map(doc => {
+
+        return {
+            type: INSERTED_DOC,
+            data: doc
+        };
+
+    })
+);
