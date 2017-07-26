@@ -26,7 +26,9 @@ import {
     Map,
     // is
 } from "immutable";
-
+import {
+    DELETE_DOC
+} from "data/db";
 
 function Text ( { text } ) {
 
@@ -93,6 +95,26 @@ export function BucketQuickDescriptionView ( {
 }
 
 
+const enhanceBucketQuickDescription = connect(
+    null,
+    {
+        onDelete: bucket => {
+
+            console.log(bucket);
+
+            return {
+                type: DELETE_DOC,
+                data: { _id: bucket.get("id") }
+            };
+
+        }
+    }
+);
+
+
+const BucketQuickDescription = enhanceBucketQuickDescription(BucketQuickDescriptionView);
+
+
 export function BucketListView ( {
     buckets = Map(),
     onDeleteAll = noop,
@@ -115,7 +137,7 @@ export function BucketListView ( {
                 buckets
                     .toArray()
                     .map(
-                        bucket => <BucketQuickDescriptionView
+                        bucket => <BucketQuickDescription
                             key={bucket.get("id")}
                             bucket={bucket}
                             match={match}

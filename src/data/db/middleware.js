@@ -66,22 +66,6 @@ const unwrapMap = data => {
 
 
 
-const init = {
-    onStart () {
-
-        if ( process.env.NODE_ENV !== "production" ) {
-
-            global.deleteById = deleteById;
-
-            global.destroyDB = destroy;
-
-        }
-
-        createIndex(db, [ "type" ])
-            .then(status => console.info("db type index status : ", status));
-    }
-};
-
 const withType = type => action => action.type === type;
 
 
@@ -140,7 +124,8 @@ const find = find$ => find$
             data
         };
 
-    })
+    });
+
 
 const creator = action$ => {
 
@@ -153,6 +138,7 @@ const creator = action$ => {
             find$
         )
         .debug();
+
 };
 
 
