@@ -150,7 +150,7 @@ const foldPrefixes = ( prefixes = [] )=> {
 
 };
 
-const listBucket = ( { baseURL, name } = {}, { prefix = "", continuationToken = "" } = {} ) => {
+const listBucket = ( { baseURL, name, continuationToken = "", prefix = "" } = {} ) => {
 
     const prefixQuery = prefix ?
         "&prefix=" + encodeURIComponent(prefix) :

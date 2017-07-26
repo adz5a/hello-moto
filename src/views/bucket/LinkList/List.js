@@ -77,7 +77,8 @@ export function ListView ( {
     contents = []
 } ) {
 
-    console.log(contents);
+    // console.log(listNext);
+    // console.log(contents);
     const links = contents
     return (
         <section

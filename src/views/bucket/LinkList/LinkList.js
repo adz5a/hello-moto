@@ -11,7 +11,8 @@ import {
     lifecycle,
     // branch,
     // renderComponent
-    componentFromStream
+    componentFromStream,
+    createEventHandler
 } from "components/recompose";
 import {
     DefaultBorderedText as Text
@@ -32,7 +33,8 @@ import { contentType } from "data/link";
 export function LinkListView ( { 
     bucket = Map(),
     contents = [],
-    nextContinuationToken = undefined 
+    nextContinuationToken = undefined,
+    listNext
 } ) {
 
     return (
@@ -41,6 +43,7 @@ export function LinkListView ( {
             <List 
                 contents={contents}
                 bucket={bucket} 
+                listNext={listNext}
             />
         </section>
     );
@@ -72,35 +75,43 @@ export const enhanceLinkList = compose(
     ),
     Component => componentFromStream(props$ => {
 
+
+        const { handler: listNext, stream: next$ } = createEventHandler();
+
+        const getList = ({ bucket, continuationToken }) => listBucket({
+            baseURL: bucket.get("baseURL"),
+            name: bucket.get("name"),
+            continuationToken
+        })
+            .then(({ contents, nextContinuationToken }) => {
+
+                const baseURL = bucket.get("baseURL");
+                return {
+                    nextContinuationToken,
+                    contents: contents.map(item => {
+
+                        const url = baseURL + "/" + item.Key;
+                        return {
+                            url,
+                            size: item.Size,
+                            lastModified: item.LastModified,
+                            contentType: contentType({ url })
+                        };
+
+                    })
+                };
+
+            });
+
+
         const bucket$ = props$
             .map( props => props.bucket )
             .compose(dropRepeats(is))
             .filter( bucket => bucket !== undefined )
             .map( bucket => {
 
-                return listBucket({
-                    baseURL: bucket.get("baseURL"),
-                    name: bucket.get("name")
-                })
-                    .then(({ contents, nextContinuationToken }) => {
 
-                        const baseURL = bucket.get("baseURL");
-                        return {
-                            nextContinuationToken,
-                            contents: contents.map(item => {
-
-                                const url = baseURL + "/" + item.Key;
-                                return {
-                                    url,
-                                    size: item.Size,
-                                    lastModified: item.LastModified,
-                                    contentType: contentType({ url })
-                                };
-
-                            })
-                        };
-
-                    });
+                return getList({ bucket });
 
             } )
             .map(xs.fromPromise)
@@ -114,6 +125,8 @@ export const enhanceLinkList = compose(
 
             });
 
+        // const nextRequests$ = next$
+        //     .map()
 
         return xs.combine(props$, bucket$)
             .map( ([props, bucketData ]) => {
@@ -121,11 +134,58 @@ export const enhanceLinkList = compose(
 
                 const finalProps = {
                     ...props,
-                    ...bucketData
+                    ...bucketData,
+                    listNext
                 };
 
-                return <Component {...finalProps}/>
-            } );
+                // return <Component {...finalProps}/>
+                return finalProps;
+            } )
+            .map(props => {
+
+                return next$
+                    .fold((props$, _) => {
+
+                        console.log("foldin");
+                        return props$
+                            .map( props => {
+
+                                const { bucket, nextContinuationToken: continuationToken } = props;
+
+                                return getList({
+                                    bucket,
+                                    continuationToken
+                                })
+                                    .then(data => {
+
+                                        console.log(data);
+                                        console.log(props);
+                                        return {
+                                            ...props,
+                                            contents: props.contents.concat(data.contents),
+                                            nextContinuationToken: data.nextContinuationToken,
+                                            listNext
+                                        }
+
+                                    });
+
+
+                            } )
+                            .map(xs.fromPromise)
+                            .flatten();
+
+                    }, 
+                    xs.of(props))
+                    .flatten();
+
+            })
+            .flatten()
+            .map(props => {
+
+                console.log(props);
+                return <Component {...props}/>;
+
+            });
     })
 );
 
