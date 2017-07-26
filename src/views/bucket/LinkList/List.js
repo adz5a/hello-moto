@@ -1,7 +1,17 @@
 import React, { } from 'react';
-// import map from "lodash/map";
+import noop from "lodash/noop";
 import fmap from "lodash/fp/map";
-// import keys from "lodash/keys";
+import {
+    inputStyle,
+    centerFlex,
+    // joinClasses as join
+} from "components/styles";
+import {
+    DefaultBorderedText as Text
+} from "components/Text";
+import {
+    Input
+} from "components/Form";
 import { connect } from "react-redux";
 import {
     compose,
@@ -12,30 +22,7 @@ import {
     renderComponent
 } from "components/recompose";
 import {
-    DefaultBorderedText as Text
-} from "components/Text";
-import {
-    // fromObject as bucketFactory,
-    LIST_CONTENT,
-    LIST_NEXT_CONTENT,
-    SAVE_ALL
-} from "data/bucket"
-import {
-    inputStyle,
-    centerFlex,
-    // joinClasses as join
-} from "components/styles";
-import {
-    Input
-} from "components/Form";
-import {
-    Map
-} from "immutable";
-import {
-    withRouter
-} from "react-router-dom";
-import noop from "lodash/noop";
-
+} from "data/db";
 
 
 export function EmptyListView ( {
@@ -137,18 +124,18 @@ export const enhanceList = compose(
         props => ({
             listNext() {
 
-                return props.dispatch({
-                    type: LIST_NEXT_CONTENT,
-                    data: props.bucket
-                });
+                // return props.dispatch({
+                //     type: LIST_NEXT_CONTENT,
+                //     data: props.bucket
+                // });
 
             },
             saveAll() {
 
-                return props.dispatch({
-                    type: SAVE_ALL,
-                    data: props.bucket
-                });
+                // return props.dispatch({
+                //     type: SAVE_ALL,
+                //     data: props.bucket
+                // });
 
             }
         })
@@ -158,44 +145,3 @@ export const enhanceList = compose(
 
 export const List = enhanceList(ListView);
 
-
-export function LinkListView ( { bucket = Map(), ...props } ) {
-
-    console.log(bucket.toJS());
-    return (
-        <section>
-            <Text text={bucket.get("name")}/>
-            <List bucket={bucket} />
-        </section>
-    );
-
-}
-
-
-export const enhanceLinkList = compose(
-    withRouter,
-    connect( state => {
-
-        return {
-            store: state.db.store
-        };
-
-    } ),
-    mapProps(
-        ( { match, store } ) => {
-
-            // console.log(match);
-            const bucketId = match.params.bucketId
-            const bucket = store.get(bucketId, Map()).get("data");
-            console.log(bucket);
-
-            return {
-                bucket
-            };
-
-        }
-    )
-);
-
-
-export const LinkList = enhanceLinkList(LinkListView);

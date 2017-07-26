@@ -28,7 +28,7 @@ import {
 } from "./Add";
 import {
     LinkList
-} from "./LinkList";
+} from "./LinkList/LinkList";
 import {
     Edit
 } from "./Edit";
