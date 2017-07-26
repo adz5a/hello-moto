@@ -15,7 +15,7 @@ import {
     DefaultBorderedText as Text
 } from "components/Text";
 import {
-    fromObject as bucketFactory,
+    // fromObject as bucketFactory,
     LIST_CONTENT,
     LIST_NEXT_CONTENT,
     SAVE_ALL
@@ -28,63 +28,19 @@ import {
 import {
     Input
 } from "components/Form";
-
+import {
+    Map
+} from "immutable";
+import {
+    withRouter
+} from "react-router-dom";
 import noop from "lodash/noop";
-// import { makeId } from "data/link";
-
-// const renderList = links => map(links, ( link, _) => (
-//     <li key={makeId(link)}>
-//         {link.url + " - " + link.contentType}
-//     </li>
-// ));
-
-export function LinkList ( { bucket = bucketFactory(), ...props } ) {
-
-    // console.log(bucket);
-    // console.log(props);
-    return (
-        <section>
-            <Text text={bucket.name}/>
-            <EnhancedList bucket={bucket} />
-        </section>
-    );
-
-}
 
 
-const enhanceLinkList = compose(
-    connect(
-        state => {
 
-            return {
-                buckets: state.buckets
-            };
-
-        }
-    ),
-    withProps( props => ({
-
-        bucketId: props.match.params.bucketId
-
-    })),
-    mapProps(
-        props => {
-
-            return {
-                bucket: props.buckets[props.bucketId],
-                dispatch: props.dispatch
-            };
-
-        }
-    ),
-);
-
-export const EnhancedLinkList = enhanceLinkList(LinkList);
-
-
-export function EmptyLinkList ( {
+export function EmptyListView ( {
     onRequestContent = noop,
-    bucket = bucketFactory()
+    bucket = Map()
 } ) {
 
     return (
@@ -102,20 +58,19 @@ export function EmptyLinkList ( {
 
 }
 
-const enhanceEmptyLinkList = connect(null,
+
+const enhanceEmptyList = connect(
+    null,
     dispatch => ({
         onRequestContent( bucket ) {
 
-            return dispatch({
-                type: LIST_CONTENT,
-                data: bucket
-            });
 
         }
     })
 );
 
-export const EnhancedEmptyLinkList = enhanceEmptyLinkList(EmptyLinkList);
+export const EmptyList = enhanceEmptyList(EmptyListView);
+
 
 const renderLinks = fmap( link => (
     <p
@@ -128,9 +83,7 @@ const renderLinks = fmap( link => (
 ));
 
 
-// const canContinue = get("status.continuationToken", null);
-
-export function List ( { bucket, listNext = noop, saveAll = noop } ) {
+export function ListView ( { bucket, listNext = noop, saveAll = noop } ) {
 
     const { links = {}, } = bucket.links;
     return (
@@ -171,10 +124,11 @@ export function List ( { bucket, listNext = noop, saveAll = noop } ) {
 
 }
 
+
 export const enhanceList = compose(
     branch(
         props => !props.bucket || !props.bucket.links,
-        renderComponent(EnhancedEmptyLinkList)
+        renderComponent(EmptyList)
     ),
     connect( state => ({
         buckets: state.buckets
@@ -201,4 +155,40 @@ export const enhanceList = compose(
     )
 );
 
-export const EnhancedList = enhanceList(List);
+
+export const List = enhanceList(ListView);
+
+
+export function LinkListView ( { bucket = Map(), ...props } ) {
+
+    // console.log(bucket);
+    // console.log(props);
+    console.log("yolo");
+    return (
+        <section>
+            <Text text={bucket.get("name")}/>
+            <List bucket={bucket} />
+        </section>
+    );
+
+}
+
+
+export const enhanceLinkList = compose(
+    withRouter,
+    mapProps(
+        ( { match } ) => {
+
+            console.log(match);
+            // const bucketId = match.para
+
+            return {
+                bucket: undefined
+            };
+
+        }
+    )
+);
+
+
+export const LinkList = enhanceLinkList(LinkListView);

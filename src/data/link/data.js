@@ -1,5 +1,10 @@
 import defaults from "lodash/fp/defaults";
 import flow from "lodash/flow";
+import omitBy from "lodash/fp/omitBy";
+import { 
+    Map,
+    fromJS
+} from "immutable";
 
 export const makeIdFromURL = flow([
     encodeURIComponent,
@@ -7,30 +12,9 @@ export const makeIdFromURL = flow([
 ]);
 
 
-export const makeId = ( link ) => {
+export const makeId = ( { url } ) => {
 
-    const tl = typeof link;
-    if ( tl === "object" && link !== null ) {
-
-        if ( link.id ) {
-
-            return link.id;
-
-        } else {
-
-            return makeIdFromURL(link.url);
-
-        }
-        
-    } else if ( tl === "string" ) {
-
-        return makeIdFromURL(tl);
-
-    } else {
-
-        return null;
-
-    }
+    return makeIdFromURL(url);
 
 }
 
@@ -81,3 +65,17 @@ export const fromURL = url => ({
     contentType: contentTypeFromURL(url),
     id: makeId( { url } )
 })
+
+
+export const fromObject = flow([
+    omitBy( value => typeof value !== "string" || value.length === 0 ),
+    defaults({
+        url: null,
+        name: null,
+    }),
+    link => fromJS({
+        ...link,
+        id: makeId(link),
+        contentType: contentTypeFromURL(link.url)
+    })
+]);
