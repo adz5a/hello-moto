@@ -83,8 +83,9 @@ export function BucketQuickDescriptionView ( {
                 value="Delete"
                 type="submit"
                 className={join(linkStyle, "reset-input")}
-                onClick={() => {
+                onClick={e => {
 
+                    e.preventDefault();
                     onDelete(bucket);
 
                 }}

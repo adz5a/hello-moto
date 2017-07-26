@@ -1,5 +1,4 @@
 import xs from "xstream";
-import { MiddlewareFactory } from "data/middlewareFactory";
 import { createStreamMiddleware } from "data/streamMiddleware";
 import { db } from "data/db";
 import {
@@ -10,7 +9,9 @@ import {
     INSERT_DOC,
     FIND_DOC,
     INSERTED_DOC,
-    FOUND_DOC
+    FOUND_DOC,
+    DELETED_DOC,
+    DELETE_DOC
 } from "./actions";
 import {
     // toJS,
@@ -18,51 +19,16 @@ import {
     List,
     fromJS
 } from "immutable";
+import { unwrapMap } from "components/immutable";
 import constant from "lodash/constant";
 import omit from "lodash/fp/omit";
 
 
 const omitRev = omit(["_rev"]);
-const deleteById = id => db
-    .find({
-        selector: {
-            _id: id
-        }
-    })
-    .then( res => {
-
-        const docs = res.docs;
-        if ( docs.length > 0 ) {
-
-            return db.bulkDocs(docs.map( doc => ({
-                ...doc,
-                _deleted: true
-            })));
-
-        } else {
-
-            throw new Error("this doc does not exist");
-
-        }
-
-    });
 
 
 const destroy = db => db.destroy();
 
-const unwrapMap = data => {
-
-    if ( Map.isMap(data) ) {
-
-        return data.toJS();
-
-    } else {
-
-        return data;
-
-    }
-
-}
 
 
 
