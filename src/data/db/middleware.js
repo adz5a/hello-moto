@@ -47,7 +47,7 @@ const insert = insert$ => insert$
         })
         .map(xs.fromPromise)
         .flatten()
-        .debug()
+        // .debug()
         .map(doc => {
 
             return {
@@ -82,7 +82,7 @@ const find = find$ => find$
     })
     .map(xs.fromPromise)
     .flatten()
-    .debug()
+    // .debug()
     .map( data => {
 
         return {
@@ -133,7 +133,7 @@ const creator = action$ => {
             find$,
             delete$
         )
-        .debug();
+        // .debug();
 
 };
 
