@@ -18,7 +18,7 @@ import {
     Set,
     List
 } from "immutable";
-
+import { unwrapMap } from "components/immutable";
 
 const emptyMap = Map();
 const emptySet = Set();
@@ -115,6 +115,7 @@ function store ( store = emptyMap, action ) {
 
         }
 
+
         case FOUND_DOC:{
 
             const { response = List() } = data;
@@ -125,6 +126,17 @@ function store ( store = emptyMap, action ) {
             );
 
         }
+
+
+        case DELETED_DOC:{
+
+            const _data = unwrapMap(data);
+            const { _id } = _data;
+
+            return store.delete(_id);
+
+        }
+
 
         default:
             return store;
