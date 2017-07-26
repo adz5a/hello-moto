@@ -17,7 +17,7 @@ import {
     compose,
     renderComponent,
     branch
-} from "recompose";
+} from "components/recompose";
 import {
     connect
 } from "react-redux";

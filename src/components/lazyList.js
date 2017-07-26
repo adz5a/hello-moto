@@ -1,6 +1,5 @@
 import React from "react";
-import { createEventHandler } from "recompose";
-import { componentFromStream } from "components/stream";
+import { createEventHandler, componentFromStream } from "components/recompose";
 import filterData from "lodash/filter";
 import xs from "xstream";
 

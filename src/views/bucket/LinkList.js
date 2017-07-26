@@ -10,7 +10,7 @@ import {
     // lifecycle,
     branch,
     renderComponent
-} from "recompose";
+} from "components/recompose";
 import {
     DefaultBorderedText as Text
 } from "components/Text";

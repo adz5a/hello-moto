@@ -21,10 +21,10 @@ import {
 import {
     compose,
     // createEventHandler
-} from "recompose";
+} from "components/recompose";
 import {
     componentFromStream
-} from "components/stream";
+} from "components/recompose";
 // import xs from "xstream";
 
 

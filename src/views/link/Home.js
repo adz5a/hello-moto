@@ -1,11 +1,9 @@
 import React from "react";
-// import { componentFromStream } from "components/stream";
-// import { createEventHandler } from "recompose";
 import { connect } from "react-redux";
 import {
     compose,
     mapProps,
-} from "recompose";
+} from "components/recompose";
 import filter from "lodash/fp/filter";
 import map from "lodash/map";
 import {
