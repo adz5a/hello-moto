@@ -146,7 +146,6 @@ export const enhanceLinkList = compose(
                 return next$
                     .fold((props$, _) => {
 
-                        console.log("foldin");
                         return props$
                             .map( props => {
 
@@ -158,8 +157,6 @@ export const enhanceLinkList = compose(
                                 })
                                     .then(data => {
 
-                                        console.log(data);
-                                        console.log(props);
                                         return {
                                             ...props,
                                             contents: props.contents.concat(data.contents),
@@ -182,7 +179,6 @@ export const enhanceLinkList = compose(
             .flatten()
             .map(props => {
 
-                console.log(props);
                 return <Component {...props}/>;
 
             });
