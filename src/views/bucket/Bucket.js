@@ -27,7 +27,7 @@ import {
     Add
 } from "./Add";
 import {
-    LinkListView as LinkList
+    LinkList
 } from "./LinkList";
 import {
     Edit

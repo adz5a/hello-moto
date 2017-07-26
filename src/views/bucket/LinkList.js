@@ -161,9 +161,7 @@ export const List = enhanceList(ListView);
 
 export function LinkListView ( { bucket = Map(), ...props } ) {
 
-    // console.log(bucket);
-    // console.log(props);
-    console.log("yolo");
+    console.log(bucket.toJS());
     return (
         <section>
             <Text text={bucket.get("name")}/>
@@ -176,14 +174,23 @@ export function LinkListView ( { bucket = Map(), ...props } ) {
 
 export const enhanceLinkList = compose(
     withRouter,
-    mapProps(
-        ( { match } ) => {
+    connect( state => {
 
-            console.log(match);
-            // const bucketId = match.para
+        return {
+            store: state.db.store
+        };
+
+    } ),
+    mapProps(
+        ( { match, store } ) => {
+
+            // console.log(match);
+            const bucketId = match.params.bucketId
+            const bucket = store.get(bucketId, Map()).get("data");
+            console.log(bucket);
 
             return {
-                bucket: undefined
+                bucket
             };
 
         }
