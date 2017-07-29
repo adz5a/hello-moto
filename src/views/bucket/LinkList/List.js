@@ -59,13 +59,13 @@ const enhanceEmptyList = connect(
 export const EmptyList = enhanceEmptyList(EmptyListView);
 
 
-const renderLinks = fmap( link => (
+const renderLinks = links => links.map( link => (
     <p
-        key={link.url}
+        key={link.get("url")}
         className={"flex justify-between"}
     >
-        <Text>{link.url.split("/").pop()}</Text>
-        <Text>{link.contentType}</Text>
+        <Text>{link.get("url").split("/").pop()}</Text>
+        <Text>{link.get("contentType")}</Text>
     </p>
 ));
 
@@ -128,4 +128,3 @@ export const enhanceList = compose(
 
 
 export const List = enhanceList(ListView);
-

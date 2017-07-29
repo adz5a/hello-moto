@@ -1,7 +1,8 @@
 import React, { } from 'react';
 import {
     Map,
-    is
+    is,
+    List as ImmutableList
 } from "immutable";
 import { connect } from "react-redux";
 import {
@@ -78,27 +79,31 @@ export const enhanceLinkList = compose(
 
         const { handler: listNext, stream: next$ } = createEventHandler();
 
-        const getList = ({ bucket, continuationToken }) => listBucket({
+        const getList = ({ 
+            bucket,
+            continuationToken,
+            contents = ImmutableList()
+        }) => listBucket({
             baseURL: bucket.get("baseURL"),
             name: bucket.get("name"),
             continuationToken
         })
-            .then(({ contents, nextContinuationToken }) => {
+            .then(({ contents: newContents, nextContinuationToken }) => {
 
                 const baseURL = bucket.get("baseURL");
                 return {
                     nextContinuationToken,
-                    contents: contents.map(item => {
+                    contents: contents.concat(ImmutableList(newContents.map(item => {
 
                         const url = baseURL + "/" + item.Key;
-                        return {
+                        return Map({
                             url,
                             size: item.Size,
                             lastModified: item.LastModified,
                             contentType: contentType({ url })
-                        };
+                        });
 
-                    })
+                    })))
                 };
 
             });
