@@ -102,7 +102,7 @@ export function ListView ( {
                 className={"flex flex-column pl3 mt5"}
             >
                 <header>
-                    <Text>{"Items " + contents.length}</Text>
+                    <Text>{"Items " + contents.size}</Text>
                 </header>
                 {renderLinks(contents)}
             </section>
