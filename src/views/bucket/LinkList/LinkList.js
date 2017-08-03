@@ -38,7 +38,7 @@ export function LinkListView ( {
     listNext
 } ) {
 
-    console.log(bucket);
+    console.log("linklist view : ", bucket);
     return (
         <section>
             <Text text={bucket.get("name")}/>
@@ -53,34 +53,45 @@ export function LinkListView ( {
 }
 
 const getList = ({ 
-    bucket,
-    continuationToken,
+    bucket = Map(),
+    nextContinuationToken: continuationToken,
     contents = ImmutableList()
-}) => listBucket({
-    baseURL: bucket.get("baseURL"),
-    name: bucket.get("name"),
-    continuationToken
-})
-    .then(({ contents: newContents, nextContinuationToken }) => {
+}) => {
 
-        const baseURL = bucket.get("baseURL");
-        return {
-            nextContinuationToken,
-            contents: contents.concat(ImmutableList(newContents.map(item => {
+    console.log("called");
+    console.log(bucket.get("baseURL"));
+    console.log(bucket.get("name"));
 
-                const url = baseURL + "/" + item.Key;
-                return Map({
-                    url,
-                    size: item.Size,
-                    lastModified: item.LastModified,
-                    contentType: contentType({ url })
-                });
+    return listBucket({
+        baseURL: bucket.get("baseURL"),
+        name: bucket.get("name"),
+        continuationToken
+    })
+        .then(({ contents: newContents, nextContinuationToken }) => {
 
-            }))),
-            bucket
-        };
+            const baseURL = bucket.get("baseURL");
+            console.log("new : ", newContents);
+            console.log("old : ", contents);
 
-    });
+            return {
+                nextContinuationToken,
+                contents: contents.concat(ImmutableList(newContents.map(item => {
+
+                    const url = baseURL + "/" + item.Key;
+                    return Map({
+                        url,
+                        size: item.Size,
+                        lastModified: item.LastModified,
+                        contentType: contentType({ url })
+                    });
+
+                }))),
+                bucket
+            };
+
+        }); 
+
+}
 
 
 export const enhanceLinkList = compose(
@@ -134,14 +145,28 @@ export const enhanceLinkList = compose(
 
             });
 
-        const nextBuckets = bucketProps$
+        const nextBucketsProps$ = bucketProps$
             .map( props => next$
-                .fold((bucket, _) => {
+                .mapTo(props)
+                .debug("next")
+                .fold((prevRqst, _) => {
 
+                    return prevRqst
+                    // gets prev request calls for a new
+                    // state
+                        .then(getList)
+                    // restore previous correct state
+                        .catch(() => prevRqst);
 
-                }, Promise.resolve(props)) );
+                }, Promise.resolve(props)))
+            .flatten()
+            .map(xs.fromPromise)
+            .flatten();
 
-        return bucketProps$.map( props => <Component {...props}/>);
+        return xs
+            .merge(bucketProps$, nextBucketsProps$)
+            .debug("props")
+            .map( props => <Component {...props} listNext={listNext}/>);
     })
 );
 

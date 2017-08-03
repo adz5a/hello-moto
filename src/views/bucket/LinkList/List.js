@@ -80,6 +80,7 @@ export function ListView ( {
     // console.log(listNext);
     // console.log(contents);
     const links = contents
+    console.log(contents);
     return (
         <section
             className="mt5"
