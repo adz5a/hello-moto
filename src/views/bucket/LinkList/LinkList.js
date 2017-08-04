@@ -35,18 +35,18 @@ import noop from "lodash/noop";
 
 export function LinkListView ( {
     bucket = Map(),
-    contents = [],
+    contents = ImmutableList(),
     nextContinuationToken = undefined,
     listNext = noop,
     syncBucket = noop,
-    status = ""
+    loading = false
 } ) {
 
     // console.log("linklist view : ", bucket);
     return (
         <section>
             <Text text={bucket.get("name")}/>
-            {status ? <Text>{status}</Text>: null}
+            {loading ? <Text>Loading</Text>: null}
             <List
                 contents={contents}
                 bucket={bucket}
@@ -134,6 +134,7 @@ export const enhanceLinkList = compose(
         const { handler: listNext, stream: next$ } = createEventHandler();
         const { handler: syncBucket, stream: sync$ } = createEventHandler();
 
+        const propsProxy$ = xs.create();
 
         const bucket$ = props$
             .map( props => props.bucket )
@@ -144,52 +145,70 @@ export const enhanceLinkList = compose(
         const initialState$ = bucket$
             .map( bucket => {
 
-                console.log(bucket);
-                return {
-                    bucket,
-                    next: getList({ bucket })
-                };
+                return [ { bucket }, getList({ bucket }) ];
 
             } );
 
 
         const onNewBucket$ = initialState$
-            .map( ({ bucket, next: promise }) => xs
-                .fromPromise(promise)
+            .map( ([ props, next ]) => xs
+                .fromPromise(next)
                 .map( res => ({
                     ...res,
                     loading:false
                 }) )
                 .startWith({
-                    bucket,
+                    ...props,
                     loading: true
                 }))
             .flatten();
 
 
-        const nextBucketsProps$ = initialState$
-            .map( ({ bucket, next }) => xs.merge(next$, sync$)
-                .fold((prevRqst, _) => {
-
-                    return prevRqst
-                    // gets prev request calls for a new
-                    // state
-                        .then(getList)
-                    // restore previous correct state
-
-                }, Promise.resolve(next)))
+        const nextBucketsProps$ = propsProxy$
+            .map( props => xs
+                .merge(next$, sync$)
+                .map(_ => [ props, getList(props) ]))
             .flatten()
             .drop(1)
-            .compose(awaitPromise)
+            .map(([ props, next ]) => {
 
-        return xs
+
+                return xs
+                    .fromPromise(next)
+                    .map(props => ({
+                        ...props,
+                        loading: false
+                    }))
+                    .startWith({
+                        ...props,
+                        loading: true
+                    });
+
+
+            })
+            .flatten()
+            .debug("next");
+
+        const finalProps$ = xs
             .merge(onNewBucket$, nextBucketsProps$)
             .debug("props")
             .map(props => ({
                 ...props,
                 listNext,
                 syncBucket
-            }));
+            }))
+            .replaceError(e => {
+
+                console.error(e);
+                return e;
+
+            });
+
+
+        propsProxy$.imitate(finalProps$);
+
+
+        return finalProps$;
     })
 );
 
