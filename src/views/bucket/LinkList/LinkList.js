@@ -12,8 +12,9 @@ import {
     // lifecycle,
     // branch,
     // renderComponent
-    componentFromStream,
-    createEventHandler
+    // componentFromStream,
+    createEventHandler,
+    mapPropsStream
 } from "components/recompose";
 import {
     DefaultBorderedText as Text
@@ -127,7 +128,7 @@ export const enhanceLinkList = compose(
 
         }
     ),
-    Component => componentFromStream(props$ => {
+    mapPropsStream(props$ => {
 
 
         const { handler: listNext, stream: next$ } = createEventHandler();
@@ -165,6 +166,7 @@ export const enhanceLinkList = compose(
                 }))
             .flatten();
 
+
         const nextBucketsProps$ = initialState$
             .map( ({ bucket, next }) => xs.merge(next$, sync$)
                 .fold((prevRqst, _) => {
@@ -183,11 +185,11 @@ export const enhanceLinkList = compose(
         return xs
             .merge(onNewBucket$, nextBucketsProps$)
             .debug("props")
-            .map( props => <Component
-                    {...props}
-                    listNext={listNext}
-                    syncBucket={syncBucket}
-                /> );
+            .map(props => ({
+                ...props,
+                listNext,
+                syncBucket
+            }));
     })
 );
 
