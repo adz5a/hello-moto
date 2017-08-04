@@ -5,18 +5,38 @@ import {
 import noop from "lodash/noop";
 import {
     centerFlex,
-    inputStyle 
+    inputStyle,
+    // defaultBordered
 } from "components/styles";
 import {
     connect
 } from "react-redux";
 import {
-    // bucket as bucketFactory,
-    fromURLAndName,
-    ADD_BUCKET
+    INSERT_DOC,
+} from "data/db";
+import {
+    fromObject,
+    toDoc
 } from "data/bucket";
+import {
+    compose,
+    // createEventHandler
+} from "components/recompose";
+import {
+    componentFromStream
+} from "components/recompose";
+// import xs from "xstream";
 
-function CreateForm ( { onAdd = noop } ) {
+
+
+function FormView ( { 
+    onAdd = noop,
+    // onChange = noop,
+    // showSaved = false,
+    // showSpinner = false
+} ) {
+
+    // console.log(showSpinner);
 
     return (
         <form action="sign-up_submit "
@@ -43,7 +63,9 @@ function CreateForm ( { onAdd = noop } ) {
                 onClick={( e ) => {
 
                     e.preventDefault();
-                    onAdd(parseForm(["baseURL", "name"], e.target.form));
+                    const { baseURL, name } = parseForm(["baseURL", "name"], e.target.form);
+
+                    return onAdd(fromObject({ baseURL, name }));
 
                 }}
             />
@@ -53,30 +75,59 @@ function CreateForm ( { onAdd = noop } ) {
 }
 
 
-const enhanceCreateForm = connect(
-    null,
-    dispatch => ({
-        onAdd( bucket ) {
 
-            return dispatch({
 
-                type: ADD_BUCKET,
-                data: fromURLAndName(bucket)
 
-            });
+export const enhanceWithStream = Component => componentFromStream( prop$ => {
 
-        }
-    })
-);
+    //  TODO : 
+    //  introduce an "addStream" and a "changeStream"
+    //  those can be used to display a spinner while
+    //  a bucket is being created.
+    //  This is why I leave it here atm...
 
-const EnhancedCreateForm = enhanceCreateForm(CreateForm);
+    return prop$
+        .map( ownProps => {
 
+            const { dispatch } = ownProps;
+
+            return {
+                onAdd: bucket => {
+
+                    // console.log(bucket);
+                    return dispatch({
+                        type: INSERT_DOC,
+                        data: toDoc(bucket)
+                    });
+
+
+                }
+            };
+
+        })
+        .map( props  => {
+
+            return (
+                <Component
+                    { ...props }
+                />
+            );
+
+        } );
+
+
+} );
+
+export const Form = compose(
+    connect(),
+    enhanceWithStream
+)(FormView);
 
 export function Add () {
 
     return (
         <section className={centerFlex}>
-            <EnhancedCreateForm />
+            <Form />
         </section>
     );
 

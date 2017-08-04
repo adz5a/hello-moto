@@ -1,12 +1,13 @@
 import isFunction from "lodash/isFunction";
 import {
     ACTIONFACTORY,
-    fromMiddleware
 } from "data/commons";
+import filter from "lodash/filter";
 
+const fromMiddleware = x => x;
 const MIDDLEWARE = ACTIONFACTORY("__middleware__");
-const PROCESSING = MIDDLEWARE("processing");
-const ERROR = MIDDLEWARE("error");
+export const PROCESSING = MIDDLEWARE("processing");
+export const ERROR = MIDDLEWARE("error");
 
 
 
@@ -29,7 +30,7 @@ export const tryCatch = (effect, wrapper) => {
 export function MiddlewareFactory ( effectsMap, {
     id = Math.random().toString(),
     onStart = null
-} ) {
+} = {} ) {
 
     if ( typeof effectsMap !== "object" || effectsMap === null ) {
 
@@ -37,8 +38,7 @@ export function MiddlewareFactory ( effectsMap, {
 
     }
 
-    const invalidKeys = Object.keys(effectsMap)
-        .filter(key => !isFunction(effectsMap[key]));
+    const invalidKeys = filter(effectsMap, eff => !isFunction(eff));
 
     if ( invalidKeys.length > 0 ) {
 
@@ -62,13 +62,12 @@ export function MiddlewareFactory ( effectsMap, {
 
         if ( typeof onStart === "function" ) {
 
-            tryCatch(() => onStart( action => {
+            setTimeout(tryCatch, 0, () => onStart( action => {
 
-                store.dispatch({
+                return store.dispatch({
                     ...action,
                     meta: {
-                        ...( action.meta || {} ),
-                        ...fromHere()
+                        startup: true
                     }
                 });
 
@@ -80,7 +79,9 @@ export function MiddlewareFactory ( effectsMap, {
         return next => action => {
 
             const { type, meta = {}, data } = action;
+
             if ( !isFromHere(action) && effects.has(type) ) {
+
 
                 const value = tryCatch(
                     () => effects.get(type)(data),
@@ -102,7 +103,7 @@ export function MiddlewareFactory ( effectsMap, {
                     }))
                     .catch( error => {
 
-                        console.log(process);
+                        // console.log(process);
                         if ( process.env.NODE_ENV !== "production" ) {
 
                             console.error(error);

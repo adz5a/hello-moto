@@ -21,15 +21,14 @@ import {
 // import noop from "lodash/noop";
 import {
     // BucketList,
-    EnhancedBucketList as BucketList
+    BucketList
 } from "./BucketList";
 import {
     Add
 } from "./Add";
 import {
-    // LinkList,
-    EnhancedLinkList as LinkList
-} from "./LinkList";
+    LinkList
+} from "./LinkList/LinkList";
 import {
     Edit
 } from "./Edit";

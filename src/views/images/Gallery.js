@@ -12,7 +12,7 @@ import {
 } from "components/Text";
 import { connect } from "react-redux";
 import{
-} from "recompose";
+} from "components/recompose";
 // import fmap from "lodash/fp/map";
 // import map from "lodash/map";
 import { List } from "./list/List";

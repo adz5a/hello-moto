@@ -1,10 +1,5 @@
 import React from "react";
 import {
-    bucket as bucketFactory,
-    makeId,
-    DELETE_ALL
-} from "data/bucket";
-import {
     joinClasses as join,
     preventDefault
 } from "components/Form";
@@ -13,20 +8,27 @@ import {
     linkStyle,
 } from "components/styles";
 import {
-    Link
+    Link,
+    withRouter
 } from "react-router-dom";
 import noop from "lodash/noop";
 // import keys from "lodash/keys";
-import { 
+import {
     compose,
     renderComponent,
     branch
-} from "recompose";
+} from "components/recompose";
 import {
     connect
 } from "react-redux";
-import map from "lodash/map";
-
+// import map from "lodash/map";
+import {
+    Map,
+    // is
+} from "immutable";
+import {
+    DELETE_DOC
+} from "data/db";
 
 function Text ( { text } ) {
 
@@ -36,80 +38,16 @@ function Text ( { text } ) {
 
 const centerFlex ="flex flex-column items-center";
 
-export function BucketList ( { 
-    buckets = [],
-    onDeleteAll = noop,
-    match = {}
-} ) {
 
-    return (
-        <section
-            className={centerFlex}
-        >
-            <form onSubmit={preventDefault}>
-                <input
-                    value="Delete All"
-                    type="submit"
-                    className={join(linkStyle, "reset-input")}
-                    onClick={onDeleteAll}
-                />
-            </form>
-            {
-                buckets.map(
-                    bucket => <BucketQuickDescription 
-                        key={makeId(bucket)}
-                        bucket={bucket}
-                        match={match}
-                    />
-                )
-            }
-        </section>
-    );
-
-}
-
-function EmptyBucketList () {
-
-    return (
-        <section
-            className={centerFlex}
-        >
-            <Text text={"You don't seem to have any bucket :("} />
-        </section>
-    );
-
-}
-
-export const enhanceBucketList = compose(
-    connect(
-        state => ({
-            buckets: map(state.buckets)
-        }),
-        dispatch => ({
-            onDeleteAll() {
-
-                return dispatch({
-                    type: DELETE_ALL
-                });
-
-            }
-        })
-    ),
-    branch(
-        ({ buckets }) => buckets.length === 0,
-        renderComponent(EmptyBucketList)
-    )
-);
-
-export const EnhancedBucketList = enhanceBucketList(BucketList);
-
-export function BucketQuickDescription ( {
-    bucket = bucketFactory(),
+export function BucketQuickDescriptionView ( {
+    bucket = Map(),
     match  = {},
     onDelete = noop
 } ) {
 
-    const bucketId = makeId(bucket);
+    const bucketId = bucket.get("id", null);
+    const baseURL = bucket.get("baseURL", null);
+    const name = bucket.get("name", null);
 
     return (
         <form action="sign-up_submit "
@@ -122,11 +60,11 @@ export function BucketQuickDescription ( {
                 <legend className="ph0 mh0 fw6">Bucket</legend>
                 <div className="mt3">
                     <label className="db fw4 lh-copy f6">{"Base URL"}</label>
-                    <span className={join(linkStyle, "dib")}>{bucket.baseURL}</span>
+                    <span className={join(linkStyle, "dib")}>{baseURL}</span>
                 </div>
                 <div className="mt3">
                     <label className="db fw4 lh-copy f6">{"Bucket Name"}</label>
-                    <span className={join(linkStyle, "dib")}>{bucket.name}</span>
+                    <span className={join(linkStyle, "dib")}>{name}</span>
                 </div>
             </fieldset>
             <Link
@@ -145,8 +83,9 @@ export function BucketQuickDescription ( {
                 value="Delete"
                 type="submit"
                 className={join(linkStyle, "reset-input")}
-                onClick={() => {
+                onClick={e => {
 
+                    e.preventDefault();
                     onDelete(bucket);
 
                 }}
@@ -155,3 +94,89 @@ export function BucketQuickDescription ( {
     );
 
 }
+
+
+const enhanceBucketQuickDescription = connect(
+    null,
+    {
+        onDelete: bucket => {
+
+            console.log(bucket);
+
+            return {
+                type: DELETE_DOC,
+                data: { _id: bucket.get("id") }
+            };
+
+        }
+    }
+);
+
+
+const BucketQuickDescription = enhanceBucketQuickDescription(BucketQuickDescriptionView);
+
+
+export function BucketListView ( {
+    buckets = Map(),
+    onDeleteAll = noop,
+    match = {}
+} ) {
+
+    return (
+        <section
+            className={centerFlex}
+        >
+            <form onSubmit={preventDefault}>
+                <input
+                    value="Delete All"
+                    type="submit"
+                    className={join(linkStyle, "reset-input")}
+                    onClick={onDeleteAll}
+                />
+            </form>
+            {
+                buckets
+                    .toArray()
+                    .map(
+                        bucket => <BucketQuickDescription
+                            key={bucket.get("id")}
+                            bucket={bucket}
+                            match={match}
+                        />
+                    )
+            }
+        </section>
+    );
+
+}
+
+
+function EmptyBucketListView () {
+
+    return (
+        <section
+            className={centerFlex}
+        >
+            <Text text={"You don't seem to have any bucket :("} />
+        </section>
+    );
+
+}
+
+export const enhanceBucketList = compose(
+    connect(
+        state => ({
+            buckets: state.db.store
+            .filter( doc => doc.get("type") === "bucket")
+            .map( doc => doc.get("data") )
+        }),
+    ),
+    branch(
+        ({ buckets }) => buckets.size === 0,
+        renderComponent(EmptyBucketListView)
+    ),
+    withRouter
+);
+
+export const BucketList = enhanceBucketList(BucketListView);
+

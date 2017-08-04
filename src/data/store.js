@@ -5,13 +5,22 @@ import {
     combineReducers
 } from 'redux';
 import {
-    reducer as buckets,
+    // reducer as buckets,
     middleware as bucketMiddleware
 } from "data/bucket";
+// import {
+//     reducer as links,
+//     middleware as linkMiddleware
+// } from "data/link";
+// import {
+//     reducer as tags,
+//     middleware as tagMiddleware
+// } from "data/tag";
 import {
-    reducer as links,
-    middleware as linkMiddleware
-} from "data/link";
+    // middleware as dbMiddleware,
+    reducer as db,
+    dbMiddleware
+} from "data/db";
 
 
 
@@ -23,8 +32,10 @@ export function createStore ( {
 
 
     const reducer = combineReducers({
-        buckets,
-        links
+        // buckets,
+        // tags,
+        // links,
+        db
     });
 
     if ( process.env.NODE_ENV !== "production" ) {
@@ -37,8 +48,10 @@ export function createStore ( {
 
     return  createReduxStore(reducer, /* preloadedState, */ composeEnhancers(
         applyMiddleware(...[
-            linkMiddleware,
+            // linkMiddleware,
             bucketMiddleware,
+            dbMiddleware,
+            // tagMiddleware,
             ...middlewares
         ])
     ));
