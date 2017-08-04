@@ -66,7 +66,8 @@ export function ListView ( {
     saveAll = noop,
     contents = [],
     syncBucket = noop,
-    loading = false
+    loading = false,
+    isTruncated = false
 } ) {
 
     // console.log(listNext);
@@ -85,11 +86,16 @@ export function ListView ( {
                     value="Save All"
                     onClick={saveAll}
                 />
-                <Input
-                    type="button"
-                    value="Load More Items"
-                    onClick={listNext}
-                />
+                {
+                    isTruncated ?
+                        <Input
+                            type="button"
+                            value="Load More Items"
+                            onClick={listNext}
+                        />
+                        : null
+
+                }
                 <Input
                     type="button"
                     value="Sync Bucket"

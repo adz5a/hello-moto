@@ -39,7 +39,8 @@ export function LinkListView ( {
     nextContinuationToken = undefined,
     listNext = noop,
     syncBucket = noop,
-    loading = false
+    loading = false,
+    isTruncated = false
 } ) {
 
     // console.log("linklist view : ", bucket);
@@ -52,6 +53,7 @@ export function LinkListView ( {
                 bucket={bucket}
                 listNext={listNext}
                 syncBucket={syncBucket}
+                isTruncated={isTruncated}
             />
         </section>
     );
@@ -79,12 +81,13 @@ const getList = ({
         name: bucket.get("name"),
         continuationToken
     })
-        .then(({ contents: newContents, nextContinuationToken }) => {
+        .then(({ contents: newContents, nextContinuationToken, ...rest }) => {
 
             const baseURL = bucket.get("baseURL");
             // console.log("new : ", newContents);
             // console.log("old : ", contents);
 
+            console.log(rest);
             return {
                 nextContinuationToken,
                 contents: contents.concat(ImmutableList(newContents.map(item => {
@@ -98,7 +101,8 @@ const getList = ({
                     });
 
                 }))),
-                bucket
+                bucket,
+                isTruncated: rest.isTruncated === "true" // it currently returns a string
             };
 
         });
