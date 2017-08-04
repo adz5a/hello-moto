@@ -1,7 +1,12 @@
 #!/bin/bash
 
+## this script launches tmux, vim & starts dev environnment.
+# If env variables are needed, a special file should be loaded from this one
+# when "yarn start" is called
 SESSION=$USER
 
+
+# TMUX
 # create session
 # detaches it and name it
 tmux -2 new-session -d -s $SESSION 
@@ -25,7 +30,6 @@ tmux send-keys "cd src && vim ." C-m #to avoid PATH issues
 
 # select second window
 tmux select-window -t $SESSION:1
-
 
 
 
