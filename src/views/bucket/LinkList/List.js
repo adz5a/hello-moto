@@ -12,7 +12,7 @@ import {
 import {
     Input
 } from "components/Form";
-import { connect } from "react-redux";
+// import { connect } from "react-redux";
 import {
     compose,
     // mapProps,
@@ -26,7 +26,7 @@ import {
 
 
 export function EmptyListView ( {
-    onRequestContent = noop,
+    listNext = noop,
     bucket = Map()
 } ) {
 
@@ -36,7 +36,7 @@ export function EmptyListView ( {
             <input
                 className={inputStyle}
                 type="button"
-                onClick={() => onRequestContent(bucket)}
+                onClick={() => listNext(bucket)}
                 value="Get bucket content"
             />
 
@@ -46,17 +46,7 @@ export function EmptyListView ( {
 }
 
 
-const enhanceEmptyList = connect(
-    null,
-    dispatch => ({
-        onRequestContent( bucket ) {
-
-
-        }
-    })
-);
-
-export const EmptyList = enhanceEmptyList(EmptyListView);
+export const EmptyList = EmptyListView;
 
 
 const renderLinks = links => links.map( link => (
@@ -75,7 +65,8 @@ export function ListView ( {
     listNext = noop,
     saveAll = noop,
     contents = [],
-    syncBucket = noop
+    syncBucket = noop,
+    loading = false
 } ) {
 
     // console.log(listNext);
