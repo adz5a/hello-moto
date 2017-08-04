@@ -37,13 +37,15 @@ export function LinkListView ( {
     contents = [],
     nextContinuationToken = undefined,
     listNext = noop,
-    syncBucket = noop
+    syncBucket = noop,
+    status = ""
 } ) {
 
     // console.log("linklist view : ", bucket);
     return (
         <section>
             <Text text={bucket.get("name")}/>
+            {status ? <Text>{status}</Text>: null}
             <List
                 contents={contents}
                 bucket={bucket}
@@ -160,7 +162,6 @@ export const enhanceLinkList = compose(
                     // state
                         .then(getList)
                     // restore previous correct state
-                        .catch(() => prevRqst);
 
                 }, Promise.resolve(props)))
             .flatten()
