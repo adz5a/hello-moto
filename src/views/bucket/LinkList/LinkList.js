@@ -57,13 +57,19 @@ export function LinkListView ( {
 
 }
 
+
+const awaitPromise = stream => stream
+    .map(xs.fromPromise)
+    .flatten();
+
+
 const getList = ({
     bucket = Map(),
     nextContinuationToken: continuationToken,
     contents = ImmutableList()
 }) => {
 
-    // console.log("called");
+    console.log("called");
     // console.log(bucket.get("baseURL"));
     // console.log(bucket.get("name"));
 
@@ -128,33 +134,39 @@ export const enhanceLinkList = compose(
         const { handler: syncBucket, stream: sync$ } = createEventHandler();
 
 
-
-        const bucketProps$ = props$
+        const bucket$ = props$
             .map( props => props.bucket )
-            .compose(dropRepeats(is))
-            .filter( bucket => bucket !== undefined )
+            .filter( bucket => bucket !== undefined && Map.isMap(bucket) )
+            .compose(dropRepeats(is));
+
+
+        const initialState$ = bucket$
             .map( bucket => {
 
-
-                return getList({ bucket });
-
-            } )
-            .map(xs.fromPromise)
-            .flatten()
-            .map(({ contents, nextContinuationToken, bucket }) => {
-
+                console.log(bucket);
                 return {
-                    contents,
-                    nextContinuationToken,
                     bucket,
+                    next: getList({ bucket })
                 };
 
-            });
+            } );
 
-        const nextBucketsProps$ = bucketProps$
-            .map( props => xs.merge(next$, sync$)
-                .mapTo(props)
-                .debug("next")
+
+        const onNewBucket$ = initialState$
+            .map( ({ bucket, next: promise }) => xs
+                .fromPromise(promise)
+                .map( res => ({
+                    ...res,
+                    loading:false
+                }) )
+                .startWith({
+                    bucket,
+                    loading: true
+                }))
+            .flatten();
+
+        const nextBucketsProps$ = initialState$
+            .map( ({ bucket, next }) => xs.merge(next$, sync$)
                 .fold((prevRqst, _) => {
 
                     return prevRqst
@@ -163,14 +175,13 @@ export const enhanceLinkList = compose(
                         .then(getList)
                     // restore previous correct state
 
-                }, Promise.resolve(props)))
+                }, Promise.resolve(next)))
             .flatten()
-            .map(xs.fromPromise)
-            .flatten()
-            .drop(1);
+            .drop(1)
+            .compose(awaitPromise)
 
         return xs
-            .merge(bucketProps$, nextBucketsProps$)
+            .merge(onNewBucket$, nextBucketsProps$)
             .debug("props")
             .map( props => <Component
                     {...props}
