@@ -30,37 +30,40 @@ import {
 import xs from "xstream";
 import dropRepeats from "xstream/extra/dropRepeats";
 import { contentType } from "data/link";
+import noop from "lodash/noop";
 
-export function LinkListView ( { 
+export function LinkListView ( {
     bucket = Map(),
     contents = [],
     nextContinuationToken = undefined,
-    listNext
+    listNext = noop,
+    syncBucket = noop
 } ) {
 
-    console.log("linklist view : ", bucket);
+    // console.log("linklist view : ", bucket);
     return (
         <section>
             <Text text={bucket.get("name")}/>
-            <List 
+            <List
                 contents={contents}
-                bucket={bucket} 
+                bucket={bucket}
                 listNext={listNext}
+                syncBucket={syncBucket}
             />
         </section>
     );
 
 }
 
-const getList = ({ 
+const getList = ({
     bucket = Map(),
     nextContinuationToken: continuationToken,
     contents = ImmutableList()
 }) => {
 
-    console.log("called");
-    console.log(bucket.get("baseURL"));
-    console.log(bucket.get("name"));
+    // console.log("called");
+    // console.log(bucket.get("baseURL"));
+    // console.log(bucket.get("name"));
 
     return listBucket({
         baseURL: bucket.get("baseURL"),
@@ -70,8 +73,8 @@ const getList = ({
         .then(({ contents: newContents, nextContinuationToken }) => {
 
             const baseURL = bucket.get("baseURL");
-            console.log("new : ", newContents);
-            console.log("old : ", contents);
+            // console.log("new : ", newContents);
+            // console.log("old : ", contents);
 
             return {
                 nextContinuationToken,
@@ -89,7 +92,7 @@ const getList = ({
                 bucket
             };
 
-        }); 
+        });
 
 }
 
@@ -120,6 +123,7 @@ export const enhanceLinkList = compose(
 
 
         const { handler: listNext, stream: next$ } = createEventHandler();
+        const { handler: syncBucket, stream: sync$ } = createEventHandler();
 
 
 
@@ -140,13 +144,13 @@ export const enhanceLinkList = compose(
                 return {
                     contents,
                     nextContinuationToken,
-                    bucket
+                    bucket,
                 };
 
             });
 
         const nextBucketsProps$ = bucketProps$
-            .map( props => next$
+            .map( props => xs.merge(next$, sync$)
                 .mapTo(props)
                 .debug("next")
                 .fold((prevRqst, _) => {
@@ -161,15 +165,19 @@ export const enhanceLinkList = compose(
                 }, Promise.resolve(props)))
             .flatten()
             .map(xs.fromPromise)
-            .flatten();
+            .flatten()
+            .drop(1);
 
         return xs
             .merge(bucketProps$, nextBucketsProps$)
             .debug("props")
-            .map( props => <Component {...props} listNext={listNext}/>);
+            .map( props => <Component
+                    {...props}
+                    listNext={listNext}
+                    syncBucket={syncBucket}
+                /> );
     })
 );
 
 
 export const LinkList = enhanceLinkList(LinkListView);
-

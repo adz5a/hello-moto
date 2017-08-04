@@ -70,17 +70,18 @@ const renderLinks = links => links.map( link => (
 ));
 
 
-export function ListView ( { 
+export function ListView ( {
     bucket,
     listNext = noop,
     saveAll = noop,
-    contents = []
+    contents = [],
+    syncBucket = noop
 } ) {
 
     // console.log(listNext);
     // console.log(contents);
     // const links = contents
-    console.log(contents);
+    // console.log(contents);
     return (
         <section
             className="mt5"
@@ -97,6 +98,11 @@ export function ListView ( {
                     type="button"
                     value="Load More Items"
                     onClick={listNext}
+                />
+                <Input
+                    type="button"
+                    value="Sync Bucket"
+                    onClick={syncBucket}
                 />
             </section>
             <section
