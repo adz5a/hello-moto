@@ -3,7 +3,7 @@ import { createStreamMiddleware } from "data/streamMiddleware";
 import { db } from "data/db";
 import {
     // loadType,
-    createIndex
+    // createIndex
 } from "./data";
 import {
     INSERT_DOC,
@@ -15,7 +15,7 @@ import {
 } from "./actions";
 import {
     // toJS,
-    Map,
+    // Map,
     List,
     fromJS
 } from "immutable";
@@ -27,7 +27,7 @@ import omit from "lodash/fp/omit";
 const omitRev = omit(["_rev"]);
 
 
-const destroy = db => db.destroy();
+// const destroy = db => db.destroy();
 
 
 

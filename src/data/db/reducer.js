@@ -1,14 +1,14 @@
 import {
-    FETCH_DOC_BY_ID,
-    FIND_DOC,
+    // FETCH_DOC_BY_ID,
+    // FIND_DOC,
     INSERT_DOC,
     INSERTED_DOC,
     FOUND_DOC,
-    DELETE_DOC,
+    // DELETE_DOC,
     DELETED_DOC
 } from "./actions";
 import {
-    PROCESSING
+    // PROCESSING
 } from "data/middlewareFactory";
 import {
     combineReducers
@@ -28,43 +28,43 @@ export const defaultState = () => emptyMap;
 
 
 const defaultTasks = emptyMap;
-const operations = Set([
-    FETCH_DOC_BY_ID,
-    FIND_DOC,
-    INSERT_DOC
-]);
+// const operations = Set([
+//     FETCH_DOC_BY_ID,
+//     FIND_DOC,
+//     INSERT_DOC
+// ]);
 
-const addTask = ( tasks, action ) => {
+// const addTask = ( tasks, action ) => {
 
-    const { type, data } = action;
+//     const { type, data } = action;
 
-    if ( operations.has(type) ) {
+//     if ( operations.has(type) ) {
 
-        return tasks.update(type, emptySet, taskSet => taskSet.add(data));
+//         return tasks.update(type, emptySet, taskSet => taskSet.add(data));
 
-    } else {
+//     } else {
 
-        return tasks;
+//         return tasks;
 
-    }
+//     }
 
-};
+// };
 
-const removeTask = ( tasks, action ) => {
+// const removeTask = ( tasks, action ) => {
 
-    const { type, data } = action;
+//     const { type, data } = action;
 
-    if ( operations.has(type) ) {
+//     if ( operations.has(type) ) {
 
-        return tasks.update(type, emptySet, taskSet => taskSet.delete(data));
+//         return tasks.update(type, emptySet, taskSet => taskSet.delete(data));
 
-    } else {
+//     } else {
 
-        return tasks;
+//         return tasks;
 
-    }
+//     }
 
-};
+// };
 
 function tasks ( tasks = defaultTasks, action ) {
 

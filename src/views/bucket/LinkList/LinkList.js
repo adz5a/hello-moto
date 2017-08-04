@@ -9,7 +9,7 @@ import {
     compose,
     mapProps,
     // withProps,
-    lifecycle,
+    // lifecycle,
     // branch,
     // renderComponent
     componentFromStream,

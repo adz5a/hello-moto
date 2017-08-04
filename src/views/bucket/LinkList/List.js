@@ -1,6 +1,6 @@
 import React, { } from 'react';
 import noop from "lodash/noop";
-import fmap from "lodash/fp/map";
+// import fmap from "lodash/fp/map";
 import {
     inputStyle,
     centerFlex,
@@ -15,8 +15,8 @@ import {
 import { connect } from "react-redux";
 import {
     compose,
-    mapProps,
-    withProps,
+    // mapProps,
+    // withProps,
     // lifecycle,
     branch,
     renderComponent
@@ -79,7 +79,7 @@ export function ListView ( {
 
     // console.log(listNext);
     // console.log(contents);
-    const links = contents
+    // const links = contents
     console.log(contents);
     return (
         <section

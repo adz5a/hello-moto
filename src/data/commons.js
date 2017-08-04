@@ -1,4 +1,4 @@
-import reduce from "lodash/fp/reduce";
+// import reduce from "lodash/fp/reduce";
 
 
 export const sanitizeURL = url => btoa(encodeURI(url));
