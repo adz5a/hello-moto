@@ -3,7 +3,11 @@ import { createStreamMiddleware } from "data/streamMiddleware";
 import {
     FIND_DOC
 } from "data/db";
+import {
+    LIST_CONTENT,
+} from "./actions";
 import { fromJS } from "immutable";
+import { withType } from "data/commons";
 
 
 const onStart = () => xs.of({
@@ -18,10 +22,25 @@ const onStart = () => xs.of({
     });
 
 
+const list = list$ => list$
+    
 const creator = action$ => {
 
-    
+    const start$ = onStart();
 
-    return onStart();
+
+    const list$ = action$
+        .filter(withType(LIST_CONTENT))
+        .compose(list);
+
+
+    return xs.merge(
+        start$,
+        list$
+    );
+
+
+
+
 };
 export const middleware = createStreamMiddleware(creator, "bucket");

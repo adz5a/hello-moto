@@ -9,3 +9,6 @@ export function ACTIONFACTORY ( namespace ) {
     return ( ...strings ) => [ namespace ].concat(strings).join("/").toUpperCase();
 
 }
+
+
+export const withType = type => action => action.type === type;
