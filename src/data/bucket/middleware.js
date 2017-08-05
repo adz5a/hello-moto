@@ -1,5 +1,4 @@
 import xs from "xstream";
-import delay from "xstream/extra/delay";
 import { createStreamMiddleware } from "data/streamMiddleware";
 import {
     FIND_DOC
@@ -16,8 +15,7 @@ const onStart = () => xs.of({
                 }
             })
         }
-    })
-    .compose(delay(1));
+    });
 
 
 const creator = action$ => {

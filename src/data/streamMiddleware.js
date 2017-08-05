@@ -1,5 +1,6 @@
 import { createEventHandler } from "components/recompose";
 import xs from "xstream";
+import delay from "xstream/extra/delay";
 
 
 export function createStreamMiddleware ( creator, name = null ) {
@@ -11,6 +12,7 @@ export function createStreamMiddleware ( creator, name = null ) {
 
 
         action$
+            .compose(delay(1))
             .addListener({
                 next: store.dispatch,
                 error ( error ) {

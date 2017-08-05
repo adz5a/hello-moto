@@ -124,7 +124,9 @@ export const enhanceLinkList = compose(
 
             // console.log(match);
             const bucketId = match.params.bucketId
-            const bucket = store.get(bucketId, Map()).get("data");
+            const bucket = store
+                .get(bucketId, Map())
+                .get("data", Map());
 
             return {
                 bucket
@@ -133,86 +135,7 @@ export const enhanceLinkList = compose(
         }
     ),
     mapPropsStream(props$ => {
-
-
-        const { handler: listNext, stream: next$ } = createEventHandler();
-        const { handler: syncBucket, stream: sync$ } = createEventHandler();
-
-        const propsProxy$ = xs.create();
-
-        const bucket$ = props$
-            .map( props => props.bucket )
-            .filter( bucket => bucket !== undefined && Map.isMap(bucket) )
-            .compose(dropRepeats(is));
-
-
-        const initialState$ = bucket$
-            .map( bucket => {
-
-                return [ { bucket }, getList({ bucket }) ];
-
-            } );
-
-
-        const onNewBucket$ = initialState$
-            .map( ([ props, next ]) => xs
-                .fromPromise(next)
-                .map( res => ({
-                    ...res,
-                    loading:false
-                }) )
-                .startWith({
-                    ...props,
-                    loading: true
-                }))
-            .flatten();
-
-
-        const nextBucketsProps$ = propsProxy$
-            .map( props => xs
-                .merge(next$, sync$)
-                .map(_ => [ props, getList(props) ]))
-            .flatten()
-            .drop(1)
-            .map(([ props, next ]) => {
-
-
-                return xs
-                    .fromPromise(next)
-                    .map(props => ({
-                        ...props,
-                        loading: false
-                    }))
-                    .startWith({
-                        ...props,
-                        loading: true
-                    });
-
-
-            })
-            .flatten()
-            .debug("next");
-
-        const finalProps$ = xs
-            .merge(onNewBucket$, nextBucketsProps$)
-            .debug("props")
-            .map(props => ({
-                ...props,
-                listNext,
-                syncBucket
-            }))
-            .replaceError(e => {
-
-                console.error(e);
-                return e;
-
-            });
-
-
-        propsProxy$.imitate(finalProps$);
-
-
-        return finalProps$;
+        return props$
     })
 );
 
