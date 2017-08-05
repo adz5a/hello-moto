@@ -8,7 +8,8 @@ import { connect } from "react-redux";
 import {
     compose,
     mapProps,
-    once
+    once,
+    withState
 } from "components/recompose";
 import {
     DefaultBorderedText as Text
@@ -21,7 +22,8 @@ import {
 } from "./List";
 import noop from "lodash/noop";
 import {
-    LIST_CONTENT
+    LIST_CONTENT,
+    LIST_ALL_CONTENT
 } from "data/bucket";
 
 export function LinkListView ( {
@@ -110,6 +112,10 @@ export const enhanceLinkList = compose(
                 return {
                     bucket,
                     dispatch,
+                    listAll: () => dispatch({
+                        type: LIST_ALL_CONTENT,
+                        data: { bucket }
+                    })
                 };
 
             }
@@ -123,12 +129,7 @@ export const enhanceLinkList = compose(
     // available to the component
     once(
         props => props.bucket.get("id") !== undefined,
-        props => props.dispatch({
-            type: LIST_CONTENT,
-            data: {
-                bucket: props.bucket
-            }
-        })
+        props => props.listAll(true)
     )
 );
 
