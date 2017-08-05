@@ -9,12 +9,13 @@ import {
     compose,
     mapProps,
     // withProps,
-    // lifecycle,
+    lifecycle,
     // branch,
     // renderComponent
     // componentFromStream,
     createEventHandler,
-    mapPropsStream
+    mapPropsStream,
+    once
 } from "components/recompose";
 import {
     DefaultBorderedText as Text
@@ -32,6 +33,9 @@ import xs from "xstream";
 import dropRepeats from "xstream/extra/dropRepeats";
 import { contentType } from "data/link";
 import noop from "lodash/noop";
+import {
+    LIST_CONTENT
+} from "data/bucket";
 
 export function LinkListView ( {
     bucket = Map(),
@@ -61,53 +65,8 @@ export function LinkListView ( {
 }
 
 
-const awaitPromise = stream => stream
-    .map(xs.fromPromise)
-    .flatten();
 
 
-const getList = ({
-    bucket = Map(),
-    nextContinuationToken: continuationToken,
-    contents = ImmutableList()
-}) => {
-
-    console.log("called");
-    // console.log(bucket.get("baseURL"));
-    // console.log(bucket.get("name"));
-
-    return listBucket({
-        baseURL: bucket.get("baseURL"),
-        name: bucket.get("name"),
-        continuationToken
-    })
-        .then(({ contents: newContents, nextContinuationToken, ...rest }) => {
-
-            const baseURL = bucket.get("baseURL");
-            // console.log("new : ", newContents);
-            // console.log("old : ", contents);
-
-            console.log(rest);
-            return {
-                nextContinuationToken,
-                contents: contents.concat(ImmutableList(newContents.map(item => {
-
-                    const url = baseURL + "/" + item.Key;
-                    return Map({
-                        url,
-                        size: item.Size,
-                        lastModified: item.LastModified,
-                        contentType: contentType({ url })
-                    });
-
-                }))),
-                bucket,
-                isTruncated: rest.isTruncated === "true" // it currently returns a string
-            };
-
-        });
-
-}
 
 
 export const enhanceLinkList = compose(
@@ -120,24 +79,40 @@ export const enhanceLinkList = compose(
 
     } ),
     mapProps(
-        ( { match, store } ) => {
+        ( { 
+            match, 
+            store,
+            dispatch
+        } ) => {
 
             // console.log(match);
             const bucketId = match.params.bucketId
+            console.log(bucketId);
             const bucket = store
                 .get(bucketId, Map())
                 .get("data", Map());
 
+            console.log(bucket);
             return {
-                bucket
+                bucket,
+                dispatch
             };
 
         }
     ),
-    mapPropsStream(props$ => {
-        return props$
-    })
+    once(
+        props => props.bucket.get("id") !== undefined,
+        props => props.dispatch({
+            type: LIST_CONTENT,
+            data: {
+                bucket: props.bucket
+            }
+        })
+    )
 );
+
+
+
 
 
 export const LinkList = enhanceLinkList(LinkListView);
