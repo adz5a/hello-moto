@@ -8,7 +8,20 @@ export function createStreamMiddleware ( creator, name = null ) {
     return function middleware ( store ) {
 
         const { stream, handler: onNext } = createEventHandler();
-        const action$ = creator(xs.fromObservable(stream));
+
+
+        const rawActions$ = xs.fromObservable(stream);
+        const state$ = rawActions$.map( () => store.getState() );
+        let action$;
+        if ( creator.length > 1 ) {
+
+            action$ = creator(rawActions$, state$);
+
+        } else {
+
+            action$ = creator(xs.fromObservable(stream));
+
+        }
 
 
         action$
