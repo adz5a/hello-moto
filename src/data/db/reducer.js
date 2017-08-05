@@ -65,7 +65,54 @@ function tasks ( tasks = defaultTasks, action ) {
 }
 
 
+function byType ( state = Map(), action ) {
+
+
+
+    const { type, data } = action;
+
+
+    switch ( type ) {
+
+        case INSERTED_DOC:{
+
+            const doc = data;
+            const docType = doc.get("type");
+            const docId = doc.get("_id");
+
+            return state.update(docType, Map(), type => type.set(docId, doc));
+
+        }
+
+
+        case FOUND_DOC:{
+
+            const { response = List() } = data;
+
+            return response.reduce(
+                ( state, doc ) => {
+
+                    const docType = doc.get("type");
+                    const docId = doc.get("_id");
+
+                    return state.update(docType, Map(), type => type.set(docId, doc));
+
+                },
+                state
+            );
+
+        }
+
+
+        default:
+            return state;
+
+    }
+
+}
+
 function store ( store = emptyMap, action ) {
+
 
     const { type, data } = action;
 
@@ -112,5 +159,6 @@ function store ( store = emptyMap, action ) {
 
 export const reducer = combineReducers({
     tasks,
-    store
+    store,
+    byType
 });

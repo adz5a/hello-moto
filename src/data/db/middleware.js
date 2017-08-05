@@ -123,9 +123,18 @@ const delete_ = delete$ => delete$
 
 const creator = action$ => {
 
-    const insert$ = insert(action$.filter(withType(INSERT_DOC)));
-    const find$ = find(action$.filter(withType(FIND_DOC)));
-    const delete$ = delete_(action$.filter(withType(DELETE_DOC)));
+
+    const insert$ = action$
+        .filter(withType(INSERT_DOC))
+        .compose(insert);
+
+    const find$ = action$
+        .filter(withType(FIND_DOC))
+        .compose(find);
+
+    const delete$ = action$
+        .filter(withType(DELETE_DOC))
+        .compose(delete_);
 
     return xs
         .merge(
