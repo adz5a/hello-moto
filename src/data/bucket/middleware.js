@@ -47,7 +47,7 @@ const getList = ({
         continuationToken
     })
         .then(({
-             contents: newContents,
+            contents: newContents,
             nextContinuationToken,
             isTruncated
         }) => {
@@ -81,10 +81,14 @@ const list = list$ => list$
 
         const { data } = action;
 
+        const { 
+            nextContinuationToken,
+            bucket = {}
+        } = data
 
-        const bucket = data.bucket || {};
         return {
-            bucket: fromJS(bucket)
+            bucket: fromJS(bucket),
+            nextContinuationToken
         };
 
     })

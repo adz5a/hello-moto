@@ -36,7 +36,8 @@ export function reducer ( state = Map(), action ) {
                     bucket.get("id"),
                     bucket,
                     bucket => bucket
-                    .set("continuationToken", bucket.get("continuationToken"))
+                    .set("nextContinuationToken", nextContinuationToken)
+                    .set("isTruncated", isTruncated)
                     .set("loading", false)
                     .update(
                         "contents",

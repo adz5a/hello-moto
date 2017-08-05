@@ -74,7 +74,8 @@ export const enhanceLinkList = compose(
     connect( state => {
 
         return {
-            store: state.db.store
+            store: state.db.store,
+            buckets: state.buckets
         };
 
     } ),
@@ -82,6 +83,7 @@ export const enhanceLinkList = compose(
         ( { 
             match, 
             store,
+            buckets,
             dispatch
         } ) => {
 
@@ -92,11 +94,40 @@ export const enhanceLinkList = compose(
                 .get(bucketId, Map())
                 .get("data", Map());
 
-            console.log(bucket);
-            return {
-                bucket,
-                dispatch
-            };
+
+            const bucketData = buckets.get(bucket.get("id"));
+
+
+            if ( bucketData !== undefined ) {
+
+
+                const nextContinuationToken = bucketData
+                    .get("nextContinuationToken");
+
+
+                return {
+                    bucket,
+                    dispatch,
+                    isTruncated: bucketData.get("isTruncated"),
+                    nextContinuationToken,
+                    contents: bucketData.get("contents"),
+                    loading: bucketData.get("loading"),
+                    listNext: () => dispatch({
+                        type: LIST_CONTENT,
+                        data: { bucket, nextContinuationToken }
+                    })
+                };
+
+            } else {
+
+                return {
+                    bucket,
+                    dispatch,
+                };
+
+            }
+
+
 
         }
     ),
