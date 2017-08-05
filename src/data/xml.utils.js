@@ -48,7 +48,8 @@ const xmlToJSON = doc => {
     const nextContinuationToken = queryNode(doc, "NextContinuationToken").textContent;
     const keyCount = queryNode(doc, "KeyCount").textContent;
     const maxKeys = queryNode(doc, "MaxKeys").textContent;
-    const isTruncated = queryNode(doc, "IsTruncated").textContent;
+    //conver string to boolean
+    const isTruncated = queryNode(doc, "IsTruncated").textContent === "true";
     const contents = queryAllNodes(doc, "Contents");
 
     return {
