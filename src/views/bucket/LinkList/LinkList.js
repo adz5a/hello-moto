@@ -1,20 +1,13 @@
 import React, { } from 'react';
 import {
     Map,
-    is,
+    // is,
     List as ImmutableList
 } from "immutable";
 import { connect } from "react-redux";
 import {
     compose,
     mapProps,
-    // withProps,
-    lifecycle,
-    // branch,
-    // renderComponent
-    // componentFromStream,
-    createEventHandler,
-    mapPropsStream,
     once
 } from "components/recompose";
 import {
@@ -26,12 +19,6 @@ import {
 import {
     List
 } from "./List";
-import {
-    listBucket
-} from "data/xml.utils";
-import xs from "xstream";
-import dropRepeats from "xstream/extra/dropRepeats";
-import { contentType } from "data/link";
 import noop from "lodash/noop";
 import {
     LIST_CONTENT
@@ -89,7 +76,7 @@ export const enhanceLinkList = compose(
 
             // console.log(match);
             const bucketId = match.params.bucketId
-            console.log(bucketId);
+            // console.log(bucketId);
             const bucket = store
                 .get(bucketId, Map())
                 .get("data", Map());
@@ -131,6 +118,9 @@ export const enhanceLinkList = compose(
 
         }
     ),
+    // will list the content 
+    // as soon as a bucket prop is 
+    // available to the component
     once(
         props => props.bucket.get("id") !== undefined,
         props => props.dispatch({

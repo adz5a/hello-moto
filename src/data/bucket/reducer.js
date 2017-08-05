@@ -1,13 +1,11 @@
 import {
     LIST_CONTENT,
     LIST_CONTENT_RESPONSE,
-    LIST_NEXT_CONTENT,
 } from "./actions";
 import {
     Map,
     List
 } from "immutable";
-import reduce from "lodash/fp/reduce";
 
 
 

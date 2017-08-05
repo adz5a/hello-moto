@@ -37,7 +37,7 @@ const getList = ({
     nextContinuationToken: continuationToken,
 }) => {
 
-    console.log("called");
+    // console.log("called");
     // console.log(bucket.get("baseURL"));
     // console.log(bucket.get("name"));
 
@@ -96,7 +96,7 @@ const list = list$ => list$
     .compose(awaitPromises)
     .map(data => {
 
-        console.log(data);
+        // console.log(data);
         return {
             type: LIST_CONTENT_RESPONSE,
             data
