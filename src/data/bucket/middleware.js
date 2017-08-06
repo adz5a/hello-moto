@@ -3,13 +3,15 @@ import xs from "xstream";
 import { createStreamMiddleware } from "data/streamMiddleware";
 import {
     FIND_DOC,
-    ADD_BULK
+    ADD_BULK,
+    ADD_BULK_RESPONSE
 } from "data/db";
 import {
     LIST_CONTENT,
     LIST_CONTENT_RESPONSE,
     LIST_ALL_CONTENT,
-    SAVE_ALL
+    SAVE_ALL,
+    SAVE_ALL_RESPONSE
 } from "./actions";
 import { 
     fromJS,
@@ -225,14 +227,34 @@ const saveAll = state$ => action$ => {
 
                     });
 
-                    return {
-                        type: ADD_BULK,
-                        data: { data: links }
-                    };
+
+                    const response$ = action$
+                        .filter(withType(ADD_BULK_RESPONSE))
+                        .map( action => action.data )
+                        .filter( data => data.data === links )
+
+
+
+                    return response$
+                        .take(1)
+                        .map(response => {
+
+                            return {
+                                type: SAVE_ALL_RESPONSE,
+                                data: response
+                            };
+
+                        })
+                        .startWith({
+                            type: ADD_BULK,
+                            data: { data: links }
+                        });
+
 
                 });
 
         })
+        .flatten()
         .flatten();
 
 }
