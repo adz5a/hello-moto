@@ -11,7 +11,8 @@ import {
     INSERTED_DOC,
     FOUND_DOC,
     DELETED_DOC,
-    DELETE_DOC
+    DELETE_DOC,
+    ADD_BULK
 } from "./actions";
 import {
     // toJS,

@@ -2,12 +2,14 @@ import xs from "xstream";
 // import dropRepeats from "xstream/extra/dropRepeats";
 import { createStreamMiddleware } from "data/streamMiddleware";
 import {
-    FIND_DOC
+    FIND_DOC,
+    ADD_BULK
 } from "data/db";
 import {
     LIST_CONTENT,
     LIST_CONTENT_RESPONSE,
-    LIST_ALL_CONTENT
+    LIST_ALL_CONTENT,
+    SAVE_ALL
 } from "./actions";
 import { 
     fromJS,
@@ -188,6 +190,22 @@ const listAll = state$ => action$ => {
 
 }
 
+
+const saveAll = action$ => {
+
+    return action$
+        .filter(withType(SAVE_ALL))
+        .map(() => {
+
+            return {
+                type: ADD_BULK
+            };
+
+        })
+
+}
+
+
 const creator = ( action$, state$ ) => {
 
     const start$ = onStart();
@@ -200,10 +218,14 @@ const creator = ( action$, state$ ) => {
     const listAll$ = action$
         .compose(listAll(state$));
 
+    const saveAll$ = action$
+        .compose(saveAll);
+
     return xs.merge(
         start$,
         list$,
-        listAll$
+        listAll$,
+        saveAll$
     );
 
 };
