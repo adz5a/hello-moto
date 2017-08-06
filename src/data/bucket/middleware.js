@@ -214,7 +214,7 @@ const saveAll = state$ => action$ => {
 
                     const links = contents.map(item => {
 
-                        const _id = makeId(item.get("url"))
+                        const _id = item.get("id");
                         return Map({
                             data: Map({
                                 id: _id,
