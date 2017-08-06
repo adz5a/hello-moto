@@ -11,17 +11,21 @@ import {
     INSERTED_DOC,
     FOUND_DOC,
     DELETED_DOC,
-    DELETE_DOC
+    DELETE_DOC,
+    ADD_BULK,
+    ADD_BULK_RESPONSE
 } from "./actions";
 import {
     // toJS,
     // Map,
     List,
+    Map,
     fromJS
 } from "immutable";
 import { unwrapMap } from "components/immutable";
 import constant from "lodash/constant";
 import { withType } from "data/commons";
+import { awaitPromises } from "components/stream";
 
 
 
@@ -118,6 +122,47 @@ const delete_ = delete$ => delete$
     .map(xs.fromPromise)
     .flatten();
 
+
+const addBulk = action$ => action$
+    .filter(withType(ADD_BULK))
+    .map(action => action.data)
+    .map( ({ data }) => {
+
+
+        const docs = data.toJS();
+        // console.log(docs);
+        return db
+            .bulkDocs(docs)
+            .then( response => {
+
+                return {
+                    type: ADD_BULK_RESPONSE,
+                    data: {
+                        data,
+                        response: List(response.map(Map))
+                    }
+                };
+
+            }, err => {
+
+                console.error(err);
+
+                return {
+                    type: ADD_BULK_RESPONSE,
+                    data: {
+                        data,
+                        response: err,
+                        error: true
+                    }
+                };
+
+            } );
+
+    } )
+    .compose(awaitPromises);
+
+
+
 const creator = action$ => {
 
 
@@ -133,11 +178,15 @@ const creator = action$ => {
         .filter(withType(DELETE_DOC))
         .compose(delete_);
 
+    const addBulk$ = action$
+        .compose(addBulk);
+
     return xs
         .merge(
             insert$,
             find$,
-            delete$
+            delete$,
+            addBulk$
         )
         // .debug();
 

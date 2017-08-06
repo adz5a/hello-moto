@@ -2,12 +2,16 @@ import xs from "xstream";
 // import dropRepeats from "xstream/extra/dropRepeats";
 import { createStreamMiddleware } from "data/streamMiddleware";
 import {
-    FIND_DOC
+    FIND_DOC,
+    ADD_BULK,
+    ADD_BULK_RESPONSE
 } from "data/db";
 import {
     LIST_CONTENT,
     LIST_CONTENT_RESPONSE,
-    LIST_ALL_CONTENT
+    LIST_ALL_CONTENT,
+    SAVE_ALL,
+    SAVE_ALL_RESPONSE
 } from "./actions";
 import { 
     fromJS,
@@ -20,6 +24,9 @@ import { 
     contentType
 } from "data/link";
 import { awaitPromises } from "components/stream";
+import {
+    makeId
+} from "./data";
 
 
 const onStart = () => xs.of({
@@ -188,6 +195,71 @@ const listAll = state$ => action$ => {
 
 }
 
+
+const saveAll = state$ => action$ => {
+
+    return action$
+        .filter(withType(SAVE_ALL))
+        .map(action => action.data )
+        .map(({ bucket }) => {
+
+            const id = bucket.get("id");
+
+            return state$
+                .take(1)
+                .map(state => {
+
+                    const data = state.buckets.get(id);
+                    const contents = data.get("contents");
+
+                    const links = contents.map(item => {
+
+                        const _id = item.get("id");
+                        return Map({
+                            data: Map({
+                                id: _id,
+                                url: item.get("url"),
+                                size: item.get("size")
+                            }),
+                            _id,
+                            type: item.get("contentType")
+                        });
+
+                    });
+
+
+                    const response$ = action$
+                        .filter(withType(ADD_BULK_RESPONSE))
+                        .map( action => action.data )
+                        .filter( data => data.data === links )
+
+
+
+                    return response$
+                        .take(1)
+                        .map(response => {
+
+                            return {
+                                type: SAVE_ALL_RESPONSE,
+                                data: response
+                            };
+
+                        })
+                        .startWith({
+                            type: ADD_BULK,
+                            data: { data: links }
+                        });
+
+
+                });
+
+        })
+        .flatten()
+        .flatten();
+
+}
+
+
 const creator = ( action$, state$ ) => {
 
     const start$ = onStart();
@@ -200,10 +272,14 @@ const creator = ( action$, state$ ) => {
     const listAll$ = action$
         .compose(listAll(state$));
 
+    const saveAll$ = action$
+        .compose(saveAll(state$));
+
     return xs.merge(
         start$,
         list$,
-        listAll$
+        listAll$,
+        saveAll$
     );
 
 };

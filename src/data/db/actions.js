@@ -19,3 +19,6 @@ export const UPDATE_DOC = ACTION("update-doc"); //
 
 export const DELETE_DOC = ACTION("delete-doc");
 export const DELETED_DOC = ACTION("deleted-doc");
+
+export const ADD_BULK = ACTION("add_bulk");
+export const ADD_BULK_RESPONSE = ACTION("add-bulk-response");
