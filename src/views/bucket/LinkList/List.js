@@ -15,6 +15,7 @@ import {
 // import { connect } from "react-redux";
 import {
     compose,
+    withReducer,
     // mapProps,
     // withProps,
     // lifecycle,
@@ -70,13 +71,15 @@ export function ListView ( {
     contents = ImmutableList(),
     syncBucket = noop,
     loading = false,
-    isTruncated = false
+    isTruncated = false,
+    listSize = 10,
+    bumpList = noop
 } ) {
 
     // console.log(listNext);
     // console.log(contents);
     // const links = contents
-    // console.log(contents);
+    // console.log(listSize);
     return (
         <section
             className="mt5"
@@ -89,21 +92,6 @@ export function ListView ( {
                     value="Save All"
                     onClick={saveAll}
                 />
-                {
-                    isTruncated ?
-                        <Input
-                            type="button"
-                            value="Load More Items"
-                            onClick={listNext}
-                        />
-                        : null
-
-                }
-                <Input
-                    type="button"
-                    value="Sync Bucket"
-                    onClick={syncBucket}
-                />
             </section>
             <section
                 className={"flex flex-column pl3 mt5"}
@@ -111,13 +99,14 @@ export function ListView ( {
                 <header>
                     <Text>{"Items " + contents.size}</Text>
                 </header>
-                {renderLinks(contents.slice(0, 10))}
+                {renderLinks(contents.slice(0, listSize))}
             </section>
-            <section>
+            <section className={centerFlex}>
                 <Input
                     type="button"
-                    value="Load More Items"
-                    onClick={listNext}
+                    value="Show More"
+                    onClick={bumpList}
+                    className={"hover-bg-black hover-white grow"}
                 />
             </section>
         </section>
@@ -131,6 +120,12 @@ export const enhanceList = compose(
         props => !props.bucket,
         renderComponent(EmptyList)
     ),
+    withReducer(
+        "listSize",
+        "bumpList",
+        ( count, _ ) => count + 10,
+        10
+    )
 );
 
 

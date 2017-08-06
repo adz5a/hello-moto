@@ -1,5 +1,5 @@
 import xs from "xstream";
-import dropRepeats from "xstream/extra/dropRepeats";
+// import dropRepeats from "xstream/extra/dropRepeats";
 import { createStreamMiddleware } from "data/streamMiddleware";
 import {
     FIND_DOC
@@ -114,7 +114,6 @@ const listAll = state$ => action$ => {
 
     return action$
         .filter(withType(LIST_ALL_CONTENT))
-        .debug("list all")
         .map(action => {
 
             const { bucket } = action.data;
@@ -135,8 +134,7 @@ const listAll = state$ => action$ => {
 
                     return response.bucket.get("id") === bucket.get("id")
 
-                } )
-                .debug("response");
+                } );
 
 
 
@@ -145,7 +143,6 @@ const listAll = state$ => action$ => {
             return state$
                 .compose(getBucketStatus)
                 .take(1)
-                .debug("bucket")
                 .map( status => {
 
                     
@@ -186,8 +183,8 @@ const listAll = state$ => action$ => {
 
         })
         .flatten()
-        .flatten()
-        .debug("listing");
+        .flatten();
+
 
 }
 
