@@ -19,6 +19,7 @@ import {
     // toJS,
     // Map,
     List,
+    Map,
     fromJS
 } from "immutable";
 import { unwrapMap } from "components/immutable";
@@ -128,9 +129,8 @@ const addBulk = action$ => action$
     .map( ({ data }) => {
 
 
-        console.log(data);
         const docs = data.toJS();
-        console.log(docs);
+        // console.log(docs);
         return db
             .bulkDocs(docs)
             .then( response => {
@@ -139,7 +139,7 @@ const addBulk = action$ => action$
                     type: ADD_BULK_RESPONSE,
                     data: {
                         data,
-                        response
+                        response: List(response.map(Map))
                     }
                 };
 
