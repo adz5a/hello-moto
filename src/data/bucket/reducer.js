@@ -29,20 +29,28 @@ export function reducer ( state = Map(), action ) {
                 nextContinuationToken
             } = data;
 
-            return state
-                .update(
-                    bucket.get("id"),
-                    bucket,
-                    bucket => bucket
-                    .set("nextContinuationToken", nextContinuationToken)
-                    .set("isTruncated", isTruncated)
-                    .set("loading", false)
-                    .update(
-                        "contents",
-                        List(),
-                        oldContents => oldContents.concat(contents))
-                );
 
+            if ( !Map.isMap(bucket) ) {
+
+                return state;
+
+            } else {
+
+                return state
+                    .update(
+                        bucket.get("id"),
+                        bucket,
+                        bucket => bucket
+                        .set("nextContinuationToken", nextContinuationToken)
+                        .set("isTruncated", isTruncated)
+                        .set("loading", false)
+                        .update(
+                            "contents",
+                            List(),
+                            oldContents => oldContents.concat(contents))
+                    );
+
+            }
 
         }
 
@@ -52,14 +60,22 @@ export function reducer ( state = Map(), action ) {
                 bucket
             } = data;
 
+            if ( !Map.isMap(bucket) ) {
 
-            return state
-                .update(
-                    bucket.get("id"),
-                    bucket,
-                    bucket => bucket
+                return state;
+
+            } else {
+
+                return state
+                    .update(
+                        bucket.get("id"),
+                        bucket,
+                        bucket => bucket
                         .set("loading", true)
-                );
+                    );
+
+            }
+
 
         }
 

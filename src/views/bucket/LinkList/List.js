@@ -23,6 +23,9 @@ import {
 } from "components/recompose";
 import {
 } from "data/db";
+import {
+    List as ImmutableList
+} from "immutable";
 
 
 export function EmptyListView ( {
@@ -64,7 +67,7 @@ export function ListView ( {
     bucket,
     listNext = noop,
     saveAll = noop,
-    contents = [],
+    contents = ImmutableList(),
     syncBucket = noop,
     loading = false,
     isTruncated = false
@@ -108,7 +111,7 @@ export function ListView ( {
                 <header>
                     <Text>{"Items " + contents.size}</Text>
                 </header>
-                {renderLinks(contents)}
+                {renderLinks(contents.slice(0, 10))}
             </section>
             <section>
                 <Input

@@ -1,11 +1,13 @@
 import xs from "xstream";
+import dropRepeats from "xstream/extra/dropRepeats";
 import { createStreamMiddleware } from "data/streamMiddleware";
 import {
     FIND_DOC
 } from "data/db";
 import {
     LIST_CONTENT,
-    LIST_CONTENT_RESPONSE
+    LIST_CONTENT_RESPONSE,
+    LIST_ALL_CONTENT
 } from "./actions";
 import { 
     fromJS,
@@ -105,7 +107,91 @@ const list = list$ => list$
     });
 
 
-const creator = action$ => {
+const listAll = state$ => action$ => {
+
+
+
+
+    return action$
+        .filter(withType(LIST_ALL_CONTENT))
+        .debug("list all")
+        .map(action => {
+
+            const { bucket } = action.data;
+
+
+            // operator : will select the relevant
+            // bucket in store.buckets
+            // will drop every non update event
+            const getBucketStatus = state$ => state$
+                .map( state => state.buckets )
+                .map( buckets => buckets.get(bucket.get("id")) )
+
+
+            const response$ = action$
+                .filter(withType(LIST_CONTENT_RESPONSE))
+                .map( action => action.data )
+                .filter( response => {
+
+                    return response.bucket.get("id") === bucket.get("id")
+
+                } )
+                .debug("response");
+
+
+
+
+                
+            return state$
+                .compose(getBucketStatus)
+                .take(1)
+                .debug("bucket")
+                .map( status => {
+
+                    
+                    const done$ = response$
+                        .filter( response => response.isTruncated === false )
+                        .take(1);
+
+                    const unfinished$ = response$
+                        .filter( response => response.isTruncated === true )
+                        .map( ({ nextContinuationToken }) => {
+
+                            return {
+
+                                type: LIST_CONTENT,
+                                data: { bucket, nextContinuationToken }
+
+                            };
+
+                        } )
+                        .endWhen(done$);
+
+
+
+                    if ( status === undefined ) {
+
+                        return unfinished$
+                            .startWith({
+                                type: LIST_CONTENT,
+                                data: { bucket }
+                            });
+
+                    } else {
+
+                        return unfinished$;
+
+                    }
+                });
+
+        })
+        .flatten()
+        .flatten()
+        .debug("listing");
+
+}
+
+const creator = ( action$, state$ ) => {
 
     const start$ = onStart();
 
@@ -114,10 +200,13 @@ const creator = action$ => {
         .filter(withType(LIST_CONTENT))
         .compose(list);
 
+    const listAll$ = action$
+        .compose(listAll(state$));
 
     return xs.merge(
         start$,
-        list$
+        list$,
+        listAll$
     );
 
 };
