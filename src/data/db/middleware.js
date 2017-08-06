@@ -12,7 +12,8 @@ import {
     FOUND_DOC,
     DELETED_DOC,
     DELETE_DOC,
-    ADD_BULK
+    ADD_BULK,
+    ADD_BULK_RESPONSE
 } from "./actions";
 import {
     // toJS,
@@ -119,6 +120,19 @@ const delete_ = delete$ => delete$
     .map(xs.fromPromise)
     .flatten();
 
+
+const addBulk = action$ => action$
+    .filter(withType(ADD_BULK))
+    .map(() => {
+
+        return {
+            type: ADD_BULK_RESPONSE
+        };
+
+    });
+
+
+
 const creator = action$ => {
 
 
@@ -134,11 +148,15 @@ const creator = action$ => {
         .filter(withType(DELETE_DOC))
         .compose(delete_);
 
+    const addBulk$ = action$
+        .compose(addBulk);
+
     return xs
         .merge(
             insert$,
             find$,
-            delete$
+            delete$,
+            addBulk$
         )
         // .debug();
 

@@ -11,12 +11,30 @@ export function createStreamMiddleware ( creator, name = null ) {
 
 
         const rawActions$ = xs.fromObservable(stream);
-        const state$ = rawActions$
-            .map( () => store.getState() )
-            .remember();
         let action$;
         if ( creator.length > 1 ) {
 
+            const state$ = rawActions$
+                .map( () => store.getState() )
+                .remember();
+            // need to startup the stream
+            state$.subscribe({
+                next: () => {}, // noop
+                error ( error ) {
+
+                    console.error("terminal error in middleware (state)", error);
+
+                },
+                complete () {
+
+                    if ( name ) {
+
+                        console.info("this middleware just terminated (state): " + name);
+
+                    }
+
+                }
+            });
             action$ = creator(rawActions$, state$);
 
         } else {
@@ -47,24 +65,6 @@ export function createStreamMiddleware ( creator, name = null ) {
             });
 
 
-        // need to startup the stream
-        state$.subscribe({
-            next: () => {}, // noop
-            error ( error ) {
-
-                console.error("terminal error in middleware (state)", error);
-
-            },
-            complete () {
-
-                if ( name ) {
-
-                    console.info("this middleware just terminated (state): " + name);
-
-                }
-
-            }
-        })
 
         return next => action => {
 
