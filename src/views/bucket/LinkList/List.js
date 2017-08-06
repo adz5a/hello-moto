@@ -23,11 +23,14 @@ import {
     renderComponent
 } from "components/recompose";
 import {
-} from "data/db";
+    SAVE_ALL
+} from "data/bucket";
 import {
     List as ImmutableList
 } from "immutable";
-
+import {
+    connect
+} from "react-redux";
 
 export function EmptyListView ( {
     listNext = noop,
@@ -90,7 +93,7 @@ export function ListView ( {
                 <Input
                     type="button"
                     value="Save All"
-                    onClick={saveAll}
+                    onClick={() => saveAll(bucket)}
                 />
             </section>
             <section
@@ -125,6 +128,19 @@ export const enhanceList = compose(
         "bumpList",
         ( count, _ ) => count + 10,
         10
+    ),
+    connect(
+        null,
+        {
+            saveAll( bucket ) {
+
+                return {
+                    type: SAVE_ALL,
+                    data: { bucket }
+                };
+
+            }
+        }
     )
 );
 
