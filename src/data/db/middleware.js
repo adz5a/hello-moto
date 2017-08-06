@@ -24,6 +24,7 @@ import {
 import { unwrapMap } from "components/immutable";
 import constant from "lodash/constant";
 import { withType } from "data/commons";
+import { awaitPromises } from "components/stream";
 
 
 
@@ -123,13 +124,42 @@ const delete_ = delete$ => delete$
 
 const addBulk = action$ => action$
     .filter(withType(ADD_BULK))
-    .map(() => {
+    .map(action => action.data)
+    .map( ({ data }) => {
 
-        return {
-            type: ADD_BULK_RESPONSE
-        };
 
-    });
+        console.log(data);
+        const docs = data.toJS();
+        console.log(docs);
+        return db
+            .bulkDocs(docs)
+            .then( response => {
+
+                return {
+                    type: ADD_BULK_RESPONSE,
+                    data: {
+                        data,
+                        response
+                    }
+                };
+
+            }, err => {
+
+                console.error(err);
+
+                return {
+                    type: ADD_BULK_RESPONSE,
+                    data: {
+                        data,
+                        response: err,
+                        error: true
+                    }
+                };
+
+            } );
+
+    } )
+    .compose(awaitPromises);
 
 
 
