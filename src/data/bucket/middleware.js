@@ -22,6 +22,9 @@ import { 
     contentType
 } from "data/link";
 import { awaitPromises } from "components/stream";
+import {
+    makeId
+} from "./data";
 
 
 const onStart = () => xs.of({
@@ -191,17 +194,46 @@ const listAll = state$ => action$ => {
 }
 
 
-const saveAll = action$ => {
+const saveAll = state$ => action$ => {
 
     return action$
         .filter(withType(SAVE_ALL))
-        .map(() => {
+        .map(action => action.data )
+        .map(({ bucket }) => {
 
-            return {
-                type: ADD_BULK
-            };
+            const id = bucket.get("id");
+
+            return state$
+                .take(1)
+                .map(state => {
+
+                    const data = state.buckets.get(id);
+                    const contents = data.get("contents");
+
+                    const links = contents.map(item => {
+
+                        const _id = makeId(item.get("url"))
+                        return Map({
+                            data: Map({
+                                id: _id,
+                                url: item.get("url"),
+                                size: item.get("size")
+                            }),
+                            _id,
+                            type: item.get("contentType")
+                        });
+
+                    });
+
+                    return {
+                        type: ADD_BULK,
+                        data: { data: links }
+                    };
+
+                });
 
         })
+        .flatten();
 
 }
 
@@ -219,7 +251,7 @@ const creator = ( action$, state$ ) => {
         .compose(listAll(state$));
 
     const saveAll$ = action$
-        .compose(saveAll);
+        .compose(saveAll(state$));
 
     return xs.merge(
         start$,
