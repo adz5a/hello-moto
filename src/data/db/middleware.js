@@ -21,10 +21,8 @@ import {
 } from "immutable";
 import { unwrapMap } from "components/immutable";
 import constant from "lodash/constant";
-import omit from "lodash/fp/omit";
+import { withType } from "data/commons";
 
-
-const omitRev = omit(["_rev"]);
 
 
 // const destroy = db => db.destroy();
@@ -32,7 +30,6 @@ const omitRev = omit(["_rev"]);
 
 
 
-const withType = type => action => action.type === type;
 
 
 const insert = insert$ => insert$
@@ -73,7 +70,7 @@ const find = find$ => find$
 
                     return {
                         query,
-                        response: List(docs.map( doc => fromJS(omitRev(doc)) ))
+                        response: List(docs.map( doc => fromJS(doc) ))
                     };
 
                 }
@@ -123,9 +120,18 @@ const delete_ = delete$ => delete$
 
 const creator = action$ => {
 
-    const insert$ = insert(action$.filter(withType(INSERT_DOC)));
-    const find$ = find(action$.filter(withType(FIND_DOC)));
-    const delete$ = delete_(action$.filter(withType(DELETE_DOC)));
+
+    const insert$ = action$
+        .filter(withType(INSERT_DOC))
+        .compose(insert);
+
+    const find$ = action$
+        .filter(withType(FIND_DOC))
+        .compose(find);
+
+    const delete$ = action$
+        .filter(withType(DELETE_DOC))
+        .compose(delete_);
 
     return xs
         .merge(

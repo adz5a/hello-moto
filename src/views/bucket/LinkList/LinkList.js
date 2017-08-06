@@ -1,19 +1,14 @@
 import React, { } from 'react';
 import {
     Map,
-    is,
+    // is,
     List as ImmutableList
 } from "immutable";
 import { connect } from "react-redux";
 import {
     compose,
     mapProps,
-    // withProps,
-    // lifecycle,
-    // branch,
-    // renderComponent
-    componentFromStream,
-    createEventHandler
+    once
 } from "components/recompose";
 import {
     DefaultBorderedText as Text
@@ -24,74 +19,41 @@ import {
 import {
     List
 } from "./List";
+import noop from "lodash/noop";
 import {
-    listBucket
-} from "data/xml.utils";
-import xs from "xstream";
-import dropRepeats from "xstream/extra/dropRepeats";
-import { contentType } from "data/link";
+    LIST_CONTENT
+} from "data/bucket";
 
-export function LinkListView ( { 
+export function LinkListView ( {
     bucket = Map(),
-    contents = [],
+    contents = ImmutableList(),
     nextContinuationToken = undefined,
-    listNext
+    listNext = noop,
+    syncBucket = noop,
+    loading = false,
+    isTruncated = false
 } ) {
 
-    console.log("linklist view : ", bucket);
+    // console.log("linklist view : ", bucket);
     return (
         <section>
             <Text text={bucket.get("name")}/>
-            <List 
+            {loading ? <Text>Loading</Text>: null}
+            <List
                 contents={contents}
-                bucket={bucket} 
+                bucket={bucket}
                 listNext={listNext}
+                syncBucket={syncBucket}
+                isTruncated={isTruncated}
             />
         </section>
     );
 
 }
 
-const getList = ({ 
-    bucket = Map(),
-    nextContinuationToken: continuationToken,
-    contents = ImmutableList()
-}) => {
 
-    console.log("called");
-    console.log(bucket.get("baseURL"));
-    console.log(bucket.get("name"));
 
-    return listBucket({
-        baseURL: bucket.get("baseURL"),
-        name: bucket.get("name"),
-        continuationToken
-    })
-        .then(({ contents: newContents, nextContinuationToken }) => {
 
-            const baseURL = bucket.get("baseURL");
-            console.log("new : ", newContents);
-            console.log("old : ", contents);
-
-            return {
-                nextContinuationToken,
-                contents: contents.concat(ImmutableList(newContents.map(item => {
-
-                    const url = baseURL + "/" + item.Key;
-                    return Map({
-                        url,
-                        size: item.Size,
-                        lastModified: item.LastModified,
-                        contentType: contentType({ url })
-                    });
-
-                }))),
-                bucket
-            };
-
-        }); 
-
-}
 
 
 export const enhanceLinkList = compose(
@@ -99,77 +61,79 @@ export const enhanceLinkList = compose(
     connect( state => {
 
         return {
-            store: state.db.store
+            store: state.db.store,
+            buckets: state.buckets
         };
 
     } ),
     mapProps(
-        ( { match, store } ) => {
+        ( { 
+            match, 
+            store,
+            buckets,
+            dispatch
+        } ) => {
 
             // console.log(match);
             const bucketId = match.params.bucketId
-            const bucket = store.get(bucketId, Map()).get("data");
+            // console.log(bucketId);
+            const bucket = store
+                .get(bucketId, Map())
+                .get("data", Map());
 
-            return {
-                bucket
-            };
+
+            const bucketData = buckets.get(bucket.get("id"));
+
+
+            if ( bucketData !== undefined ) {
+
+
+                const nextContinuationToken = bucketData
+                    .get("nextContinuationToken");
+
+
+                return {
+                    bucket,
+                    dispatch,
+                    isTruncated: bucketData.get("isTruncated"),
+                    nextContinuationToken,
+                    contents: bucketData.get("contents"),
+                    loading: bucketData.get("loading"),
+                    listNext: () => dispatch({
+                        type: LIST_CONTENT,
+                        data: { bucket, nextContinuationToken }
+                    })
+                };
+
+            } else {
+
+                return {
+                    bucket,
+                    dispatch,
+                };
+
+            }
+
+
 
         }
     ),
-    Component => componentFromStream(props$ => {
-
-
-        const { handler: listNext, stream: next$ } = createEventHandler();
-
-
-
-        const bucketProps$ = props$
-            .map( props => props.bucket )
-            .compose(dropRepeats(is))
-            .filter( bucket => bucket !== undefined )
-            .map( bucket => {
-
-
-                return getList({ bucket });
-
-            } )
-            .map(xs.fromPromise)
-            .flatten()
-            .map(({ contents, nextContinuationToken, bucket }) => {
-
-                return {
-                    contents,
-                    nextContinuationToken,
-                    bucket
-                };
-
-            });
-
-        const nextBucketsProps$ = bucketProps$
-            .map( props => next$
-                .mapTo(props)
-                .debug("next")
-                .fold((prevRqst, _) => {
-
-                    return prevRqst
-                    // gets prev request calls for a new
-                    // state
-                        .then(getList)
-                    // restore previous correct state
-                        .catch(() => prevRqst);
-
-                }, Promise.resolve(props)))
-            .flatten()
-            .map(xs.fromPromise)
-            .flatten();
-
-        return xs
-            .merge(bucketProps$, nextBucketsProps$)
-            .debug("props")
-            .map( props => <Component {...props} listNext={listNext}/>);
-    })
+    // will list the content 
+    // as soon as a bucket prop is 
+    // available to the component
+    once(
+        props => props.bucket.get("id") !== undefined,
+        props => props.dispatch({
+            type: LIST_CONTENT,
+            data: {
+                bucket: props.bucket
+            }
+        })
+    )
 );
 
 
-export const LinkList = enhanceLinkList(LinkListView);
 
+
+
+export const LinkList = enhanceLinkList(LinkListView);

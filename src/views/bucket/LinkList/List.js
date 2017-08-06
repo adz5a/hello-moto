@@ -12,7 +12,7 @@ import {
 import {
     Input
 } from "components/Form";
-import { connect } from "react-redux";
+// import { connect } from "react-redux";
 import {
     compose,
     // mapProps,
@@ -26,7 +26,7 @@ import {
 
 
 export function EmptyListView ( {
-    onRequestContent = noop,
+    listNext = noop,
     bucket = Map()
 } ) {
 
@@ -36,7 +36,7 @@ export function EmptyListView ( {
             <input
                 className={inputStyle}
                 type="button"
-                onClick={() => onRequestContent(bucket)}
+                onClick={() => listNext(bucket)}
                 value="Get bucket content"
             />
 
@@ -46,17 +46,7 @@ export function EmptyListView ( {
 }
 
 
-const enhanceEmptyList = connect(
-    null,
-    dispatch => ({
-        onRequestContent( bucket ) {
-
-
-        }
-    })
-);
-
-export const EmptyList = enhanceEmptyList(EmptyListView);
+export const EmptyList = EmptyListView;
 
 
 const renderLinks = links => links.map( link => (
@@ -70,17 +60,20 @@ const renderLinks = links => links.map( link => (
 ));
 
 
-export function ListView ( { 
+export function ListView ( {
     bucket,
     listNext = noop,
     saveAll = noop,
-    contents = []
+    contents = [],
+    syncBucket = noop,
+    loading = false,
+    isTruncated = false
 } ) {
 
     // console.log(listNext);
     // console.log(contents);
     // const links = contents
-    console.log(contents);
+    // console.log(contents);
     return (
         <section
             className="mt5"
@@ -93,10 +86,20 @@ export function ListView ( {
                     value="Save All"
                     onClick={saveAll}
                 />
+                {
+                    isTruncated ?
+                        <Input
+                            type="button"
+                            value="Load More Items"
+                            onClick={listNext}
+                        />
+                        : null
+
+                }
                 <Input
                     type="button"
-                    value="Load More Items"
-                    onClick={listNext}
+                    value="Sync Bucket"
+                    onClick={syncBucket}
                 />
             </section>
             <section

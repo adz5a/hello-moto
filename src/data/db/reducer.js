@@ -28,43 +28,7 @@ export const defaultState = () => emptyMap;
 
 
 const defaultTasks = emptyMap;
-// const operations = Set([
-//     FETCH_DOC_BY_ID,
-//     FIND_DOC,
-//     INSERT_DOC
-// ]);
 
-// const addTask = ( tasks, action ) => {
-
-//     const { type, data } = action;
-
-//     if ( operations.has(type) ) {
-
-//         return tasks.update(type, emptySet, taskSet => taskSet.add(data));
-
-//     } else {
-
-//         return tasks;
-
-//     }
-
-// };
-
-// const removeTask = ( tasks, action ) => {
-
-//     const { type, data } = action;
-
-//     if ( operations.has(type) ) {
-
-//         return tasks.update(type, emptySet, taskSet => taskSet.delete(data));
-
-//     } else {
-
-//         return tasks;
-
-//     }
-
-// };
 
 function tasks ( tasks = defaultTasks, action ) {
 
@@ -101,7 +65,54 @@ function tasks ( tasks = defaultTasks, action ) {
 }
 
 
+function byType ( state = Map(), action ) {
+
+
+
+    const { type, data } = action;
+
+
+    switch ( type ) {
+
+        case INSERTED_DOC:{
+
+            const doc = data;
+            const docType = doc.get("type");
+            const docId = doc.get("_id");
+
+            return state.update(docType, Map(), type => type.set(docId, doc));
+
+        }
+
+
+        case FOUND_DOC:{
+
+            const { response = List() } = data;
+
+            return response.reduce(
+                ( state, doc ) => {
+
+                    const docType = doc.get("type");
+                    const docId = doc.get("_id");
+
+                    return state.update(docType, Map(), type => type.set(docId, doc));
+
+                },
+                state
+            );
+
+        }
+
+
+        default:
+            return state;
+
+    }
+
+}
+
 function store ( store = emptyMap, action ) {
+
 
     const { type, data } = action;
 
@@ -148,5 +159,6 @@ function store ( store = emptyMap, action ) {
 
 export const reducer = combineReducers({
     tasks,
-    store
+    store,
+    byType
 });
