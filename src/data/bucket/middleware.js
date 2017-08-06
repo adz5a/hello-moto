@@ -1,4 +1,5 @@
 import xs from "xstream";
+import dropRepeats from "xstream/extra/dropRepeats";
 import { createStreamMiddleware } from "data/streamMiddleware";
 import {
     FIND_DOC
@@ -108,70 +109,85 @@ const list = list$ => list$
 
 const listAll = state$ => action$ => {
 
+
+
+
     return action$
+        .filter(withType(LIST_ALL_CONTENT))
+        .debug("list all")
         .map(action => {
 
             const { bucket } = action.data;
 
-            const selectBucket = state$ => state$
+
+            // operator : will select the relevant
+            // bucket in store.buckets
+            // will drop every non update event
+            const getBucketStatus = state$ => state$
                 .map( state => state.buckets )
-                .map( buckets => buckets.get(bucket.get("id")) );
-            
+                .map( buckets => buckets.get(bucket.get("id")) )
+
+
+            const response$ = action$
+                .filter(withType(LIST_CONTENT_RESPONSE))
+                .map( action => action.data )
+                .filter( response => {
+
+                    return response.bucket.get("id") === bucket.get("id")
+
+                } )
+                .debug("response");
+
+
+
 
                 
-            const full$ = state$
-                .compose(selectBucket)
-                .filter( bucket => bucket !== undefined )
-                .filter( bucket => bucket.get("isTruncated") !== true && !bucket.get("loading") );
-
-            const truncated$ = state$
-                .compose(selectBucket)
-                .filter( bucket => bucket !== undefined )
-                .filter( bucket => bucket.get("isTruncated") === true )
-                .filter( bucket => bucket.get("loading") === false );
-
-
             return state$
-                .compose(selectBucket)
+                .compose(getBucketStatus)
                 .take(1)
-                .map( currentBucket => {
+                .debug("bucket")
+                .map( status => {
 
-                    const newActions$ = truncated$
-                        .map(currentBucket => {
+                    
+                    const done$ = response$
+                        .filter( response => response.isTruncated === false )
+                        .take(1);
+
+                    const unfinished$ = response$
+                        .filter( response => response.isTruncated === true )
+                        .map( ({ nextContinuationToken }) => {
 
                             return {
+
                                 type: LIST_CONTENT,
-                                data: {
-                                    bucket: currentBucket,
-                                    nextContinuationToken: currentBucket.get("nextContinuationToken"),
-                                }
+                                data: { bucket, nextContinuationToken }
+
                             };
 
-                        })
-                        .endWhen(full$);
+                        } )
+                        .endWhen(done$);
 
-                    if ( currentBucket === undefined ) {
 
-                        return newActions$
+
+                    if ( status === undefined ) {
+
+                        return unfinished$
                             .startWith({
                                 type: LIST_CONTENT,
-                                data: {
-                                    bucket,
-                                }
+                                data: { bucket }
                             });
 
                     } else {
 
-                        return newActions$;
+                        return unfinished$;
 
                     }
-
-                } );
-                
+                });
 
         })
         .flatten()
-        .flatten();
+        .flatten()
+        .debug("listing");
 
 }
 
@@ -185,7 +201,6 @@ const creator = ( action$, state$ ) => {
         .compose(list);
 
     const listAll$ = action$
-        .filter(withType(LIST_ALL_CONTENT))
         .compose(listAll(state$));
 
     return xs.merge(
