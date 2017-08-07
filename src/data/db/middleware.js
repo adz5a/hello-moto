@@ -1,4 +1,5 @@
 import xs from "xstream";
+import concat from "xstream/extra/concat";
 import { createStreamMiddleware } from "data/streamMiddleware";
 import { db } from "data/db";
 import {
@@ -81,8 +82,7 @@ const find = find$ => find$
             );
 
     })
-    .map(xs.fromPromise)
-    .flatten()
+    .compose(awaitPromises())
     // .debug()
     .map( data => {
 
@@ -119,8 +119,7 @@ const delete_ = delete$ => delete$
             });
 
     })
-    .map(xs.fromPromise)
-    .flatten();
+    .compose(awaitPromises());
 
 
 const addBulk = action$ => action$
@@ -159,7 +158,7 @@ const addBulk = action$ => action$
             } );
 
     } )
-    .compose(awaitPromises);
+    .compose(awaitPromises());
 
 
 
@@ -193,7 +192,7 @@ const creator = action$ => {
 };
 
 
-export const dbMiddleware = createStreamMiddleware(
+export const middleware = createStreamMiddleware(
     creator,
     "db"
 );

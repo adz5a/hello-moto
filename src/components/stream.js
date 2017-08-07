@@ -1,9 +1,18 @@
 import xs from "xstream";
+import flattenSequentially from "xstream/extra/flattenSequentially";
+import flattenConcurrently from "xstream/extra/flattenConcurrently";
+import concat from "xstream/extra/concat";
 
 
-export const awaitPromises = promise$ => promise$
+export const awaitPromises = ( concurrent = true ) => promise$ => promise$
+    .map(xs.fromPromise)
+    .compose( concurrent ? flattenConcurrently: flattenSequentially);
+
+
+export const flattenPromises = promise$ => promise$
     .map(xs.fromPromise)
     .flatten();
+
 
 
 export const takeUntil = predicate => stream$ => {
@@ -30,11 +39,8 @@ export const reduce = fold => stream$ => {
 
 export const withGenerator = (gen, arg) => stream$ => {
 
-
     return xs.create({
         start ( listener ) {
-
-
 
             let iterator;
             if ( arg !== undefined ) {
@@ -119,3 +125,7 @@ export const withGenerator = (gen, arg) => stream$ => {
     });
 
 };
+
+
+export const continueWith = other$ => stream$ => concat(stream$, other$);
+

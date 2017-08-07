@@ -43,3 +43,10 @@ export const createIndex = (db, fields = []) => db
     });
 
 export const db = new PouchDB(__name__);
+
+
+if ( process.env.NODE_ENV !== "production" ) {
+
+    global.__db = db;
+
+}

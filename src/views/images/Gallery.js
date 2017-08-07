@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    viewStyle,
+    // viewStyle,
     // centerFlex,
     // inputStyle
 } from "components/styles";
@@ -12,32 +12,54 @@ import {
 } from "components/Text";
 import { connect } from "react-redux";
 import{
+    // branch,
+    // compose,
+    // renderComponent
 } from "components/recompose";
-// import fmap from "lodash/fp/map";
-// import map from "lodash/map";
-import { List } from "./list/List";
+import {
+    Map,
+    List,
+    Seq
+} from "immutable";
+import { ImageList } from "./List";
 
 
-// const vs = join(viewStyle, "justify-around");
+
+export const route = match => match.url + "/gallery";
 
 
-
-export function View () {
+export function GalleryStatView ( { count = 0 } ) {
 
     return (
-        <section
-            className={viewStyle}
-        >
-            <EnhancedList />
+        <section className="dib">
+            {"Image count : " + count}
         </section>
     );
 
 }
 
 
-const enhanceList = connect(
-    state => ({ links: state.links })
-);
+export const GalleryStat = connect(
+    state => ({
+        count: state.db.byType.get("image", Map()).size
+    })
+)(GalleryStatView);
 
 
-const EnhancedList = enhanceList(List);
+
+
+export function GalleryView () {
+
+    return (
+        <section
+        >
+            <h1>Gallery</h1>
+            <GalleryStat />
+            <ImageList />
+        </section>
+    );
+
+}
+
+
+export const Gallery = GalleryView;
