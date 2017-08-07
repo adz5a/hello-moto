@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    viewStyle,
+    // viewStyle,
     // centerFlex,
     // inputStyle
 } from "components/styles";
@@ -12,11 +12,15 @@ import {
 } from "components/Text";
 import { connect } from "react-redux";
 import{
-    branch,
-    compose,
-    renderComponent
+    // branch,
+    // compose,
+    // renderComponent
 } from "components/recompose";
-import { Map, List } from "immutable";
+import {
+    Map,
+    List
+} from "immutable";
+import { ImageList } from "./List";
 
 
 
@@ -41,39 +45,6 @@ export const GalleryStat = connect(
 )(GalleryStatView);
 
 
-export function ListView ({ images = List() }) {
-
-    return (
-        <section className="">
-            {"hihi"}
-        </section>
-    );
-
-}
-
-
-export function EmptyListView () {
-
-    return (
-        <section className="">
-            No images for you
-        </section>
-    );
-
-}
-
-
-export const ImageList = compose(
-    connect(
-        state => ({
-            images: state.db.byType.get("image", Map()).toList()
-        })
-    ),
-    branch(
-        props => props.images.size === 0,
-        renderComponent(EmptyListView)
-    )
-)(ListView);
 
 
 export function GalleryView () {
