@@ -2,7 +2,8 @@ import fromDiagram from "xstream/extra/fromDiagram";
 import {
     takeUntil,
     withGenerator,
-    awaitPromises
+    awaitPromises,
+    continueWith
 } from "components/stream";
 import noop from "lodash/noop";
 import xs from "xstream";
@@ -237,8 +238,8 @@ describe("awaitPromises/concurrently", () => {
          * resolved in the same order they are
          * received.
          * They are received synchronously but the
-         * 2nd is resolved first. 
-         * Because it is concurrent, the returned 
+         * 2nd is resolved first.
+         * Because it is concurrent, the returned
          * values are in the order of the resolution.
          *
          */
@@ -309,5 +310,42 @@ describe("awaitPromises/sequentially", () => {
 
     });
 
+
+});
+
+
+describe("continueWith", () => {
+
+    test("basic", () => {
+        const input$ = fromDiagram("--a--b-|");
+        const next$ = fromDiagram("-c--d-|");
+
+
+        const done = defer();
+
+
+        input$
+            .compose(continueWith(next$))
+            .fold(( list, value ) => [ ...list, value ], [])
+            .last()
+            .addListener({
+
+                next ( value ) {
+
+                    expect(value).toEqual("abcd".split(""));
+
+                },
+
+                complete () {
+
+                    done.resolve();
+
+                }
+
+            });
+
+
+        return done.promise;
+    });
 
 });
