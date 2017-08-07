@@ -19,8 +19,11 @@ import {
 import {
     // middleware as dbMiddleware,
     reducer as db,
-    dbMiddleware
+    middleware as dbMiddleware
 } from "data/db";
+import {
+    middleware as imageMiddleware
+} from "data/image";
 
 
 
@@ -52,6 +55,7 @@ export function createStore ( {
             // linkMiddleware,
             bucketMiddleware,
             dbMiddleware,
+            imageMiddleware,
             // tagMiddleware,
             ...middlewares
         ])

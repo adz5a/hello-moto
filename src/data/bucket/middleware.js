@@ -102,7 +102,7 @@ const list = list$ => list$
 
     })
     .map(getList)
-    .compose(awaitPromises)
+    .compose(awaitPromises())
     .map(data => {
 
         // console.log(data);
