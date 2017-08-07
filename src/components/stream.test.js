@@ -9,7 +9,6 @@ import xs from "xstream";
 const reduce = ( reduceFn, startWith, input$ ) => {
 
 
-
     return new Promise(( resole, reject ) => {
 
 
@@ -162,4 +161,44 @@ describe("withGenerator", () => {
 
     });
 
+
+    test("until", () => {
+
+        const done = defer();
+
+        xs.periodic(3)
+            .take(5)
+            .compose(withGenerator(function * () {
+
+                yield 1;
+                yield 1;
+                return 3;
+
+            }))
+            .last()
+            .addListener({
+
+                next( value ) {
+
+                    expect(value).toBe(3);
+
+                },
+
+                error ( err ) {
+
+                    done.reject(err);
+
+                },
+
+                complete () {
+
+                    done.resolve();
+
+                }
+
+            })
+
+        return done.promise;
+
+    });
 });
