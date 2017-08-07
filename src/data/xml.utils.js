@@ -31,7 +31,7 @@ const contentToJSON = content => {
 
     return reduce(( res, node ) => {
 
-        res[node.nodeName] = node.textContent;
+        res[node.nodeName] = node.textContent;
         return res;
 
     }, {}, content);

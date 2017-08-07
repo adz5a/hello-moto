@@ -62,13 +62,14 @@ const getList = ({
         }) => {
 
             const baseURL = bucket.get("baseURL");
+            const name = bucket.get("name");
 
 
             return {
                 nextContinuationToken,
                 contents: List(newContents.map(item => {
 
-                    const url = baseURL + "/" + item.Key;
+                    const url = baseURL + "/" + name + "/" + item.Key;
                     return Map({
                         url,
                         size: item.Size,
