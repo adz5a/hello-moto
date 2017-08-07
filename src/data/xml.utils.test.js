@@ -27,7 +27,7 @@ test("listPrefixes", () => {
 
 test("listBucket", () => {
 
-    return listBucket({ baseURL, bucket })
+    return listBucket({ baseURL, name: bucket })
         .then( value => {
 
             expect(value).toMatchSnapshot();
