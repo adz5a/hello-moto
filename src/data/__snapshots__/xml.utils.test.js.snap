@@ -2455,7 +2455,7 @@ Object {
       "StorageClass": "STANDARD",
     },
   ],
-  "isTruncated": "false",
+  "isTruncated": false,
   "keyCount": "348",
   "maxKeys": "1000",
   "name": "yolo-misc",
