@@ -12,32 +12,82 @@ import {
 } from "components/Text";
 import { connect } from "react-redux";
 import{
+    branch,
+    compose,
+    renderComponent
 } from "components/recompose";
-// import fmap from "lodash/fp/map";
-// import map from "lodash/map";
-import { List } from "./list/List";
-
-
-// const vs = join(viewStyle, "justify-around");
+import { Map, List } from "immutable";
 
 
 
-export function View () {
+export const route = match => match.url + "/gallery";
+
+
+export function GalleryStatView ( { count = 0 } ) {
 
     return (
-        <section
-            className={viewStyle}
-        >
-            <EnhancedList />
+        <section className="dib">
+            {"Image count : " + count}
         </section>
     );
 
 }
 
 
-const enhanceList = connect(
-    state => ({ links: state.links })
-);
+export const GalleryStat = connect(
+    state => ({
+        count: state.db.byType.get("image", Map()).size
+    })
+)(GalleryStatView);
 
 
-const EnhancedList = enhanceList(List);
+export function ListView ({ images = List() }) {
+
+    return (
+        <section className="">
+            {"hihi"}
+        </section>
+    );
+
+}
+
+
+export function EmptyListView () {
+
+    return (
+        <section className="">
+            No images for you
+        </section>
+    );
+
+}
+
+
+export const ImageList = compose(
+    connect(
+        state => ({
+            images: state.db.byType.get("image", Map()).toList()
+        })
+    ),
+    branch(
+        props => props.images.size === 0,
+        renderComponent(EmptyListView)
+    )
+)(ListView);
+
+
+export function GalleryView () {
+
+    return (
+        <section
+        >
+            <h1>Gallery</h1>
+            <GalleryStat />
+            <ImageList />
+        </section>
+    );
+
+}
+
+
+export const Gallery = GalleryView;

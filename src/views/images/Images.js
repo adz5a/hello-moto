@@ -13,6 +13,10 @@ import {
     Add,
     route as addRoute
 } from "./Add";
+import {
+    Gallery,
+    route as galleryRoute
+} from "./Gallery";
 
 
 
@@ -53,6 +57,10 @@ export function Images ( { match } ) {
             <Route
                 path={addRoute(match)}
                 component={Add}
+            />
+            <Route
+                path={galleryRoute(match)}
+                component={Gallery}
             />
         </section>
     );
