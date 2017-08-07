@@ -5,7 +5,7 @@ import{
     renderComponent
 } from "components/recompose";
 import { connect } from "react-redux";
-import { Map, List } from "immutable";
+import { Map, List, Seq } from "immutable";
 
 
 export function ListView ({ images = List() }) {
@@ -33,7 +33,7 @@ export function EmptyListView () {
 export const ImageList = compose(
     connect(
         state => ({
-            images: state.db.byType.get("image", Map()).toList()
+            images: state.db.byType.get("image", Seq()).toSeq()
         })
     ),
     branch(
