@@ -115,7 +115,7 @@ describe("withGenerator", () => {
             .compose(withGenerator(function * (start = 0) {
 
                 let value = start;
-                while ( true ) {
+                while ( true ) {
 
                     value = value + 1;
                     value = yield value;
@@ -198,7 +198,7 @@ describe("withGenerator", () => {
 describe("awaitPromises/concurrently", () => {
 
 
-    test("basic", () => {
+    test("basic", () => {
 
         const done = defer();
         const in$ = xs
@@ -278,7 +278,7 @@ describe("awaitPromises/concurrently", () => {
 describe("awaitPromises/sequentially", () => {
 
 
-    test("basic test", () => {
+    test("basic test", () => {
 
         const done = defer();
         const in$ = xs
@@ -316,7 +316,7 @@ describe("awaitPromises/sequentially", () => {
 
 describe("continueWith", () => {
 
-    test("basic", () => {
+    test("basic", () => {
         const input$ = fromDiagram("--a--b-|");
         const next$ = fromDiagram("-c--d-|");
 
