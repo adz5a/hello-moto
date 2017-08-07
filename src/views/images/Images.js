@@ -9,12 +9,16 @@ import {
     Link,
     Route
 } from "react-router-dom";
+import {
+    Add,
+    route as addRoute
+} from "./Add";
 
 
 
 function Links ({ match }) {
 
-    const link = join(linkStyle, "ma3");
+    const link = join(linkStyle, "ma3", "hover-bg-black", "hover-white");
     const linkContainer = join(centerFlex, "space-between", "pa3");
 
     return (
@@ -26,7 +30,7 @@ function Links ({ match }) {
                 Gallery
             </Link>
             <Link
-                to={match.url + "/add"}
+                to={addRoute(match)}
                 className={link}
             >
                 Add
@@ -39,15 +43,16 @@ function Links ({ match }) {
 
 export function Images ( { match } ) {
 
-
-
-
     return (
         <section className={viewStyle}>
             <Route
                 path={match.url}
                 exact
                 component={Links}
+            />
+            <Route
+                path={addRoute(match)}
+                component={Add}
             />
         </section>
     );
