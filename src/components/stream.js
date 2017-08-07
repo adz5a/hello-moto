@@ -1,9 +1,17 @@
 import xs from "xstream";
+import flattenSequentially from "xstream/extra/flattenSequentially";
+import flattenConcurrently from "xstream/extra/flattenConcurrently";
 
 
-export const awaitPromises = promise$ => promise$
+export const awaitPromises = ( concurrent = true ) => promise$ => promise$
+    .map(xs.fromPromise)
+    .compose( concurrent ? flattenConcurrently: flattenSequentially);
+
+
+export const flattenPromises = promise$ => promise$
     .map(xs.fromPromise)
     .flatten();
+
 
 
 export const takeUntil = predicate => stream$ => {

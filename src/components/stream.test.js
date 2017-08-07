@@ -1,10 +1,16 @@
 import fromDiagram from "xstream/extra/fromDiagram";
 import {
     takeUntil,
-    withGenerator
+    withGenerator,
+    awaitPromises
 } from "components/stream";
 import noop from "lodash/noop";
 import xs from "xstream";
+import { defer, after } from "components/promise";
+
+
+const K = v => () => v;
+
 
 const reduce = ( reduceFn, startWith, input$ ) => {
 
@@ -34,22 +40,6 @@ const reduce = ( reduceFn, startWith, input$ ) => {
 }
 
 
-const defer = () => {
-
-    const deferred = {};
-
-    const promise = new Promise (( resolve, reject ) => {
-
-        deferred.resolve = resolve;
-        deferred.reject = reject;
-
-    });
-
-    deferred.promise = promise;
-
-    return deferred;
-
-};
 
 
 describe("takeUntil", () => {
@@ -61,7 +51,7 @@ describe("takeUntil", () => {
 
 
         const input$ = fromDiagram("-a--b--c|");
-        
+
         const stop$ = fromDiagram("-----d|");
 
         const next = jest.fn(value => {
@@ -80,7 +70,7 @@ describe("takeUntil", () => {
                 return list;
 
             }, [])
-            .last() 
+            .last()
             .addListener({
                 next,
                 error: ( err ) => {
@@ -106,7 +96,7 @@ describe("takeUntil", () => {
         return complete.promise;
 
 
-        
+
     });
 
 });
@@ -116,7 +106,7 @@ describe("withGenerator", () => {
 
     test("add", () => {
 
-        const done = defer(); 
+        const done = defer();
 
 
         xs.periodic(10)
@@ -138,7 +128,7 @@ describe("withGenerator", () => {
                 next ( value ) {
 
                     // console.log("value", value);
-                    expect(value).toBe(5); 
+                    expect(value).toBe(5);
 
                 },
 
@@ -154,7 +144,7 @@ describe("withGenerator", () => {
 
                 }
             });
-        
+
 
 
         return done.promise;
@@ -201,4 +191,123 @@ describe("withGenerator", () => {
         return done.promise;
 
     });
+});
+
+
+describe("awaitPromises/concurrently", () => {
+
+
+    test("basic", () => {
+
+        const done = defer();
+        const in$ = xs
+            .of(
+                after(10).then(K(1)),
+                after(15).then(K(2)),
+                after(17).then(K(3))
+            )
+            .compose(awaitPromises())
+            .fold((list, value) => [...list, value], [])
+            .last()
+            .addListener({
+
+                next ( value ) {
+
+                    expect(value).toEqual([1, 2, 3]);
+
+                },
+                complete () {
+
+                    done.resolve();
+
+                }
+
+            });
+
+
+        return done.promise;
+
+    });
+
+
+    test("without no order", () => {
+
+        /*
+         * In this example, promises are not
+         * resolved in the same order they are
+         * received.
+         * They are received synchronously but the
+         * 2nd is resolved first. 
+         * Because it is concurrent, the returned 
+         * values are in the order of the resolution.
+         *
+         */
+        const done = defer();
+        const in$ = xs
+            .of(
+                after(10).then(K(1)),
+                after(5).then(K(2)),
+            )
+            .compose(awaitPromises())
+            .fold((list, value) => [...list, value], [])
+            .last()
+            .addListener({
+
+                next ( value ) {
+
+                    expect(value).toEqual([2, 1]);
+
+                },
+                complete () {
+
+                    done.resolve();
+
+                }
+
+            });
+
+
+        return done.promise;
+
+
+    });
+});
+
+
+describe("awaitPromises/sequentially", () => {
+
+
+    test("basic test", () => {
+
+        const done = defer();
+        const in$ = xs
+            .of(
+                after(17).then(K(3)),
+                after(10).then(K(1)),
+                after(15).then(K(2))
+            )
+            .compose(awaitPromises(false))
+            .fold((list, value) => [...list, value], [])
+            .last()
+            .addListener({
+
+                next ( value ) {
+
+                    expect(value).toEqual([3, 1, 2]);
+
+                },
+                complete () {
+
+                    done.resolve();
+
+                }
+
+            });
+
+
+        return done.promise;
+
+    });
+
+
 });
