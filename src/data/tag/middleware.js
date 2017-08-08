@@ -7,8 +7,13 @@ import {
     TAG_DOC,
     TOGGLE_DOC_TAG
 } from "./actions";
+import {
+    FIND_DOC
+} from "data/db";
 import { withType } from "data/commons";
-// import { Set, Map } from "immutable";
+import {
+    fromJS
+} from "immutable";
 import { createStreamMiddleware } from "data/streamMiddleware";
 // import { makeId } from "./data";
 
@@ -52,7 +57,21 @@ const creator = ( action$, state$ ) => {
 
         });
 
+
+    // will load all tags
+    const start$ = xs.of({
+        type: FIND_DOC,
+        data: {
+            query: fromJS({
+                selector: {
+                    tag: { $exists: true }
+                },
+            })
+        }
+    });
+
     return xs.merge(
+        start$,
         tag$,
         toggle$
     );
