@@ -14,7 +14,7 @@ const context = getContext({
 });
 
 
-export const infiniteScroll = ( propName, propType = anyProp ) => compose(
+export const infiniteScroll = ( propName, propType = anyProp, start = 10 ) => compose(
     context,
     mapPropsStream(props$ => props$
         .map(props => {
@@ -45,7 +45,7 @@ export const infiniteScroll = ( propName, propType = anyProp ) => compose(
 
                     }
 
-                }, 10)
+                }, start)
                 .map(size => {
 
                     return {

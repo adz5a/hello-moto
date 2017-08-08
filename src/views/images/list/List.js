@@ -15,11 +15,9 @@ import {
     // viewStyle,
     // centerFlex,
     // inputStyle
-    defaultBordered,
-    joinClasses as join
 } from "components/styles";
 import {
-    ThumbListVieww
+    ThumbListView
 } from "./ImageThumb";
 import { infiniteScroll } from "components/infiniteScroll";
 import { TextListView } from "./ImageText";

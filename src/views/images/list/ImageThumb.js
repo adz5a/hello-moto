@@ -124,7 +124,7 @@ const renderThumb = imageDoc => <Thumb
 
 
 const list = join("flex", "justify-between", "flex-wrap");
-export function ThumbListVieww ({
+export function ThumbListView ({
     images = EmptySeq,
     size = 10,
 }) {
