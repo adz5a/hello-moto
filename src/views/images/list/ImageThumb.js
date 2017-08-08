@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import {
     Map,
     // List,
-    // Seq
+    Seq
 } from "immutable";
 import { css } from "glamor";
 import {
@@ -27,6 +27,7 @@ import {
 } from "data/tag";
 
 
+const EmptySeq = Seq();
 const EmptyMap = Map();
 const imageStyle = join(
     "db",
@@ -114,3 +115,26 @@ const ThumbFooter = compose(
         };
     }),
 )(ThumbFooterView);
+
+
+const renderThumb = imageDoc => <Thumb
+    key={imageDoc.get("_id")}
+    image={imageDoc}
+/>
+
+
+const list = join("flex", "justify-between", "flex-wrap");
+export function ThumbListView ({
+    images = EmptySeq,
+    size = 10,
+}) {
+
+    return (
+        <section
+            className={list}
+        >
+            {images.slice(0, size).map(renderThumb).toArray()}
+        </section>
+    );
+
+}

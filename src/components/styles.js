@@ -3,6 +3,8 @@ import { css } from "glamor";
 export const joinClasses = (...classes) => classes.join(" ");
 
 export const defaultBordered = "b ph3 pa2 ba b--black bg-transparent f6 dit";
+export const defaultBorderedBlock = "b ph3 pa2 ba b--black bg-transparent f6 db";
+export const defaultBorderedInlineBlock = "b ph3 pa2 ba b--black bg-transparent f6 dib";
 
 export const linkStyle = joinClasses(defaultBordered, "dim", "link", "black");
 
