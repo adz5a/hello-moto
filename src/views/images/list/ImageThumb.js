@@ -2,10 +2,8 @@ import React from "react";
 import{
 //     branch,
     compose,
-    mapProps,
     setPropTypes
 } from "components/recompose";
-import { connect } from "react-redux";
 import {
     Map,
     // List,
@@ -22,10 +20,6 @@ import EmptyHeart from "react-icons/lib/md/favorite-outline";
 import FullHeart from "react-icons/lib/md/favorite";
 import noop from "lodash/noop";
 import PropTypes from "prop-types";
-import {
-    TAG_DOC,
-    TAG_DOC_ADDED
-} from "data/tag";
 import {
     withToggleTag
 } from "components/withAddTag"

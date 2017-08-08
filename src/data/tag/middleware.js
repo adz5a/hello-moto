@@ -20,8 +20,6 @@ import { createStreamMiddleware } from "data/streamMiddleware";
 
 const creator = ( action$, state$ ) => {
 
-    const dbByType$ = state$
-        .map( state => state.db.byType )
 
     const tag$ = action$
         .filter(withType(TAG_DOC))
@@ -75,6 +73,7 @@ const creator = ( action$, state$ ) => {
         tag$,
         toggle$
     );
+
 };
 
 
