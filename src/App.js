@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-    BrowserRouter as Router,
     Route
 } from "react-router-dom";
 import {
@@ -12,6 +11,7 @@ import {
 import {
     Images
 } from "views/images";
+import { Router } from "components/Router";
 
 
 
