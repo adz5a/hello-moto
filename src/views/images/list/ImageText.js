@@ -14,6 +14,7 @@ import {
 } from "components/styles";
 import { withAddTag } from "components/withAddTag";
 import EmptyHeart from "react-icons/lib/md/favorite-outline";
+import FullHeart from "react-icons/lib/md/favorite";
 import noop from "lodash/noop";
 
 
@@ -45,6 +46,24 @@ const likeStyle = join(
 
 function AddTagView ({ onAddTag = noop, image = EmptyMap }) {
 
+    const isFav = image.getIn(
+        [ "tag", "favorite" ],
+        false
+    );
+
+
+    console.log(isFav);
+    if ( isFav ) {
+
+    return (
+        <FullHeart
+            onClick={() => onAddTag("favorite")}
+            className={likeStyle}
+        />
+    );
+
+    } else {
+
     return (
         <EmptyHeart
             onClick={() => onAddTag("favorite")}
@@ -52,9 +71,10 @@ function AddTagView ({ onAddTag = noop, image = EmptyMap }) {
         />
     );
 
+    }
+
 }
 
-console.log(withAddTag);
 
 const AddTag = withAddTag("image")(AddTagView);
 

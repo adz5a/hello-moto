@@ -20,7 +20,20 @@ const creator = ( action$, state$ ) => {
 
     return action$
         .filter(withType(TAG_DOC))
-        .mapTo({ type: "noop" })
+        .map(action => {
+
+
+            const { doc, tag } = action.data;
+
+            return {
+                type: UPDATE_DOC,
+                data: {
+                    doc: doc.updateIn(["tag", tag], () => true)
+                }
+            };
+
+
+        })
 
 };
 

@@ -170,7 +170,7 @@ const update = action$ => {
 
             const { doc } = action.data;
 
-            return db.put(doc)
+            return db.put(unwrapMap(doc))
                 .then( response => {
 
                     return { doc, response };
@@ -183,9 +183,22 @@ const update = action$ => {
                         data
                     };
 
+                })
+                .catch(error => {
+
+                    return {
+                        type: DOC_UPDATED,
+                        data: {
+                            doc,
+                            response: error,
+                            error: true
+                        }
+                    };
+
                 });
 
         })
+        .compose(awaitPromises());
 
 };
 
@@ -207,12 +220,16 @@ const creator = action$ => {
     const addBulk$ = action$
         .compose(addBulk);
 
+    const update$ = action$
+        .compose(update);
+
     return xs
         .merge(
             insert$,
             find$,
             delete$,
-            addBulk$
+            addBulk$,
+            update$
         )
         // .debug();
 
