@@ -6,6 +6,9 @@ import {
     Seq
 } from "immutable";
 import {
+    withReducer
+} from "components/recompose";
+import {
     // viewStyle,
     // centerFlex,
     // inputStyle
@@ -13,8 +16,12 @@ import {
     joinClasses as join
 } from "components/styles";
 import { withAddTag } from "components/withAddTag";
-import EmptyHeart from "react-icons/lib/md/favorite-outline";
-import FullHeart from "react-icons/lib/md/favorite";
+import {
+    EmptyHeart,
+    FullHeart,
+    DownArrow,
+    UpArrow
+} from "components/icons";
 import noop from "lodash/noop";
 
 
@@ -27,22 +34,33 @@ const textStyle = join(
     "mt2",
     "flex",
     "justify-between",
+    "items-center",
+    "flex-wrap",
     css({
     })
 );
 
 
+const iconFontSize = css({
+    fontSize: "1.5em"
+});
 const likeStyle = join(
     "grow",
     "pointer",
+    iconFontSize,
     css({
-        fontSize: "1.5em",
         color: "red",
         ":hover": {
             fill: "red"
         }
     }),
 );
+
+const expandStyle = join(
+    iconFontSize,
+    "pointer",
+);
+
 
 function AddTagView ({ onAddTag = noop, image = EmptyMap }) {
 
@@ -77,20 +95,81 @@ function AddTagView ({ onAddTag = noop, image = EmptyMap }) {
 const AddTag = withAddTag("image")(AddTagView);
 
 
-export function TextImage ({ image = EmptyMap }) {
+const expandableStyle = join(
+    "w-100",
+    css({
+        textAlign: "center",
+        transition: "height 0.3s",
+        height: "0",
+    })
+);
+
+const expandedStyle = join(
+    expandableStyle,
+    css({
+        height: "20em"
+    })
+);
+function Expandable ( { expand = false, image = EmptyMap } ) {
+
+    if ( expand ) {
+
+        return (
+            <section className={expandedStyle}>
+                <img
+                    src={image.getIn(["data", "url"], "")}
+                    className="w-auto h-100"
+                />
+            </section>
+        );
+
+    } else {
+
+        return (
+            <section className={expandableStyle}>
+                <img
+                    src={image.getIn(["data", "url"], "")}
+                    className="w-auto h-100"
+                />
+            </section>
+        );
+
+    }
+
+}
+
+
+
+export function TextImageView ({ image = EmptyMap, showExpand, toggleExpand = noop }) {
 
     return (
-        <p
+        <section
             className={textStyle}>
             <span>
                 {image.getIn(["data", "url"], "lol").split("/").slice(4).join("/").slice(0, 50)}
             </span>
-            <AddTag image={image}/>
-        </p>
+            <div>
+                <AddTag image={image}/>
+                {
+                    showExpand ?
+                        <UpArrow className={expandStyle} onClick={toggleExpand}/>:
+                        <DownArrow className={expandStyle} onClick={toggleExpand}/>
+                }
+            </div>
+            <Expandable image={image} expand={showExpand}/>
+        </section>
     );
 
 }
 
+
+
+const TextImage = withReducer(
+    "showExpand",
+    "toggleExpand",
+    ( state, _ ) => !state,
+    () => false
+)(TextImageView);
 
 
 
