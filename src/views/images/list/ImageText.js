@@ -51,25 +51,23 @@ function AddTagView ({ onAddTag = noop, image = EmptyMap }) {
         false
     );
 
-
-    console.log(isFav);
     if ( isFav ) {
 
-    return (
-        <FullHeart
-            onClick={() => onAddTag("favorite")}
-            className={likeStyle}
-        />
-    );
+        return (
+            <FullHeart
+                onClick={() => onAddTag("favorite")}
+                className={likeStyle}
+            />
+        );
 
     } else {
 
-    return (
-        <EmptyHeart
-            onClick={() => onAddTag("favorite")}
-            className={likeStyle}
-        />
-    );
+        return (
+            <EmptyHeart
+                onClick={() => onAddTag("favorite")}
+                className={likeStyle}
+            />
+        );
 
     }
 

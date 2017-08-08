@@ -19,12 +19,16 @@ import {
     joinClasses as join
 } from "components/styles";
 import EmptyHeart from "react-icons/lib/md/favorite-outline";
+import FullHeart from "react-icons/lib/md/favorite";
 import noop from "lodash/noop";
 import PropTypes from "prop-types";
 import {
     TAG_DOC,
     TAG_DOC_ADDED
 } from "data/tag";
+import {
+    withToggleTag
+} from "components/withAddTag"
 
 
 const EmptySeq = Seq();
@@ -86,14 +90,34 @@ export function ThumbFooterView ({
     onAddTag = noop
 }) {
 
-    return (
-        <footer>
-            <EmptyHeart
-                className={ThumIconStyle}
-                onClick={() => onAddTag("favorite")}
-            />
-        </footer>
+    const isFav = image.getIn(
+        [ "tag", "favorite" ],
+        false
     );
+
+    if ( isFav ) {
+
+        return (
+            <footer>
+                <FullHeart
+                    className={ThumIconStyle}
+                    onClick={() => onAddTag("favorite")}
+                />
+            </footer>
+        );
+
+    } else {
+
+        return (
+            <footer>
+                <EmptyHeart
+                    className={ThumIconStyle}
+                    onClick={() => onAddTag("favorite")}
+                />
+            </footer>
+        );
+
+    }
 
 }
 
@@ -102,18 +126,7 @@ const ThumbFooter = compose(
     setPropTypes({
         image: PropTypes.object.isRequired
     }),
-    connect(),
-    mapProps(props => {
-        const { image, dispatch } = props;
-
-        return {
-            image,
-            onAddTag: (tagName) => dispatch({
-                type: TAG_DOC,
-                data: { doc: image, tag: tagName }
-            })
-        };
-    }),
+    withToggleTag("image")
 )(ThumbFooterView);
 
 
