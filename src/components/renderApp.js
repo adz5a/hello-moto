@@ -17,7 +17,7 @@ export function renderApp (
 
     const store = createStore();
     const root = render(
-        <Provider store={createStore()}>
+        <Provider store={store}>
             <ScrollMonitor>
                 <Component />
             </ScrollMonitor>
@@ -31,3 +31,17 @@ export function renderApp (
     };
 
 }
+
+
+export const withContext = Component => {
+
+    return (
+        <Provider store={createStore()}>
+            <ScrollMonitor>
+                <Component />
+            </ScrollMonitor>
+        </Provider>
+    );
+
+
+};
