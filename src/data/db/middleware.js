@@ -1,7 +1,7 @@
 import xs from "xstream";
 import concat from "xstream/extra/concat";
 import { createStreamMiddleware } from "data/streamMiddleware";
-import { db } from "data/db";
+import { db } from "data/db";
 import {
     // loadType,
     // createIndex
@@ -14,7 +14,9 @@ import {
     DELETED_DOC,
     DELETE_DOC,
     ADD_BULK,
-    ADD_BULK_RESPONSE
+    ADD_BULK_RESPONSE,
+    UPDATE_DOC,
+    DOC_UPDATED
 } from "./actions";
 import {
     // toJS,
@@ -25,7 +27,7 @@ import {
 } from "immutable";
 import { unwrapMap } from "components/immutable";
 import constant from "lodash/constant";
-import { withType } from "data/commons";
+import { withType } from "data/commons";
 import { awaitPromises } from "components/stream";
 
 
@@ -161,6 +163,32 @@ const addBulk = action$ => action$
     .compose(awaitPromises());
 
 
+const update = action$ => {
+
+    return action$
+        .filter(withType(UPDATE_DOC))
+        .map(action => {
+
+            const { doc } = action.data;
+
+            return db.put(doc)
+                .then( response => {
+
+                    return { doc, response };
+
+                })
+                .then(data => {
+
+                    return {
+                        type: DOC_UPDATED,
+                        data
+                    };
+
+                });
+
+        })
+
+};
 
 const creator = action$ => {
 
