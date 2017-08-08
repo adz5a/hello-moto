@@ -21,7 +21,7 @@ import {
     // List,
     // Seq
 } from "immutable";
-import { ImageList, EmptyListView } from "./List";
+import { ImageList, EmptyListView } from "./list/List";
 
 
 
