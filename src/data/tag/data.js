@@ -1,7 +1,7 @@
-import { ACTIONFACTORY } from "data/commons";
+import { ACTIONFACTORY } from "data/commons";
 
 
-const ACTION = ACTIONFACTORY("tag");
+const prefixer = ACTIONFACTORY("__tag__");
 
-export const TAG_DOC = ACTION("tag-doc");
-export const TAG_DOC_ADDED = ACTION("tag-doc-added");
+
+export const makeId = tagName => prefixer(tagName);
