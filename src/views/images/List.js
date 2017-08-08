@@ -7,8 +7,12 @@ import{
     getContext
 } from "components/recompose";
 import { connect } from "react-redux";
-import { Map, List, Seq } from "immutable";
-import { css } from "glamor";
+import {
+    // Map,
+    // List,
+    Seq
+} from "immutable";
+// import { css } from "glamor";
 import {
     // viewStyle,
     // centerFlex,
@@ -58,13 +62,11 @@ const enhanceListView = compose(
         .map(props => {
 
 
-            const maxHeight = window.document.body.scrollHeight;
             const innerHeight = window.innerHeight;
 
             const {
                 scrollMonitor: scroll$,
                 images,
-                ...otherProps
             } = props;
 
 

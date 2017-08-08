@@ -1,13 +1,17 @@
 import React from "react";
-import{
-    branch,
-    compose,
-    renderComponent,
-    mapPropsStream,
-    getContext
-} from "components/recompose";
-import { connect } from "react-redux";
-import { Map, List, Seq } from "immutable";
+// import{
+//     branch,
+//     compose,
+//     renderComponent,
+//     mapPropsStream,
+//     getContext
+// } from "components/recompose";
+// import { connect } from "react-redux";
+import {
+    Map,
+    // List,
+    // Seq
+} from "immutable";
 import { css } from "glamor";
 import {
     // viewStyle,
@@ -15,8 +19,8 @@ import {
     // inputStyle
     joinClasses as join
 } from "components/styles";
-import PropTypes from "prop-types";
-import debounce from "xstream/extra/debounce";
+// import PropTypes from "prop-types";
+// import debounce from "xstream/extra/debounce";
 
 
 const EmptyMap = Map();
@@ -48,6 +52,7 @@ export function Thumb ({ image = EmptyMap }) {
             className={imageContainerStyle}
         >
             <img
+                alt={image.get("data").get("url")}
                 src={image.get("data").get("url")}
                 className={imageStyle}
             />
