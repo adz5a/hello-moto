@@ -1,12 +1,11 @@
 import React from "react";
-// import{
+import{
 //     branch,
-//     compose,
-//     renderComponent,
-//     mapPropsStream,
-//     getContext
-// } from "components/recompose";
-// import { connect } from "react-redux";
+    compose,
+    mapProps,
+    setPropTypes
+} from "components/recompose";
+import { connect } from "react-redux";
 import {
     Map,
     // List,
@@ -19,13 +18,18 @@ import {
     // inputStyle
     joinClasses as join
 } from "components/styles";
-// import PropTypes from "prop-types";
-// import debounce from "xstream/extra/debounce";
+import EmptyHeart from "react-icons/lib/md/favorite-outline";
+import noop from "lodash/noop";
+import PropTypes from "prop-types";
+import {
+    TAG_DOC,
+    TAG_DOC_ADDED
+} from "data/tag";
 
 
 const EmptyMap = Map();
 const imageStyle = join(
-    "dib",
+    "db",
     css({
         width: "100%",
         height: "auto"
@@ -35,9 +39,11 @@ const imageStyle = join(
 const imageContainerStyle = join(
     "dib",
     "flex",
+    "flex-column",
     "items-center",
     "mt2",
     "mb2",
+    "justify-center",
     css({
         width: "28%"
     })
@@ -56,7 +62,55 @@ export function Thumb ({ image = EmptyMap }) {
                 src={image.get("data").get("url")}
                 className={imageStyle}
             />
+            <ThumbFooter image={image}/>
         </div>
     );
 
 }
+
+const ThumIconStyle = join(
+    "grow",
+    "pointer",
+    css({
+        fontSize: "1.5em",
+        color: "red",
+        ":hover": {
+            fill: "red"
+        }
+    }),
+);
+
+export function ThumbFooterView ({
+    image = EmptyMap,
+    onAddTag = noop
+}) {
+
+    return (
+        <footer>
+            <EmptyHeart
+                className={ThumIconStyle}
+                onClick={() => onAddTag("favorite")}
+            />
+        </footer>
+    );
+
+}
+
+
+const ThumbFooter = compose(
+    setPropTypes({
+        image: PropTypes.object.isRequired
+    }),
+    connect(),
+    mapProps(props => {
+        const { image, dispatch } = props;
+
+        return {
+            image,
+            onAddTag: (tagName) => dispatch({
+                type: TAG_DOC,
+                data: { doc: image, tag: tagName }
+            })
+        };
+    }),
+)(ThumbFooterView);
