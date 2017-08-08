@@ -21,6 +21,7 @@ import {
 } from "./ImageThumb";
 import { infiniteScroll } from "components/infiniteScroll";
 import { TextListView } from "./ImageText";
+import { ToggleListView } from "./ToggleList";
 
 
 const EmptySeq = Seq();
@@ -45,7 +46,12 @@ export function EmptyListView () {
 
 export function ListView ({ View = TextListView, ...props }) {
 
-    return <View {...props} />
+    return (
+        <div>
+            <ToggleListView />
+            <View {...props} />
+        </div>
+    );
 
 }
 
