@@ -18,10 +18,10 @@ import{
 } from "components/recompose";
 import {
     Map,
-    List,
-    Seq
+    // List,
+    // Seq
 } from "immutable";
-import { ImageList } from "./List";
+import { ImageList, } from "./list/List";
 
 
 

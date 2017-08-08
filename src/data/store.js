@@ -8,23 +8,16 @@ import {
     reducer as buckets,
     middleware as bucketMiddleware
 } from "data/bucket";
-// import {
-//     reducer as links,
-//     middleware as linkMiddleware
-// } from "data/link";
-// import {
-//     reducer as tags,
-//     middleware as tagMiddleware
-// } from "data/tag";
 import {
-    // middleware as dbMiddleware,
     reducer as db,
     middleware as dbMiddleware
 } from "data/db";
 import {
     middleware as imageMiddleware
 } from "data/image";
-
+import {
+    middleware as tagMiddleware
+} from "data/tag";
 
 
 export function createStore ( {
@@ -56,7 +49,7 @@ export function createStore ( {
             bucketMiddleware,
             dbMiddleware,
             imageMiddleware,
-            // tagMiddleware,
+            tagMiddleware,
             ...middlewares
         ])
     ));

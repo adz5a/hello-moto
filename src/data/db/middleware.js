@@ -1,7 +1,6 @@
 import xs from "xstream";
-import concat from "xstream/extra/concat";
 import { createStreamMiddleware } from "data/streamMiddleware";
-import { db } from "data/db";
+import { db } from "data/db";
 import {
     // loadType,
     // createIndex
@@ -14,7 +13,9 @@ import {
     DELETED_DOC,
     DELETE_DOC,
     ADD_BULK,
-    ADD_BULK_RESPONSE
+    ADD_BULK_RESPONSE,
+    UPDATE_DOC,
+    DOC_UPDATED
 } from "./actions";
 import {
     // toJS,
@@ -25,7 +26,7 @@ import {
 } from "immutable";
 import { unwrapMap } from "components/immutable";
 import constant from "lodash/constant";
-import { withType } from "data/commons";
+import { withType } from "data/commons";
 import { awaitPromises } from "components/stream";
 
 
@@ -124,9 +125,9 @@ const delete_ = delete$ => delete$
 
 const addBulk = action$ => action$
     .filter(withType(ADD_BULK))
-    .map(action => action.data)
-    .map( ({ data }) => {
+    .map( action => {
 
+        const { data } = action.data;
 
         const docs = data.toJS();
         // console.log(docs);
@@ -161,6 +162,45 @@ const addBulk = action$ => action$
     .compose(awaitPromises());
 
 
+const update = action$ => {
+
+    return action$
+        .filter(withType(UPDATE_DOC))
+        .map(action => {
+
+            const { doc } = action.data;
+
+            return db.put(unwrapMap(doc))
+                .then( response => {
+
+                    return { doc, response };
+
+                })
+                .then(data => {
+
+                    return {
+                        type: DOC_UPDATED,
+                        data
+                    };
+
+                })
+                .catch(error => {
+
+                    return {
+                        type: DOC_UPDATED,
+                        data: {
+                            doc,
+                            response: error,
+                            error: true
+                        }
+                    };
+
+                });
+
+        })
+        .compose(awaitPromises());
+
+};
 
 const creator = action$ => {
 
@@ -180,12 +220,16 @@ const creator = action$ => {
     const addBulk$ = action$
         .compose(addBulk);
 
+    const update$ = action$
+        .compose(update);
+
     return xs
         .merge(
             insert$,
             find$,
             delete$,
-            addBulk$
+            addBulk$,
+            update$
         )
         // .debug();
 

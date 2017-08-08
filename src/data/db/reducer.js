@@ -5,7 +5,8 @@ import {
     INSERTED_DOC,
     FOUND_DOC,
     // DELETE_DOC,
-    DELETED_DOC
+    DELETED_DOC,
+    DOC_UPDATED
 } from "./actions";
 import {
     // PROCESSING
@@ -104,6 +105,30 @@ function byType ( state = Map(), action ) {
         }
 
 
+        case DOC_UPDATED:{
+
+            const { doc, response, error = false } = data;
+
+            const docType = doc.get("type");
+
+            if ( !error && response.ok ) {
+
+                // erase previous doc
+                // set new one with new rev
+                return state.setIn(
+                    [ docType, doc.get("_id") ],
+                    doc.set("_rev", response.rev)
+                );
+
+            } else {
+
+                return state;
+
+            }
+
+
+        }
+
         default:
             return state;
 
@@ -148,6 +173,28 @@ function store ( store = emptyMap, action ) {
 
         }
 
+
+        case DOC_UPDATED:{
+
+            const { doc, response, error = false } = data;
+
+            if ( !error && response.ok ) {
+
+                // erase previous doc
+                // set new one with new rev
+                return store.set(
+                    doc.get("_id"),
+                    doc.set("_rev", response.rev)
+                );
+
+            } else {
+
+                return store;
+
+            }
+
+
+        }
 
         default:
             return store;
