@@ -24,6 +24,7 @@ import debounce from "xstream/extra/debounce";
 import {
     Thumb
 } from "./ImageThumb";
+import { infiniteScroll } from "components/infiniteScroll";
 
 
 const EmptySeq = Seq();
@@ -122,5 +123,5 @@ export const ImageList = compose(
         props => props.images.size === 0,
         renderComponent(EmptyListView)
     ),
-    enhanceListView
+    infiniteScroll("images")
 )(ListView);
