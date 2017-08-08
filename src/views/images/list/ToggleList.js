@@ -58,4 +58,3 @@ export function ToggleListView ({ onToggle = console.log, current = "text"}) {
     );
 
 }
-

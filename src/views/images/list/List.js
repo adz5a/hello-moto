@@ -3,6 +3,7 @@ import{
     branch,
     compose,
     renderComponent,
+    withReducer
 } from "components/recompose";
 import { connect } from "react-redux";
 import {
@@ -44,11 +45,11 @@ export function EmptyListView () {
 }
 
 
-export function ListView ({ View = TextListView, ...props }) {
+export function ListView ({ View = TextListView, onToggle, ...props }) {
 
     return (
         <div>
-            <ToggleListView />
+            <ToggleListView onToggle={onToggle}/>
             <View {...props} />
         </div>
     );
@@ -70,4 +71,25 @@ export const ImageList = compose(
         undefined,
         25
     ),
+    withReducer(
+        "View",
+        "onToggle",
+        ( View, name ) => {
+
+            switch ( name ) {
+
+                case "text":
+                    return TextListView;
+
+                case "thumb":
+                    return ThumbListView;
+
+                default:
+                    return View;
+
+            }
+
+        },
+        () => TextListView
+    )
 )(ListView);
