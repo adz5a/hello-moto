@@ -17,31 +17,19 @@ import {
 } from "components/styles";
 import PropTypes from "prop-types";
 import debounce from "xstream/extra/debounce";
+import {
+    Thumb
+} from "./ImageThumb";
 
 
 const EmptySeq = Seq();
 
-const imageContainerStyle = join(
-    "flex",
-    "items-center",
-    css({
-        width: "28%"
-}));
 
-const imageStyle = css({
-    width: "100%",
-    height: "auto"
-});
 
-const renderImage = imageDoc => <div
+const renderImage = imageDoc => <Thumb
     key={imageDoc.get("_id")}
-    className={join("dib", imageContainerStyle)}
->
-    <img
-        src={imageDoc.get("data").get("url")}
-        className={join("dib", imageStyle)}
-    />
-</div>;
+    image={imageDoc}
+/>
 
 
 const list = join("flex", "justify-between", "flex-wrap");
