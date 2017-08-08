@@ -1,5 +1,4 @@
 import xs from "xstream";
-import concat from "xstream/extra/concat";
 import { createStreamMiddleware } from "data/streamMiddleware";
 import { db } from "data/db";
 import {
@@ -126,9 +125,9 @@ const delete_ = delete$ => delete$
 
 const addBulk = action$ => action$
     .filter(withType(ADD_BULK))
-    .map(action => action.data)
-    .map( ({ data }) => {
+    .map( action => {
 
+        const { data } = action.data;
 
         const docs = data.toJS();
         // console.log(docs);
