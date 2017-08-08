@@ -9,6 +9,7 @@ const pouchdbAlias = isTest ? "pouchdb-memory" : "pouchdb";
 
 
 module.exports = {
+    "src": paths.appSrc,
     "views": resolve(paths.appSrc, "views"),
     "data": resolve(paths.appSrc, "data"),
     "api": resolve(paths.appSrc, "api"),
