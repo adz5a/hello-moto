@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "glamor";
 import {
-    // Map,
+    Map,
     // List,
     Seq
 } from "immutable";
@@ -12,8 +12,13 @@ import {
     defaultBorderedBlock as defaultBordered,
     joinClasses as join
 } from "components/styles";
+import { withAddTag } from "components/withAddTag";
 import EmptyHeart from "react-icons/lib/md/favorite-outline";
+import noop from "lodash/noop";
+
+
 const EmptySeq = Seq();
+const EmptyMap = Map()
 
 const textStyle = join(
     defaultBordered,
@@ -38,23 +43,53 @@ const likeStyle = join(
     }),
 );
 
+function AddTagView ({ onAddTag = noop, image = EmptyMap }) {
+
+    return (
+        <EmptyHeart
+            onClick={() => onAddTag("favorite")}
+            className={likeStyle}
+        />
+    );
+
+}
+
+console.log(withAddTag);
+
+const AddTag = withAddTag("image")(AddTagView);
+
+
+export function TextImage ({ image = EmptyMap }) {
+
+    return (
+        <p
+            className={textStyle}>
+            <span>
+                {image.getIn(["data", "url"], "lol").split("/").slice(4).join("/").slice(0, 50)}
+            </span>
+            <AddTag image={image}/>
+        </p>
+    );
+
+}
+
+
+
 
 const renderText = imageDoc => {
 
     return (
-        <p
+        <TextImage
             key={imageDoc.get("_id")}
-            className={textStyle}>
-            <span>
-                {imageDoc.getIn(["data", "url"], "lol").split("/").slice(4).join("/").slice(0, 50)}
-            </span>
-            <EmptyHeart
-                className={likeStyle}
-            />
-        </p>
+            image={imageDoc}
+        />
     );
 
 };
+
+
+
+
 
 export function TextListView ({
     images = EmptySeq,
