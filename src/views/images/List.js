@@ -3,8 +3,6 @@ import{
     branch,
     compose,
     renderComponent,
-    mapPropsStream,
-    getContext
 } from "components/recompose";
 import { connect } from "react-redux";
 import {
@@ -19,8 +17,6 @@ import {
     // inputStyle
     joinClasses as join
 } from "components/styles";
-import PropTypes from "prop-types";
-import debounce from "xstream/extra/debounce";
 import {
     Thumb
 } from "./ImageThumb";
@@ -55,52 +51,6 @@ export function ListView ({
 }
 
 
-const enhanceListView = compose(
-    getContext({
-        scrollMonitor: PropTypes.object
-    }),
-    mapPropsStream(props$ => props$
-        .map(props => {
-
-
-            const innerHeight = window.innerHeight;
-
-            const {
-                scrollMonitor: scroll$,
-                images,
-            } = props;
-
-
-            return scroll$
-                .compose(debounce(70))
-                .map( () => window.scrollY )
-                .map( currentHeight => window.document.body.scrollHeight - innerHeight - currentHeight )
-                .fold(( size, spread ) => {
-
-                    if ( spread < 100 && size < images.size ) {
-
-                        return size + 10;
-
-                    } else {
-
-                        return size;
-
-                    }
-
-                }, 10)
-                .map(size => {
-
-                    return {
-                        ...props,
-                        size
-                    };
-
-                });
-
-        })
-        .flatten()
-    )
-);
 
 export function EmptyListView () {
 
