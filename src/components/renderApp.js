@@ -9,7 +9,11 @@ import { ScrollMonitor } from "src/ScrollMonitor";
 
 
 
-export function renderApp ( Component, render = ReactDOM.render ) {
+export function renderApp (
+    Component,
+    dom = null,
+    render = ReactDOM.render
+) {
 
     const store = createStore();
     const root = render(
@@ -18,8 +22,7 @@ export function renderApp ( Component, render = ReactDOM.render ) {
                 <Component />
             </ScrollMonitor>
         </Provider>,
-        document.getElementById('root')
-
+        dom
     );
 
     return {

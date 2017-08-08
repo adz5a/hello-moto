@@ -5,6 +5,6 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import { renderApp } from "components/renderApp";
 
-renderApp(App);
+renderApp(App, document.getElementById("root"));
 
 registerServiceWorker();
