@@ -194,6 +194,7 @@ export function TextListView ({
 }) {
 
     const style = join("flex", "justify-between", "flex-wrap", "flex-column");
+    // console.log(size);
 
     return (
         <section
