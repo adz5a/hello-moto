@@ -15,7 +15,7 @@ import {
     defaultBorderedBlock as defaultBordered,
     joinClasses as join
 } from "components/styles";
-import { withAddTag } from "components/withAddTag";
+import { withAddTag, withToggleTag } from "components/withAddTag";
 import {
     EmptyHeart,
     FullHeart,
@@ -92,7 +92,7 @@ function AddTagView ({ onAddTag = noop, image = EmptyMap }) {
 }
 
 
-const AddTag = withAddTag("image")(AddTagView);
+const AddTag = withToggleTag("image")(AddTagView);
 
 
 const expandableStyle = join(

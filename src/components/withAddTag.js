@@ -9,14 +9,16 @@ import {
 } from "data/tag";
 
 
-export const withAddTag = docPropName => compose(
-    connect(),
-    withProps(props => {
+export const withAddTag = ( docPropName, newPropName = "onAddTag" ) => connect(
+    null,
+    dispatch => ({ dispatch }),
+    (_, { dispatch }, ownProps ) => {
 
-        const doc = props[docPropName];
-        const dispatch = props.dispatch
+        const doc = ownProps[docPropName];
+
         return {
-            onAddTag( tag ) {
+            ...ownProps,
+            [newPropName]: ( tag ) => {
 
                 return dispatch({
                     type: TAG_DOC,
@@ -27,20 +29,25 @@ export const withAddTag = docPropName => compose(
                 });
 
             }
-        }
 
-    })
-);
+        };
 
 
-export const withToggleTag = docPropName => compose(
-    connect(),
-    withProps(props => {
 
-        const doc = props[docPropName];
-        const dispatch = props.dispatch
+    });
+
+
+export const withToggleTag = ( docPropName, newPropName = "onAddTag" ) => connect(
+    null,
+    dispatch => ({ dispatch }),
+    (_, { dispatch }, ownProps ) => {
+
+        const doc = ownProps[docPropName];
+
+
         return {
-            onAddTag( tag ) {
+            ...ownProps,
+            [newPropName]: ( tag ) => {
 
                 return dispatch({
                     type: TOGGLE_DOC_TAG,
@@ -51,7 +58,9 @@ export const withToggleTag = docPropName => compose(
                 });
 
             }
-        }
 
-    })
-);
+        };
+
+
+
+    });
