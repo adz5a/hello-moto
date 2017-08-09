@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 // import './index.css';
 import { Provider } from "react-redux";
 import { createStore } from "data/store";
-import { ScrollMonitor } from "src/ScrollMonitor";
+// import { ScrollMonitor } from "src/ScrollMonitor";
 
 
 
@@ -18,9 +18,7 @@ export function renderApp (
     const store = createStore();
     const root = render(
         <Provider store={store}>
-            <ScrollMonitor>
-                <Component />
-            </ScrollMonitor>
+            <Component />
         </Provider>,
         dom
     );
@@ -37,9 +35,7 @@ export const withContext = Component => {
 
     return (
         <Provider store={createStore()}>
-            <ScrollMonitor>
-                <Component />
-            </ScrollMonitor>
+            <Component />
         </Provider>
     );
 
