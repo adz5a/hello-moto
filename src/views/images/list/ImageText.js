@@ -23,6 +23,9 @@ import {
     UpArrow,
     AddBox
 } from "components/icons";
+import {
+    AddTag
+} from "./CreateTag";
 import noop from "lodash/noop";
 
 
@@ -61,7 +64,7 @@ const expandStyle = join(
 );
 
 
-function AddTagView ({ onAddTag = noop, image = EmptyMap }) {
+function FavTagView ({ onAddTag = noop, image = EmptyMap }) {
 
     const isFav = image.getIn(
         [ "tag", "favorite" ],
@@ -90,15 +93,17 @@ function AddTagView ({ onAddTag = noop, image = EmptyMap }) {
 
 }
 
-const AddTag = withToggleTag("image")(AddTagView);
+const FavTag = withToggleTag("image")(FavTagView);
 
 
 function TagView ({ image }) {
 
     return (
         <section className="dib">
-            <AddBox className={join(expandStyle, "dim")}/>
-            <AddTag image={image} />
+            <AddTag 
+                image={image}
+                className={join(expandStyle, "dim")}/>
+            <FavTag image={image} />
         </section>
     );
 

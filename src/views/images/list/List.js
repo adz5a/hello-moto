@@ -24,6 +24,7 @@ import { TagListView, TagList } from "./TagList";
 import { infiniteScroll } from "components/infiniteScroll";
 import { TextListView } from "./ImageText";
 import { ToggleListView } from "./ToggleList";
+import { CreateTagModal } from "./CreateTag";
 
 
 const EmptySeq = Seq();
@@ -46,12 +47,17 @@ export function EmptyListView () {
 }
 
 
-export function ListView ({ View = TextListView, onToggle, ...props }) {
+export function ListView ({ 
+    View = TextListView,
+    onToggle,
+    ...props 
+}) {
 
     return (
         <div>
             <ToggleListView onToggle={onToggle}/>
             <TagList />
+            <CreateTagModal />
             <View {...props} />
         </div>
     );

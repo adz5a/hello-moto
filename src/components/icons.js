@@ -9,6 +9,8 @@ import FullHeart from "react-icons/lib/md/favorite";
 
 import AddBox from "react-icons/lib/md/add-box";
 
+import Close from "react-icons/lib/md/close"
+
 export {
     DownArrow,
     UpArrow,
@@ -16,5 +18,6 @@ export {
     RightArrow,
     FullHeart,
     EmptyHeart,
-    AddBox
+    AddBox,
+    Close
 }
