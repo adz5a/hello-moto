@@ -20,7 +20,8 @@ import {
     EmptyHeart,
     FullHeart,
     DownArrow,
-    UpArrow
+    UpArrow,
+    AddBox
 } from "components/icons";
 import noop from "lodash/noop";
 
@@ -50,9 +51,7 @@ const likeStyle = join(
     iconFontSize,
     css({
         color: "red",
-        ":hover": {
-            fill: "red"
-        }
+        transformOrigin: "center center"
     }),
 );
 
@@ -91,8 +90,19 @@ function AddTagView ({ onAddTag = noop, image = EmptyMap }) {
 
 }
 
-
 const AddTag = withToggleTag("image")(AddTagView);
+
+
+function TagView ({ image }) {
+
+    return (
+        <section className="dib">
+            <AddBox className={join(expandStyle, "dim")}/>
+            <AddTag image={image} />
+        </section>
+    );
+
+}
 
 
 const expandableStyle = join(
@@ -149,7 +159,7 @@ export function TextImageView ({ image = EmptyMap, showExpand, toggleExpand = no
                 {image.getIn(["data", "url"], "lol").split("/").slice(4).join("/").slice(0, 50)}
             </span>
             <div>
-                <AddTag image={image}/>
+                <TagView image={image}/>
                 {
                     showExpand ?
                         <UpArrow className={expandStyle} onClick={toggleExpand}/>:

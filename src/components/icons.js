@@ -7,11 +7,14 @@ import RightArrow from "react-icons/lib/md/keyboard-arrow-right";
 import EmptyHeart from "react-icons/lib/md/favorite-outline";
 import FullHeart from "react-icons/lib/md/favorite";
 
+import AddBox from "react-icons/lib/md/add-box";
+
 export {
     DownArrow,
     UpArrow,
     LeftArrow,
     RightArrow,
     FullHeart,
-    EmptyHeart
+    EmptyHeart,
+    AddBox
 }
