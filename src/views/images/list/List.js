@@ -20,9 +20,10 @@ import {
 import {
     ThumbListView
 } from "./ImageThumb";
+import { TagListView, TagList } from "./TagList";
 import { infiniteScroll } from "components/infiniteScroll";
 import { TextListView } from "./ImageText";
-import { ToggleListView } from "./ToggleList";
+import { ToggleListView } from "./ToggleList";
 
 
 const EmptySeq = Seq();
@@ -50,6 +51,7 @@ export function ListView ({ View = TextListView, onToggle, ...props }) {
     return (
         <div>
             <ToggleListView onToggle={onToggle}/>
+            <TagList />
             <View {...props} />
         </div>
     );

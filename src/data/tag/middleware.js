@@ -5,10 +5,11 @@ import {
 } from "data/db";
 import {
     TAG_DOC,
-    TOGGLE_DOC_TAG
+    TOGGLE_DOC_TAG,
+    UPDATE_TAG_LIST
 } from "./actions";
 import {
-    FIND_DOC
+    QUERY
 } from "data/db";
 import { withType } from "data/commons";
 import {
@@ -58,13 +59,17 @@ const creator = ( action$, state$ ) => {
 
     // will load all tags
     const start$ = xs.of({
-        type: FIND_DOC,
+        type: QUERY,
         data: {
             query: fromJS({
                 selector: {
-                    tag: { $exists: true }
+                    tag: { $exists: true },
                 },
+                fields: [ "_id", "tag", "type" ]
             })
+        },
+        meta: {
+            nextActionType: UPDATE_TAG_LIST
         }
     });
 
