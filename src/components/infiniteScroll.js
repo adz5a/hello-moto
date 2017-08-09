@@ -4,7 +4,9 @@ import {
     getContext,
     compose
 } from "components/recompose";
+import xs from "xstream";
 import debounce from "xstream/extra/debounce";
+import dropRepeats from "xstream/extra/dropRepeats";
 import PropTypes from "prop-types";
 
 
@@ -16,48 +18,61 @@ const context = getContext({
 
 export const infiniteScroll = ( propName, propType = anyProp, start = 10 ) => compose(
     context,
-    mapPropsStream(props$ => props$
-        .map(props => {
+    mapPropsStream(props$ => {
 
 
-            const innerHeight = window.innerHeight;
+        const innerHeight = window.innerHeight;
+        const getSize = props => props[propName].size || 0;
+        const scrollMonitor = props$
+            .map( props => props.scrollMonitor )
+            .take(1);
+        const size$ = props$
+            .map(getSize)
+            .compose(dropRepeats())
+            .map( maxSize => {
 
-            const data = props[propName];
 
-            const {
-                scrollMonitor: scroll$,
-            } = props;
+                return scrollMonitor
+                    .map( scroll$ => {
+
+                        return scroll$.compose(debounce(70))
+                            .map( () => window.scrollY )
+                            .map( currentHeight => window.document.body.scrollHeight - innerHeight - currentHeight )
+                            .fold(( size, spread ) => {
+
+                                if ( spread < 100 && size < maxSize ) {
+
+                                    return size + 10;
+
+                                } else {
+
+                                    return size;
+
+                                }
+
+                            }, start );
 
 
-            return scroll$
-                .compose(debounce(70))
-                .map( () => window.scrollY )
-                .map( currentHeight => window.document.body.scrollHeight - innerHeight - currentHeight )
-                .fold(( size, spread ) => {
+                    } );
 
-                    if ( spread < 100 && size < data.size ) {
 
-                        return size + 10;
+            } )
+            .flatten()
+            .flatten()
+            .compose(dropRepeats());
 
-                    } else {
+        return xs
+            .combine(props$, size$)
+            .map(([props, size]) => {
 
-                        return size;
+                return {
+                    ...props,
+                    size
+                };
 
-                    }
+            })
 
-                }, start)
-                .map(size => {
-
-                    return {
-                        ...props,
-                        size
-                    };
-
-                });
-
-        })
-        .flatten()
-    ),
+    }),
     setPropTypes({
         [propName]: propType
     })
