@@ -23,3 +23,7 @@ export const DELETED_DOC = ACTION("deleted-doc");
 
 export const ADD_BULK = ACTION("add_bulk");
 export const ADD_BULK_RESPONSE = ACTION("add-bulk-response");
+
+
+export const QUERY = ACTION("query");
+export const QUERY_DONE = ACTION("query-done");

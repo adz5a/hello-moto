@@ -16,7 +16,8 @@ import {
     middleware as imageMiddleware
 } from "data/image";
 import {
-    middleware as tagMiddleware
+    middleware as tagMiddleware,
+    reducer as tags
 } from "data/tag";
 
 
@@ -28,9 +29,7 @@ export function createStore ( {
 
 
     const reducer = combineReducers({
-        // buckets,
-        // tags,
-        // links,
+        tags,
         db,
         buckets
     });
