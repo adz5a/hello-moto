@@ -17,47 +17,51 @@ const context = getContext({
 
 
 export const infiniteScroll = ( propName, propType = anyProp, start = 10 ) => compose(
-    context,
     mapPropsStream(props$ => {
 
 
         const innerHeight = window.innerHeight;
         const getSize = props => props[propName].size || 0;
-        const scrollMonitor = props$
-            .map( props => props.scrollMonitor )
-            .take(1);
+
+        const scroll$ = xs.create({
+            start( listener ) {
+
+                this._listener = e => listener.next(e);
+
+                window.addEventListener("scroll", this._listener, true);
+            },
+            stop () {
+
+                window.removeEventListener("scroll", this._listener, true);
+
+            }
+        });
+
         const size$ = props$
             .map(getSize)
             .compose(dropRepeats())
             .map( maxSize => {
 
+                return scroll$
+                    .compose(debounce(70))
+                    .map( () => window.scrollY )
+                    .map( currentHeight => window.document.body.scrollHeight - innerHeight - currentHeight )
+                    .fold(( size, spread ) => {
 
-                return scrollMonitor
-                    .map( scroll$ => {
+                        if ( spread < 100 && size < maxSize ) {
 
-                        return scroll$.compose(debounce(70))
-                            .map( () => window.scrollY )
-                            .map( currentHeight => window.document.body.scrollHeight - innerHeight - currentHeight )
-                            .fold(( size, spread ) => {
+                            return size + 10;
 
-                                if ( spread < 100 && size < maxSize ) {
+                        } else {
 
-                                    return size + 10;
+                            return size;
 
-                                } else {
+                        }
 
-                                    return size;
-
-                                }
-
-                            }, start );
-
-
-                    } );
+                    }, start );
 
 
             } )
-            .flatten()
             .flatten()
             .compose(dropRepeats());
 
