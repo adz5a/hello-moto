@@ -6,9 +6,9 @@ import {
 } from "components/styles";
 import {
     compose,
-    withReducer,
-    mapPropsStream,
-    createEventHandler
+    // withReducer,
+    // mapPropsStream,
+    // createEventHandler
 } from "components/recompose";
 import { css } from "glamor";
 import {
@@ -26,6 +26,9 @@ import {
 } from "react-redux";
 import PropTypes from "prop-types";
 import noop from "lodash/noop";
+import {
+    CLOSE_TAG_MODAL
+} from "data/gallery";
 
 
 const modalStyle = join(
@@ -66,7 +69,8 @@ export function CreateTagView ({
     onClose = noop
 }) {
 
-    console.log(image);
+    // console.log(show);
+    // console.log(image);
 
     const name = image.getIn(["data", "url"], "").split("/").pop();
     return (
@@ -149,36 +153,20 @@ export function CreateTagView ({
 export const CreateTagModal = compose(
     connect(
         state => ({
-            tags: state.tags.byName
-        })
+            tags: state.tags.byName,
+            show: state.gallery.tagModale.show,
+            image: state.gallery.tagModale.doc
+        }),
+        {
+            onClose () {
+
+                return {
+                    type: CLOSE_TAG_MODAL
+                };
+
+            }
+        }
     ),
-    mapPropsStream( props$ => {
-
-        const { handler: onClose, stream: close$ } = createEventHandler();
-
-        return props$
-            .map( props  => {
-
-                const  { show = false } = props;
-
-                return close$
-                    .fold( show => !show, show )
-                    .debug("show")
-                    .map( show => {
-
-                        return {
-                            ...props,
-                            show,
-                            onClose
-                        };
-
-                    } );
-
-            })
-            .flatten();
-
-
-    } )
 )(CreateTagView);
 
 
@@ -195,7 +183,7 @@ export function AddTagView ({ image, openTagModal = noop }) {
     return (
         <AddBox 
             className={join(expandStyle, "dim")}
-            onClick={() => openTagModal({ image })}
+            onClick={() => openTagModal(image)}
         />
     );
 

@@ -20,12 +20,18 @@ import {
 import {
     ThumbListView
 } from "./ImageThumb";
-import { TagListView, TagList } from "./TagList";
+import { 
+    // TagListView,
+    TagList
+} from "./TagList";
 import { infiniteScroll } from "components/infiniteScroll";
 import { TextListView } from "./ImageText";
 import { ToggleListView } from "./ToggleList";
 import { CreateTagModal } from "./CreateTag";
-import noop from "lodash/noop";
+// import noop from "lodash/noop";
+import {
+    OPEN_TAG_MODAL
+} from "data/gallery";
 
 
 const EmptySeq = Seq();
@@ -51,25 +57,17 @@ export function EmptyListView () {
 export function ListView ({
     View = TextListView,
     onToggle,
-    modalState = {},
-    toggleModal = noop,
     ...props
 }) {
 
-    const { show, image: currentImage } = modalState;
 
-    console.log(show, currentImage);
     return (
         <div>
             <ToggleListView onToggle={onToggle}/>
             <TagList />
-            <CreateTagModal
-                image={currentImage}
-                show={show}
-            />
+            <CreateTagModal />
             <View
                 {...props}
-                openTagModal={toggleModal}
             />
         </div>
     );
@@ -80,12 +78,25 @@ export const ImageList = compose(
     connect(
         state => ({
             images: state.db.byType.get("image", EmptySeq).toSeq()
-        })
+        }),
+        {
+            openTagModal ( doc ) {
+
+                return {
+                    type: OPEN_TAG_MODAL,
+                    data: { doc }
+                };
+
+            }
+        }
     ),
     branch(
         props => props.images.size === 0,
         renderComponent(EmptyListView)
     ),
+    // injects a "size" props
+    // which is refreshed with
+    // the scroll
     infiniteScroll(
         "images",
         undefined,
@@ -111,21 +122,5 @@ export const ImageList = compose(
 
         },
         () => TextListView
-    ),
-    withReducer(
-        "modalState",
-        "toggleModal",
-        ( state, { image } ) => {
-
-            console.log(image);
-            return {
-                image,
-                show: true
-            };
-
-        },
-        () => ({
-            show: false
-        })
     )
 )(ListView);

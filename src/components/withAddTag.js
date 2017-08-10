@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
-import {
-    compose,
-    withProps
-} from "components/recompose";
+// import {
+//     compose,
+//     withProps
+// } from "components/recompose";
 import {
     TAG_DOC,
     TOGGLE_DOC_TAG

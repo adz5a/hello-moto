@@ -1,7 +1,7 @@
 import {
     setPropTypes,
     mapPropsStream,
-    getContext,
+    // getContext,
     compose
 } from "components/recompose";
 import xs from "xstream";
@@ -11,9 +11,6 @@ import PropTypes from "prop-types";
 
 
 const anyProp = PropTypes.any.isRequired;
-const context = getContext({
-    scrollMonitor: PropTypes.object
-});
 
 
 export const infiniteScroll = ( propName, propType = anyProp, start = 10 ) => compose(

@@ -15,13 +15,16 @@ import {
     defaultBorderedBlock as defaultBordered,
     joinClasses as join
 } from "components/styles";
-import { withAddTag, withToggleTag } from "components/withAddTag";
+import { 
+    // withAddTag,
+    withToggleTag
+} from "components/withAddTag";
 import {
     EmptyHeart,
     FullHeart,
     DownArrow,
     UpArrow,
-    AddBox
+    // AddBox
 } from "components/icons";
 import {
     AddTag
@@ -141,6 +144,7 @@ function Expandable ( { expand = false, image = EmptyMap } ) {
                 <img
                     src={image.getIn(["data", "url"], "")}
                     className="w-auto h-100"
+                    alt=""
                 />
             </section>
         );
@@ -152,6 +156,7 @@ function Expandable ( { expand = false, image = EmptyMap } ) {
                 <img
                     src={image.getIn(["data", "url"], "")}
                     className="w-auto h-100"
+                    alt=""
                 />
             </section>
         );
