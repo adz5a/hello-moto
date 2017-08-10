@@ -144,7 +144,7 @@ const foldPrefixes = ( prefixes = [] )=> {
 
     return reduce( ( res, prefix = "") => {
 
-        const [ head, ...tail ] = prefix.split("/").filter( str => str !== "" );
+        const [ head, ...tail ] = prefix.split("/").filter( str => str !== "" );
         return insert(res, head, tail );
 
     }, {}, prefixes );
@@ -188,7 +188,7 @@ const listBucket = ( { baseURL, name, continuationToken = "", prefix = "" } = {}
 const isValidRequest = conforms({
     baseURL: val => isString(val) && val.length > 0,
     bucket: val => isString(val) && val.length > 0,
-    prefix: val => val === undefined || isString(val)
+    prefix: val => val === undefined || isString(val)
 });
 
 module.exports = {

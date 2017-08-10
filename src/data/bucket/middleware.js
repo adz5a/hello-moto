@@ -1,6 +1,6 @@
 import xs from "xstream";
 // import dropRepeats from "xstream/extra/dropRepeats";
-import { createStreamMiddleware } from "data/streamMiddleware";
+import { createStreamMiddleware } from "data/streamMiddleware";
 import {
     FIND_DOC,
     ADD_BULK,
@@ -18,15 +18,15 @@ import {
     Map,
     List
 } from "immutable";
-import { withType } from "data/commons";
+import { withType } from "data/commons";
 import { listBucket } from "data/xml.utils";
-import { 
+import { 
     contentType
 } from "data/link";
 import { awaitPromises } from "components/stream";
-// import {
-//     makeId
-// } from "./data";
+import {
+    makeId
+} from "./data";
 
 
 const onStart = () => xs.of({
@@ -69,8 +69,11 @@ const getList = ({
                 nextContinuationToken,
                 contents: List(newContents.map(item => {
 
-                    const url = baseURL + "/" + name + "/" + item.Key;
+                    const url = [ baseURL, name, item.Key ]
+                        .map( s => s.trim() )
+                        .join("/");
                     return Map({
+                        id: makeId(url),
                         url,
                         size: item.Size,
                         lastModified: item.LastModified,
@@ -124,7 +127,7 @@ const listAll = state$ => action$ => {
         .filter(withType(LIST_ALL_CONTENT))
         .map(action => {
 
-            const { bucket } = action.data;
+            const { bucket } = action.data;
 
 
             // operator : will select the relevant
