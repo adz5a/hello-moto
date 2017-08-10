@@ -99,7 +99,7 @@ export function CreateTagView ({
 
                         e.preventDefault();
                         const data = parseForm([ "newTag", "oldTag" ], e.target);
-                        console.log(data);
+                        // console.log(data);
                         const tag = data.newTag.length > 0 ?
                             data.newTag :
                             data.oldTag;

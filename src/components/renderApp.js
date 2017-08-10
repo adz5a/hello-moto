@@ -5,22 +5,25 @@ import { Provider } from "react-redux";
 import { createStore } from "data/store";
 // import { ScrollMonitor } from "src/ScrollMonitor";
 
+import { Router } from "components/Router";
 
 
 
 
 export function renderApp (
     Component,
-    dom = null,
+    options,
     render = ReactDOM.render
 ) {
 
     const store = createStore();
     const root = render(
         <Provider store={store}>
-            <Component />
+            <Router>
+                <Component />
+            </Router>
         </Provider>,
-        dom
+        options
     );
 
     return {
@@ -35,7 +38,9 @@ export const withContext = Component => {
 
     return (
         <Provider store={createStore()}>
-            <Component />
+            <Router>
+                <Component />
+            </Router>
         </Provider>
     );
 

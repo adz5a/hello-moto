@@ -11,7 +11,6 @@ import {
 import {
     Images
 } from "views/images";
-import { Router } from "components/Router";
 
 
 
@@ -23,27 +22,25 @@ const NotFound = () => (
 class App extends Component {
     render() {
         return (
-            <Router>
-                <div>
-                    <Route
-                        path="/"
-                        exact
-                        component={Home}
-                    />
-                    <Route
-                        path="/bucket"
-                        component={Bucket}
-                    />
-                    <Route
-                        path="/images"
-                        component={Images}
-                    />
-                    <Route
-                        path="/404"
-                        component={NotFound}
-                    />
-                </div>
-            </Router>
+            <div>
+                <Route
+                    path="/"
+                    exact
+                    component={Home}
+                />
+                <Route
+                    path="/bucket"
+                    component={Bucket}
+                />
+                <Route
+                    path="/images"
+                    component={Images}
+                />
+                <Route
+                    path="/404"
+                    component={NotFound}
+                />
+            </div>
         );
     }
 }
