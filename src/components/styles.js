@@ -28,3 +28,10 @@ export const viewStyle = css({
     marginRight: "auto",
     marginTop: "2em"
 });
+
+
+export const pillStyle = "dim br-pill ph3 pv2 mb2 dib white bg-black";
+export const smallPillStyle = joinClasses(
+    pillStyle,
+    "f6"
+);
