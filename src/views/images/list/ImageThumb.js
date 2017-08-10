@@ -23,6 +23,9 @@ import PropTypes from "prop-types";
 import {
     withToggleTag
 } from "components/withAddTag"
+import {
+    AddTag
+} from "./CreateTag";
 
 
 const EmptySeq = Seq();
@@ -49,7 +52,10 @@ const imageContainerStyle = join(
 );
 
 
-export function Thumb ({ image = EmptyMap }) {
+export function Thumb ({
+    image = EmptyMap,
+    openTagModal = noop
+}) {
 
     return (
         <div
@@ -61,11 +67,20 @@ export function Thumb ({ image = EmptyMap }) {
                 src={image.get("data").get("url")}
                 className={imageStyle}
             />
-            <ThumbFooter image={image}/>
+            <ThumbFooter
+                image={image}
+                openTagModal={openTagModal}
+            />
         </div>
     );
 
 }
+
+
+Thumb.propTypes = {
+    openTagModal: PropTypes.func.isRequired,
+    image: PropTypes.any.isRequired
+};
 
 const ThumIconStyle = join(
     "grow",
@@ -81,7 +96,8 @@ const ThumIconStyle = join(
 
 export function ThumbFooterView ({
     image = EmptyMap,
-    onAddTag = noop
+    onAddTag = noop,
+    openTagModal = noop
 }) {
 
     const isFav = image.getIn(
@@ -89,58 +105,69 @@ export function ThumbFooterView ({
         false
     );
 
-    if ( isFav ) {
 
-        return (
-            <footer>
-                <FullHeart
-                    className={ThumIconStyle}
-                    onClick={() => onAddTag("favorite")}
-                />
-            </footer>
-        );
+    return (
+        <footer>
+            {
 
-    } else {
+                isFav ?
+                    <FullHeart
+                        className={ThumIconStyle}
+                        onClick={() => onAddTag("favorite")}
+                    /> :
+                    <EmptyHeart
+                        className={ThumIconStyle}
+                        onClick={() => onAddTag("favorite")}
+                    />
 
-        return (
-            <footer>
-                <EmptyHeart
-                    className={ThumIconStyle}
-                    onClick={() => onAddTag("favorite")}
-                />
-            </footer>
-        );
+            }
+            <AddTag
+                openTagModal={openTagModal}
+                image={image}
+            />
+        </footer>
+    );
 
-    }
 
 }
 
 
 const ThumbFooter = compose(
     setPropTypes({
-        image: PropTypes.object.isRequired
+        image: PropTypes.object.isRequired,
+        openTagModal: PropTypes.func.isRequired
     }),
     withToggleTag("image")
 )(ThumbFooterView);
-
-
-const renderThumb = imageDoc => <Thumb
-    key={imageDoc.get("_id")}
-    image={imageDoc}
-/>
 
 
 const list = join("flex", "justify-between", "flex-wrap");
 export function ThumbListView ({
     images = EmptySeq,
     size = 10,
+    openTagModal = noop
 }) {
 
     return (
         <section
             className={list}
         >
-            {images.slice(0, size).map(renderThumb).toArray()}
+            {
+                images
+                    .slice(0, size)
+                    .map(image => {
+
+                        return (
+                            <Thumb
+                                key={image.get("_id")}
+                                image={image}
+                                openTagModal={openTagModal}
+                            />
+                        );
+
+                    })
+                    .toArray()
+            }
         </section>
     );
 

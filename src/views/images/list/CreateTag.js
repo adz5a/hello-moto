@@ -27,8 +27,11 @@ import {
 import PropTypes from "prop-types";
 import noop from "lodash/noop";
 import {
-    CLOSE_TAG_MODAL
+    CLOSE_TAG_MODAL,
 } from "data/gallery";
+import {
+    TOGGLE_DOC_TAG
+} from "data/tag";
 
 
 const modalStyle = join(
@@ -66,7 +69,8 @@ export function CreateTagView ({
     show = true,
     image = Map(),
     tags = Map(),
-    onClose = noop
+    onClose = noop,
+    onAdd = noop
 }) {
 
     // console.log(show);
@@ -96,6 +100,17 @@ export function CreateTagView ({
                         e.preventDefault();
                         const data = parseForm([ "newTag", "oldTag" ], e.target);
                         console.log(data);
+                        const tag = data.newTag.length > 0 ?
+                            data.newTag :
+                            data.oldTag;
+
+                        if ( tag !== "none" ) {
+
+
+                            onAdd(image, tag);
+                            onClose();
+
+                        }
 
                     }}
                 >
@@ -108,6 +123,7 @@ export function CreateTagView ({
                                 className={inputStyle}
                                 type="text"
                                 name="newTag"
+                                defaultValue={""}
                             />
                         </label>
                     </p>
@@ -119,6 +135,7 @@ export function CreateTagView ({
                             <select
                                 className={inputStyle}
                                 name="oldTag"
+                                defaultValue={"none"}
                             >
                                 <option value={"none"}>Select</option>
                                 {
@@ -164,6 +181,14 @@ export const CreateTagModal = compose(
                     type: CLOSE_TAG_MODAL
                 };
 
+            },
+            onAdd ( doc, tag ) {
+
+                return {
+                    type: TOGGLE_DOC_TAG,
+                    data: { doc, tag }
+                };
+
             }
         }
     ),
@@ -190,7 +215,8 @@ export function AddTagView ({ image, openTagModal = noop }) {
 }
 
 AddTagView.propTypes = {
-    openTagModal: PropTypes.func
+    openTagModal: PropTypes.func.isRequired,
+    image: PropTypes.any.isRequired
 };
 
 export const AddTag = AddTagView;

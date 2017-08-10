@@ -20,7 +20,8 @@ import {
     reducer as tags
 } from "data/tag";
 import {
-    reducer as gallery
+    reducer as gallery,
+    // middleware as galleryMiddleware
 } from "data/gallery";
 
 
