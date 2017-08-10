@@ -96,13 +96,20 @@ function FavTagView ({ onAddTag = noop, image = EmptyMap }) {
 const FavTag = withToggleTag("image")(FavTagView);
 
 
-function TagView ({ image }) {
+function TagView ({ 
+    image, 
+    onAddTag = noop,
+    openTagModal= noop
+}) {
 
+    // console.log(onAddTag);
     return (
         <section className="dib">
             <AddTag 
                 image={image}
-                className={join(expandStyle, "dim")}/>
+                className={join(expandStyle, "dim")}
+                openTagModal={openTagModal}
+            />
             <FavTag image={image} />
         </section>
     );
@@ -155,7 +162,15 @@ function Expandable ( { expand = false, image = EmptyMap } ) {
 
 
 
-export function TextImageView ({ image = EmptyMap, showExpand, toggleExpand = noop }) {
+export function TextImageView ({ 
+    image = EmptyMap,
+    showExpand,
+    toggleExpand = noop,
+    onAddTag = noop,
+    openTagModal = noop
+}) {
+
+    // console.log(openTagModal);
 
     return (
         <section
@@ -164,7 +179,10 @@ export function TextImageView ({ image = EmptyMap, showExpand, toggleExpand = no
                 {image.getIn(["data", "url"], "lol").split("/").slice(4).join("/").slice(0, 50)}
             </span>
             <div>
-                <TagView image={image}/>
+                <TagView 
+                    image={image}
+                    openTagModal={openTagModal}
+                />
                 {
                     showExpand ?
                         <UpArrow className={expandStyle} onClick={toggleExpand}/>:
@@ -188,24 +206,13 @@ const TextImage = withReducer(
 
 
 
-const renderText = imageDoc => {
-
-    return (
-        <TextImage
-            key={imageDoc.get("_id")}
-            image={imageDoc}
-        />
-    );
-
-};
-
-
-
 
 
 export function TextListView ({
     images = EmptySeq,
     size = 10,
+    onAddTag = noop,
+    openTagModal = noop
 }) {
 
     const style = join("flex", "justify-between", "flex-wrap", "flex-column");
@@ -215,7 +222,23 @@ export function TextListView ({
         <section
             className={style}
         >
-            {images.slice(0, size).map(renderText).toArray()}
+            {
+                images
+                    .toSeq()
+                    .slice(0, size)
+                    .map(imageDoc => {
+
+                        return (
+                            <TextImage
+                                key={imageDoc.get("_id")}
+                                image={imageDoc}
+                                onAddTag={onAddTag}
+                                openTagModal={openTagModal}
+                            />
+                        );
+
+                    }).toArray()
+            }
         </section>
     );
 

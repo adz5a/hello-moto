@@ -25,6 +25,7 @@ import { infiniteScroll } from "components/infiniteScroll";
 import { TextListView } from "./ImageText";
 import { ToggleListView } from "./ToggleList";
 import { CreateTagModal } from "./CreateTag";
+import noop from "lodash/noop";
 
 
 const EmptySeq = Seq();
@@ -47,18 +48,29 @@ export function EmptyListView () {
 }
 
 
-export function ListView ({ 
+export function ListView ({
     View = TextListView,
     onToggle,
-    ...props 
+    modalState = {},
+    toggleModal = noop,
+    ...props
 }) {
 
+    const { show, image: currentImage } = modalState;
+
+    console.log(show);
     return (
         <div>
             <ToggleListView onToggle={onToggle}/>
             <TagList />
-            <CreateTagModal />
-            <View {...props} />
+            <CreateTagModal
+                image={currentImage}
+                show={show}
+            />
+            <View
+                {...props}
+                openTagModal={toggleModal}
+            />
         </div>
     );
 
@@ -99,5 +111,20 @@ export const ImageList = compose(
 
         },
         () => TextListView
+    ),
+    withReducer(
+        "modalState",
+        "toggleModal",
+        ( state, { image } ) => {
+
+            return {
+                image,
+                show: true
+            };
+
+        },
+        () => ({
+            show: false
+        })
     )
 )(ListView);

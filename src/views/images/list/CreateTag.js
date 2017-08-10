@@ -6,7 +6,9 @@ import {
 } from "components/styles";
 import {
     compose,
-    withReducer
+    withReducer,
+    mapPropsStream,
+    createEventHandler
 } from "components/recompose";
 import { css } from "glamor";
 import {
@@ -19,6 +21,7 @@ import {
 import {
     connect
 } from "react-redux";
+import PropTypes from "prop-types";
 import noop from "lodash/noop";
 
 
@@ -60,6 +63,7 @@ export function CreateTagView ({
     onClose = noop
 }) {
 
+    console.log(image);
 
     return (
         <section >
@@ -131,12 +135,33 @@ export const CreateTagModal = compose(
             tags: state.tags.byName
         })
     ),
-    withReducer(
-        "show",
-        "onClose",
-        ( show, _ ) => !show,
-        () => true
-    )
+    mapPropsStream( props$ => {
+
+        const { handler: onClose, stream: close$ } = createEventHandler();
+
+        return props$
+            .map( props  => {
+
+                const  { show = false } = props;
+
+                return close$
+                    .fold( show => !show, show )
+                    .debug("show")
+                    .map( show => {
+
+                        return {
+                            ...props,
+                            show,
+                            onClose
+                        };
+
+                    } );
+
+            })
+            .flatten();
+
+
+    } )
 )(CreateTagView);
 
 
@@ -147,15 +172,20 @@ const expandStyle = join(
     "pointer",
 );
 
-export function AddTagView ({ image }) {
+export function AddTagView ({ image, openTagModal = noop }) {
 
+    // console.log(openTagModal);
     return (
         <AddBox 
             className={join(expandStyle, "dim")}
+            onClick={() => openTagModal({ image })}
         />
     );
 
 }
 
+AddTagView.propTypes = {
+    openTagModal: PropTypes.func
+};
 
 export const AddTag = AddTagView;
