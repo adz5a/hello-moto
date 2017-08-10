@@ -15,7 +15,9 @@ import {
     ADD_BULK,
     ADD_BULK_RESPONSE,
     UPDATE_DOC,
-    DOC_UPDATED
+    DOC_UPDATED,
+    QUERY,
+    QUERY_DONE
 } from "./actions";
 import {
     // toJS,
@@ -35,10 +37,44 @@ import { awaitPromises } from "components/stream";
 
 
 
+const query = action$ => action$
+    .filter(withType(QUERY))
+    .map( ({ data, meta }) => {
+
+
+        const { query } = data;
+        const raw = unwrapMap(query);
+        const { nextActionType = QUERY_DONE } = meta;
+
+
+        return db
+            .find(raw)
+            .then(
+                ( { docs = [] } ) => {
+
+                    return {
+                        query,
+                        response: List(docs.map( doc => fromJS(doc) ))
+                    };
+
+                }
+            )
+            .then ( data => {
+
+                return {
+                    type: nextActionType,
+                    data
+                }
+
+            } );
+
+    })
+    .compose(awaitPromises());
 
 
 
 const insert = insert$ => insert$
+        .filter(withType(INSERT_DOC))
         .map( ( { data: doc } ) => {
 
             const raw = unwrapMap(doc);
@@ -206,7 +242,6 @@ const creator = action$ => {
 
 
     const insert$ = action$
-        .filter(withType(INSERT_DOC))
         .compose(insert);
 
     const find$ = action$
@@ -223,13 +258,16 @@ const creator = action$ => {
     const update$ = action$
         .compose(update);
 
+    const query$ = query(action$);
+
     return xs
         .merge(
             insert$,
             find$,
             delete$,
             addBulk$,
-            update$
+            update$,
+            query$
         )
         // .debug();
 

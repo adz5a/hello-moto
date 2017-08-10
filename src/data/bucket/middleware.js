@@ -24,9 +24,9 @@ import { 
     contentType
 } from "data/link";
 import { awaitPromises } from "components/stream";
-import {
-    makeId
-} from "./data";
+// import {
+//     makeId
+// } from "./data";
 
 
 const onStart = () => xs.of({

@@ -20,9 +20,18 @@ import {
 import {
     ThumbListView
 } from "./ImageThumb";
+import { 
+    // TagListView,
+    TagList
+} from "./TagList";
 import { infiniteScroll } from "components/infiniteScroll";
 import { TextListView } from "./ImageText";
-import { ToggleListView } from "./ToggleList";
+import { ToggleListView } from "./ToggleList";
+import { CreateTagModal } from "./CreateTag";
+// import noop from "lodash/noop";
+import {
+    OPEN_TAG_MODAL
+} from "data/gallery";
 
 
 const EmptySeq = Seq();
@@ -45,12 +54,21 @@ export function EmptyListView () {
 }
 
 
-export function ListView ({ View = TextListView, onToggle, ...props }) {
+export function ListView ({
+    View = TextListView,
+    onToggle,
+    ...props
+}) {
+
 
     return (
         <div>
             <ToggleListView onToggle={onToggle}/>
-            <View {...props} />
+            <TagList />
+            <CreateTagModal />
+            <View
+                {...props}
+            />
         </div>
     );
 
@@ -60,12 +78,25 @@ export const ImageList = compose(
     connect(
         state => ({
             images: state.db.byType.get("image", EmptySeq).toSeq()
-        })
+        }),
+        {
+            openTagModal ( doc ) {
+
+                return {
+                    type: OPEN_TAG_MODAL,
+                    data: { doc }
+                };
+
+            }
+        }
     ),
     branch(
         props => props.images.size === 0,
         renderComponent(EmptyListView)
     ),
+    // injects a "size" props
+    // which is refreshed with
+    // the scroll
     infiniteScroll(
         "images",
         undefined,
