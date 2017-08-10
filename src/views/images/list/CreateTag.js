@@ -16,6 +16,9 @@ import {
     AddBox
 } from "components/icons";
 import {
+    parseForm
+} from "components/Form";
+import {
     Map
 } from "immutable";
 import {
@@ -65,6 +68,7 @@ export function CreateTagView ({
 
     console.log(image);
 
+    const name = image.getIn(["data", "url"], "").split("/").pop();
     return (
         <section >
             <section
@@ -81,7 +85,16 @@ export function CreateTagView ({
                 />
 
                 <h1>Add new tag</h1>
-                <form>
+                <h3>{name.slice(0, 20)}</h3>
+                <form
+                    onSubmit={e => {
+
+                        e.preventDefault();
+                        const data = parseForm([ "newTag", "oldTag" ], e.target);
+                        console.log(data);
+
+                    }}
+                >
                     <p>
                         <label
                             className="flex"
@@ -90,6 +103,7 @@ export function CreateTagView ({
                             <input
                                 className={inputStyle}
                                 type="text"
+                                name="newTag"
                             />
                         </label>
                     </p>
@@ -100,13 +114,16 @@ export function CreateTagView ({
                             <span className={textLabel}>Select one</span>
                             <select
                                 className={inputStyle}
+                                name="oldTag"
                             >
+                                <option value={"none"}>Select</option>
                                 {
                                     tags
                                         .toSeq()
                                         .map(( _, name ) => (
                                             <option
                                                 key={name}
+                                                value={name}
                                             >
                                                 {name}
                                             </option>

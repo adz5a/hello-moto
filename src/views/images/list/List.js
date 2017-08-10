@@ -58,7 +58,7 @@ export function ListView ({
 
     const { show, image: currentImage } = modalState;
 
-    console.log(show);
+    console.log(show, currentImage);
     return (
         <div>
             <ToggleListView onToggle={onToggle}/>
@@ -117,6 +117,7 @@ export const ImageList = compose(
         "toggleModal",
         ( state, { image } ) => {
 
+            console.log(image);
             return {
                 image,
                 show: true
