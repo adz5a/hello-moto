@@ -13,7 +13,13 @@ import PropTypes from "prop-types";
 const anyProp = PropTypes.any.isRequired;
 
 
-export const infiniteScroll = ( propName, propType = anyProp, start = 10 ) => compose(
+export const infiniteScroll = (
+    propName,
+    propType = anyProp,
+    start = 10,
+    increment = 10,
+    scrollSpread = 100
+) => compose(
     mapPropsStream(props$ => {
 
 
@@ -45,7 +51,7 @@ export const infiniteScroll = ( propName, propType = anyProp, start = 10 ) => co
                     .map( currentHeight => window.document.body.scrollHeight - innerHeight - currentHeight )
                     .fold(( size, spread ) => {
 
-                        if ( spread < 100 && size < maxSize ) {
+                        if ( spread < scrollSpread && size < maxSize ) {
 
                             return size + 10;
 
