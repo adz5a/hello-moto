@@ -40,7 +40,7 @@ export function TagListView ({ tags = Map() }) {
             })
             .toArray()
         )
-        .map( list => <ul className="dib">{list}</ul> )
+        .map( (list, index) => <ul key={index} className="dib">{list}</ul> )
 
 
 
