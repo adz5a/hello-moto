@@ -19,6 +19,9 @@ import {
     middleware as tagMiddleware,
     reducer as tags
 } from "data/tag";
+import {
+    reducer as gallery
+} from "data/gallery";
 
 
 export function createStore ( {
@@ -31,7 +34,8 @@ export function createStore ( {
     const reducer = combineReducers({
         tags,
         db,
-        buckets
+        buckets,
+        gallery
     });
 
     if ( process.env.NODE_ENV !== "production" ) {
