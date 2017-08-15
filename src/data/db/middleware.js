@@ -1,9 +1,7 @@
 import xs from "xstream";
 import { createStreamMiddleware } from "data/streamMiddleware";
-import { db } from "data/db";
 import {
-    // loadType,
-    // createIndex
+    db
 } from "./data";
 import {
     INSERT_DOC,
@@ -42,7 +40,7 @@ const query = action$ => action$
     .map( ({ data, meta }) => {
 
 
-        const { query } = data;
+        const { query } = data;
         const raw = unwrapMap(query);
         const { nextActionType = QUERY_DONE } = meta;
 

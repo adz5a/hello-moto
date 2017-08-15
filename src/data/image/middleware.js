@@ -8,7 +8,7 @@ import {
 } from "immutable";
 
 
-export const creator = ( action$, state$ ) => {
+export const creator = ( action$, state$ ) => {
 
     return xs.of({
         type: FIND_DOC,
