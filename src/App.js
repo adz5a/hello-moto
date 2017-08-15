@@ -11,6 +11,9 @@ import {
 import {
     Images
 } from "views/images";
+import {
+    Music
+} from "views/music";
 
 
 
@@ -35,6 +38,10 @@ class App extends Component {
                 <Route
                     path="/images"
                     component={Images}
+                />
+                <Route
+                    path="/music"
+                    component={Music}
                 />
                 <Route
                     path="/404"

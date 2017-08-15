@@ -25,9 +25,9 @@ export function View () {
             </Link>
             <Link
                 className={ls}
-                to={"/link"}
+                to={"/music"}
             >
-                {"Links"}
+                {"Music"}
             </Link>
             <Link
                 className={ls}
