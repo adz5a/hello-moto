@@ -4,7 +4,7 @@ const { resolve } = require("path");
 
 
 const isTest = process.env.BABEL_ENV === "test" || process.env.NODE_ENV === "test"
-const pouchdbAlias = isTest ? "pouchdb-memory" : "pouchdb";
+const pouchdbAlias = isTest ? "pouchdb-memory" : "pouchdb-browser";
 
 
 
