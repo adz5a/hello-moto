@@ -9,7 +9,7 @@ import {
     compose,
     mapProps,
     once,
-    // withState
+    lifecycle
 } from "components/recompose";
 import {
     DefaultBorderedText as Text

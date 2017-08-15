@@ -25,7 +25,7 @@ export const once = ( predicate, action ) => {
 
     let wasPlayed = false;
 
-    const hook = function hook () {
+    function lifecycleHook () {
 
 
             if ( !wasPlayed ) {
@@ -42,15 +42,14 @@ export const once = ( predicate, action ) => {
 
     return lifecycle({
 
+        componentDidMount: lifecycleHook,
+        componentDidUpdate: lifecycleHook,
+        componentWillUnmount () {
 
-        componentDidMount: hook,
-        componentDidUpdate: hook
+            wasPlayed = false;
+
+        }
 
     })
-
-
-
-
-
 
 };

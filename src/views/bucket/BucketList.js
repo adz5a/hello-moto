@@ -16,7 +16,8 @@ import noop from "lodash/noop";
 import {
     compose,
     renderComponent,
-    branch
+    branch,
+    once
 } from "components/recompose";
 import {
     connect
@@ -27,8 +28,11 @@ import {
     // is
 } from "immutable";
 import {
-    DELETE_DOC
+    DELETE_DOC,
+    FIND_DOC
 } from "data/db";
+import constant from "lodash/constant";
+
 
 function Text ( { text } ) {
 
@@ -171,12 +175,24 @@ export const enhanceBucketList = compose(
             .map( doc => doc.get("data") )
         }),
     ),
+    once(
+        constant(true),
+        props => props.dispatch({
+            type: FIND_DOC,
+            data: {
+                query: {
+                    selector: {
+                        type: "bucket"
+                    }
+                }
+            }
+        })
+    ),
     branch(
         ({ buckets }) => buckets.size === 0,
         renderComponent(EmptyBucketListView)
     ),
-    withRouter
+    withRouter,
 );
 
 export const BucketList = enhanceBucketList(BucketListView);
-

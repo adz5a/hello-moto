@@ -25,7 +25,7 @@ import {
 } from "data/link";
 import { awaitPromises } from "components/stream";
 import {
-    makeId
+    makeIdFromURL
 } from "./data";
 
 
@@ -73,7 +73,7 @@ const getList = ({
                         .map( s => s.trim() )
                         .join("/");
                     return Map({
-                        id: makeId(url),
+                        id: makeIdFromURL(url),
                         url,
                         size: item.Size,
                         lastModified: item.LastModified,

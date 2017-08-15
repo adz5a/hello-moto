@@ -27,11 +27,18 @@ export const fromObject = flow([
 
 export const makeURL = bucket => bucket.baseURL + "/" + bucket.name
 
-export const makeId = flow([
-    makeURL,
+export const makeIdFromURL = flow([
     encodeURIComponent,
     btoa
 ]);
+
+export const makeId = flow([
+    makeURL,
+    makeIdFromURL
+]);
+
+
+
 
 export const fromURLAndName = fromObject;
 
