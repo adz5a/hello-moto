@@ -14,5 +14,6 @@ module.exports = {
     "data": resolve(paths.appSrc, "data"),
     "api": resolve(paths.appSrc, "api"),
     "components": resolve(paths.appSrc, "components"),
+    "parser": resolve(paths.appSrc, "parser"),
     "pouchdb": pouchdbAlias
 };
