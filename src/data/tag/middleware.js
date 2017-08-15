@@ -57,24 +57,8 @@ const creator = ( action$, state$ ) => {
         });
 
 
-    // will load all tags
-    const start$ = xs.of({
-        type: QUERY,
-        data: {
-            query: fromJS({
-                selector: {
-                    tag: { $exists: true },
-                },
-                fields: [ "_id", "tag", "type" ]
-            })
-        },
-        meta: {
-            nextActionType: UPDATE_TAG_LIST
-        }
-    });
 
     return xs.merge(
-        start$,
         tag$,
         toggle$
     );

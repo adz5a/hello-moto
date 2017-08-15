@@ -29,16 +29,16 @@ import {
 } from "./data";
 
 
-const onStart = () => xs.of({
-        type: FIND_DOC,
-        data: {
-            query: fromJS({
-                selector: {
-                    type: "bucket"
-                }
-            })
-        }
-    });
+// const onStart = () => xs.of({
+//         type: FIND_DOC,
+//         data: {
+//             query: fromJS({
+//                 selector: {
+//                     type: "bucket"
+//                 }
+//             })
+//         }
+//     });
 
 
 const getList = ({
@@ -266,8 +266,6 @@ const saveAll = state$ => action$ => {
 
 const creator = ( action$, state$ ) => {
 
-    const start$ = onStart();
-
 
     const list$ = action$
         .filter(withType(LIST_CONTENT))
@@ -280,7 +278,6 @@ const creator = ( action$, state$ ) => {
         .compose(saveAll(state$));
 
     return xs.merge(
-        start$,
         list$,
         listAll$,
         saveAll$
