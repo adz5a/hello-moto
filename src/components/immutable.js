@@ -17,3 +17,21 @@ export const unwrapMap = data => {
 
 };
 
+
+export const toJS = obj => {
+
+    if ( Object.hasOwnProperty("toJS", obj) ) {
+
+        try {
+            return obj.toJS();
+        } catch ( e ) {
+            return obj;
+        }
+
+    } else {
+
+        return obj;
+
+    }
+
+};
