@@ -28,6 +28,7 @@ export const fromObject = flow([
 export const makeURL = bucket => bucket.baseURL + "/" + bucket.name
 
 export const makeId = flow([
+    makeURL,
     encodeURIComponent,
     btoa
 ]);

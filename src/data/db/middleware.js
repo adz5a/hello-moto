@@ -95,11 +95,23 @@ const insert = insert$ => insert$
         });
 
 
-const find = find$ => find$
+/**
+ * FIND QUERY
+ * action : data/db/FIND_DOC
+ * data: { query: Map<Query> | Query }
+ * meta : unspecified
+ * Returned action :
+ * action : data/db/FOUND_DOC
+ * data: { query: Map<Query> | Query, response: List<Map<T>> }
+ * will exectute a query against the db and return the response in a new
+ * action. Query can be Immutable objects or not.
+ */
+const find = action$ => action$
+    .filter(withType(FIND_DOC))
     .map( ({ data }) => {
 
 
-        const { query } = data;
+        const { query } = data;
         const raw = unwrapMap(query);
 
 
@@ -145,7 +157,7 @@ const delete_ = delete$ => delete$
 
                     return {
                         type: DELETED_DOC,
-                        data: { _id: res.id }
+                        data: { _id: res.id }
                     };
 
 
@@ -243,7 +255,6 @@ const creator = action$ => {
         .compose(insert);
 
     const find$ = action$
-        .filter(withType(FIND_DOC))
         .compose(find);
 
     const delete$ = action$
