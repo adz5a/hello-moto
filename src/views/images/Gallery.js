@@ -1,27 +1,14 @@
 import React from "react";
-import {
-    // viewStyle,
-    // centerFlex,
-    // inputStyle
-} from "components/styles";
-import {
-    // Link
-} from "react-router-dom";
-import {
-    // DefaultBorderedText as Text
-} from "components/Text";
 import { connect } from "react-redux";
-import{
-    // branch,
-    // compose,
-    // renderComponent
-} from "components/recompose";
 import {
     Map,
-    // List,
-    // Seq
 } from "immutable";
 import { ImageList, } from "./list/List";
+import {
+    once,
+    compose
+} from "components/recompose";
+import { FIND_DOC } from "data/db";
 
 
 
@@ -62,4 +49,20 @@ export function GalleryView () {
 }
 
 
-export const Gallery = GalleryView;
+export const Gallery = compose(
+    connect(),
+    once(
+        // will executeas soon as mounted
+        () => true,
+        props => props.dispatch({
+            type: FIND_DOC,
+            data: {
+                query: {
+                    selector: {
+                        type: "image"
+                    }
+                }
+            }
+        })
+    )
+)(GalleryView);

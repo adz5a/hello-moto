@@ -37,13 +37,13 @@ import {
 const modalStyle = join(
     defaultBordered,
     "fixed",
-    "w-60",
     "bg-near-black",
     "white",
     css({
         zIndex: 1,
         marginLeft: "50%",
-        transition: "0.5s"
+        transition: "0.5s",
+        width: "38em"
     })
 );
 
@@ -52,7 +52,7 @@ const closedStyle = css({
     opacity: 0
 });
 const openStyle = css({
-    left: "-30%",
+    left: "-19em",
     opacity: 1
 });
 const textLabel = css({

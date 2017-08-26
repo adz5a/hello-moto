@@ -7,21 +7,12 @@ import{
 } from "components/recompose";
 import { connect } from "react-redux";
 import {
-    // Map,
-    // List,
     Seq
 } from "immutable";
-// import { css } from "glamor";
-import {
-    // viewStyle,
-    // centerFlex,
-    // inputStyle
-} from "components/styles";
 import {
     ThumbListView
 } from "./ImageThumb";
 import { 
-    // TagListView,
     TagList
 } from "./TagList";
 import { infiniteScroll } from "components/infiniteScroll";
