@@ -12,8 +12,8 @@ import {
     Images
 } from "views/images";
 import {
-    Music
-} from "views/music";
+    Snake
+} from "views/snake";
 
 
 
@@ -40,8 +40,8 @@ class App extends Component {
                     component={Images}
                 />
                 <Route
-                    path="/music"
-                    component={Music}
+                    path="/snake"
+                    component={Snake}
                 />
                 <Route
                     path="/404"
