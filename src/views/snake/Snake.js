@@ -87,7 +87,9 @@ export function GameBoardView ({ children, width, height }) {
             viewBox={`0 0 ${width} ${height}`}
             width={width}
             height={height}
-        >{children}</svg>
+        >
+            {children}
+        </svg>
     );
 
 }
