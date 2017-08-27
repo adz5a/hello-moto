@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
     Route
 } from "react-router-dom";
@@ -14,6 +14,9 @@ import {
 import {
     Snake
 } from "views/snake";
+import {
+    Showcase
+} from "views/showcase";
 
 
 
@@ -22,7 +25,7 @@ const NotFound = () => (
 )
 
 
-class App extends Component {
+class App extends React.Component {
     render() {
         return (
             <div className="helvetica">
@@ -42,6 +45,10 @@ class App extends Component {
                 <Route
                     path="/snake"
                     component={Snake}
+                />
+                <Route
+                    path="/showcase"
+                    component={Showcase}
                 />
                 <Route
                     path="/404"

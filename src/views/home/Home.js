@@ -41,6 +41,12 @@ export function View () {
             >
                 {"Snake"}
             </Link>
+            <Link
+                className={ls}
+                to={"/showcase"}
+            >
+                {"Showcase"}
+            </Link>
         </section>
     );
 
