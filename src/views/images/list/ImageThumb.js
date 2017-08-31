@@ -46,9 +46,8 @@ const imageContainerStyle = join(
     "mt2",
     "mb2",
     "justify-center",
-    css({
-        width: "28%"
-    })
+    "w-80",
+    "w-30-ns"
 );
 
 
@@ -141,7 +140,12 @@ const ThumbFooter = compose(
 )(ThumbFooterView);
 
 
-const list = join("flex", "justify-between", "flex-wrap");
+const list = join(
+"flex",
+"justify-between-ns",
+    "justify-center",
+"flex-wrap",
+);
 export function ThumbListView ({
     images = EmptySeq,
     size = 10,

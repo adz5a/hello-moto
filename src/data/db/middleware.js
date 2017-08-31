@@ -15,7 +15,9 @@ import {
     UPDATE_DOC,
     DOC_UPDATED,
     QUERY,
-    QUERY_DONE
+    QUERY_DONE,
+    REGISTER_TYPE,
+    TYPE_REGISTERED
 } from "./actions";
 import {
     // toJS,
@@ -250,6 +252,19 @@ const update = action$ => {
 
 const creator = action$ => {
 
+    const state$ = action$
+        .filter(withType(REGISTER_TYPE))
+        .fold(
+            (state, action) => {
+
+                const { type, Record } = action.data;
+                return {
+                    ...state,
+                    [type]: Record
+                };
+            },
+            {}
+        );
 
     const insert$ = action$
         .compose(insert);

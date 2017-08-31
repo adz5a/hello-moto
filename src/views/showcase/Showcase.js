@@ -85,11 +85,18 @@ export function TextExample () {
 
 }
 
+
+export function ImageText () {
+    return (
+        <section></section>
+    );
+}
 export function ShowcaseView () {
 
     return (
         <Page
             MenuItems={MenuItems}
+            title="ShowCase"
         >
             <Lorem />
             <TextExample />

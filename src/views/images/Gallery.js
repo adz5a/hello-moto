@@ -8,6 +8,9 @@ import {
     once,
     compose
 } from "components/recompose";
+import {
+    Page
+} from "components/Page";
 import { FIND_DOC } from "data/db";
 
 
@@ -38,12 +41,12 @@ export const GalleryStat = connect(
 export function GalleryView () {
 
     return (
-        <section
+        <Page
+            title="Gallery"
         >
-            <h1>Gallery</h1>
             <GalleryStat />
             <ImageList />
-        </section>
+        </Page>
     );
 
 }

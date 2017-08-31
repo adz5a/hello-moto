@@ -30,6 +30,7 @@ const headerStyle = join(
     "justify-between",
     "pl1",
     "pr1",
+    "bg-white",
     css({
         top: "0",
         left: "0",
@@ -93,31 +94,41 @@ export function PageView ({
     MenuItems,
     Menu = MenuView,
     isMenuOpen = false,
-    openMenu = noop
+    openMenu = noop,
+    hasMenu = true,
+    title = ""
 }) {
 
+   
     const items = MenuItems ?
         <MenuItems /> :
+        null;
+
+    const menu = hasMenu ?
+            <Menu 
+                onClose={() => openMenu(false)}
+                isOpen={isMenuOpen}>
+                {items}
+            </Menu> :
+        null;
+
+    const menuIcon = hasMenu ? <MenuIcon 
+        className={menuIconStyle}
+        onClick={() => openMenu(true)}
+    /> :
         null;
 
     return (
         <section
         >
             <header className={headerStyle}>
-                <h2 className={titleStyle}>Gallery</h2>
-                <MenuIcon 
-                    className={menuIconStyle}
-                    onClick={() => openMenu(true)}
-                />
+                <h2 className={titleStyle}>{title}</h2>
+                {menuIcon}
             </header>
             <main className={mainStyle}>
                 {children}
             </main>
-            <Menu 
-                onClose={() => openMenu(false)}
-                isOpen={isMenuOpen}>
-                {items}
-            </Menu>
+            {menu}
         </section>
     );
 
