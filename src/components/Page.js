@@ -175,3 +175,6 @@ export const Page = compose(
         false
     )
 )(PageView)
+Page.propTypes = {
+    menuOpen: PropTypes.bool,
+};
