@@ -3,7 +3,14 @@ import {
     joinClasses as join
 } from "components/styles";
 import { css } from "glamor";
-import { MenuIcon } from "components/icons";
+import { MenuIcon, Close } from "components/icons";
+import { 
+    withState,
+    withProps,
+    compose
+} from "recompose";
+import noop from "lodash/noop";
+import PropTypes from "prop-types";
 
 
 export const mainStyle = join(
@@ -42,20 +49,118 @@ const menuIconStyle = join(
     "grow",
 );
 
-export function PageView ({ children }) {
+
+
+const baseMenuStyle = join(
+    "fixed",
+    "w5",
+    "shadow-2",
+    "bg-white",
+    css({
+        top: 0,
+        bottom: 0,
+        zIndex: 4000,
+        transition: "right 0.4s"
+    })
+);
+
+
+const openMenuStyle = join(
+    baseMenuStyle,
+    css({
+        right: 0
+    })
+);
+
+const closedMenuStyle = join(
+    baseMenuStyle,
+    css({
+        right: "-16rem"
+    })
+);
+
+
+const closeMenuStyle = join(
+    "h2",
+    "w2",
+    "pointer",
+    "grow"
+);
+
+
+export function PageView ({ 
+    children, 
+    MenuItems,
+    Menu = MenuView,
+    isMenuOpen = false,
+    openMenu = noop
+}) {
+
+    const items = MenuItems ?
+        <MenuItems /> :
+        null;
 
     return (
         <section
         >
             <header className={headerStyle}>
                 <h2 className={titleStyle}>Gallery</h2>
-                <MenuIcon className={menuIconStyle} />
+                <MenuIcon 
+                    className={menuIconStyle}
+                    onClick={() => openMenu(true)}
+                />
             </header>
             <main className={mainStyle}>
                 {children}
             </main>
+            <Menu 
+                onClose={() => openMenu(false)}
+                isOpen={isMenuOpen}>
+                {items}
+            </Menu>
         </section>
     );
 
 }
 
+
+export function MenuView ({ 
+    isOpen = false,
+    onClose = noop,
+    children
+}) {
+
+    const menuStyle = isOpen ?
+        openMenuStyle :
+        closedMenuStyle;
+
+    return (
+        <aside className={menuStyle}>
+            <Close
+                className={closeMenuStyle}
+                onClick={onClose}
+            />
+            {children}
+        </aside>
+    );
+
+}
+
+
+export const Menu = MenuView;
+
+Menu.propTypes = {
+    isOpen: PropTypes.bool,
+    onClose: PropTypes.func
+};
+
+export const Page = compose(
+    withProps(
+        { Menu }
+    ),
+    withState(
+        "isMenuOpen",
+        "openMenu",
+        false
+    )
+)(PageView)

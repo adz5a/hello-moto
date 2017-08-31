@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    PageView as Page
+    Page
 } from "components/Page";
 
 const lorem = `
@@ -8,10 +8,26 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 `;
 
 
+const MenuItems = () => (
+    <ul className="list pa0 ma0">
+        <li className="ph3 pv3 bb b--light-silver">Mackeral Tabby</li>
+        <li className="ph3 pv3 bb b--light-silver">Burmese</li>
+        <li className="ph3 pv3 bb b--light-silver">Orange Tabby</li>
+        <li className="ph3 pv3 bb b--light-silver">Maine Coon</li>
+        <li className="ph3 pv3 bb b--light-silver">Siamese</li>
+        <li className="ph3 pv3 bb b--light-silver">Scottish Fold</li>
+        <li className="ph3 pv3">American Bobtail</li>
+    </ul>
+);
+
 export function ShowcaseView () {
 
     return (
-        <Page>
+        <Page
+            MenuItems={
+                MenuItems
+            }
+        >
             <h1>Lorem</h1>
             <p>
                 {lorem}
