@@ -235,7 +235,7 @@ export function TextListView ({
                 images
                     .toSeq()
                     .slice(0, size)
-                    .map(imageDoc => {
+                    .map((imageDoc, index) => {
 
                         return (
                             <TextImage
@@ -243,6 +243,7 @@ export function TextListView ({
                                 image={imageDoc}
                                 onAddTag={onAddTag}
                                 openTagModal={openTagModal}
+                                selected={index % 2 === 0}
                             />
                         );
 

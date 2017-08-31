@@ -132,12 +132,13 @@ export function ListImageExample () {
                 {
                     images
                         .toSeq()
-                        .map(imageDoc => {
+                        .map((imageDoc, i) => {
 
                             return (
                                 <TextImage
                                     key={imageDoc.get("_id")}
                                     image={imageDoc}
+                                    selected={i % 2 === 0}
                                 />
                             );
 
@@ -149,13 +150,14 @@ export function ListImageExample () {
                 {
                     images
                         .toSeq()
-                        .map(imageDoc => {
+                        .map((imageDoc, i) => {
 
                             return (
                                 <ImageThumb
                                     key={imageDoc.get("_id")}
                                     image={imageDoc}
                                     openTagModal={noop}
+                                    selected={i % 2 === 0}
                                 />
                             );
 
