@@ -10,17 +10,13 @@ import {
     Route
 } from "react-router-dom";
 import {
-    Add,
-    route as addRoute
-} from "./Add";
-import {
     Gallery,
     route as galleryRoute
 } from "./Gallery";
+import PropTypes from "prop-types";
 
 
-
-function Links ({ match }) {
+function Home ({ match }) {
 
     const link = join(linkStyle, "ma3", "hover-bg-black", "hover-white");
     const linkContainer = join(centerFlex, "space-between", "pa3");
@@ -32,12 +28,6 @@ function Links ({ match }) {
                 className={link}
             >
                 Gallery
-            </Link>
-            <Link
-                to={addRoute(match)}
-                className={link}
-            >
-                Add
             </Link>
         </div>
     );
@@ -52,11 +42,7 @@ export function Images ( { match } ) {
             <Route
                 path={match.url}
                 exact
-                component={Links}
-            />
-            <Route
-                path={addRoute(match)}
-                component={Add}
+                component={Home}
             />
             <Route
                 path={galleryRoute(match)}
@@ -66,3 +52,6 @@ export function Images ( { match } ) {
     );
 
 }
+Images.propTypes = {
+    match: PropTypes.any.isRequired
+};

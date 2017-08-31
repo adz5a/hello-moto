@@ -10,16 +10,7 @@ import {
 
 export const creator = ( action$, state$ ) => {
 
-    return xs.of({
-        type: FIND_DOC,
-        data: {
-            query: Map({
-                selector: {
-                    type: "image"
-                }
-            })
-        }
-    })
+    return xs.never();
 
 };
 
