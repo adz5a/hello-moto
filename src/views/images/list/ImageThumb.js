@@ -54,7 +54,8 @@ const imageContainerStyle = join(
 
 export function Thumb ({
     image = EmptyMap,
-    openTagModal = noop
+    openTagModal = noop,
+    selected = false
 }) {
 
     return (
@@ -70,6 +71,7 @@ export function Thumb ({
             <ThumbFooter
                 image={image}
                 openTagModal={openTagModal}
+                selected={selected}
             />
         </div>
     );

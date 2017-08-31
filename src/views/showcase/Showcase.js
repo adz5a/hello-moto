@@ -146,7 +146,7 @@ export function ListImageExample () {
                         .toArray()
                 }
             </section>
-            <section className={join("flex", "justify-between", "flex-wrap", "flex-column")}>
+            <section className={join("items-center", "flex", "justify-between", "flex-wrap", "flex-column")}>
                 {
                     images
                         .toSeq()
@@ -172,7 +172,9 @@ export function ShowcaseView () {
 
     return (
         <Page
-            MenuItems={MenuItems}
+            MenuItems={() => (
+                <ul></ul>
+            )}
             title="ShowCase"
         >
             <Lorem />

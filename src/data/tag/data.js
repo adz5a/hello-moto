@@ -3,7 +3,7 @@ import {
     // Seq,
     // List,
     // Repeat,
-    Record
+    Map
 } from "immutable";
 
 
@@ -13,6 +13,6 @@ import {
 const prefixer = ACTIONFACTORY("__tag__");
 
 
-export const Tag = Record({});
+export const Tag = Map
 
 export const makeId = tagName => prefixer(tagName);
