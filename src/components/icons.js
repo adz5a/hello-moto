@@ -11,6 +11,8 @@ import AddBox from "react-icons/lib/md/add-box";
 
 import Close from "react-icons/lib/md/close"
 
+import Burger from "react-icons/lib/md/format-align-justify"
+
 export {
     DownArrow,
     UpArrow,
@@ -19,5 +21,7 @@ export {
     FullHeart,
     EmptyHeart,
     AddBox,
-    Close
+    Close,
+    Burger,
+    Burger as MenuIcon
 }
