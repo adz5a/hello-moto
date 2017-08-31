@@ -3,8 +3,30 @@ import {
     Page
 } from "components/Page";
 import {
+    TextListView
+} from "views/images/list/ImageText";
+import {
+    ThumbListView
+} from "views/images/list/ImageThumb";
+import {
     Link
 } from "react-router-dom";
+import {
+    Seq,
+    List,
+    Repeat,
+    Map
+} from "immutable";
+import {
+    Tag
+} from "data/tag";
+import {
+    Data as Image,
+} from "data/image";
+import {
+    Doc
+} from "data/commons";
+
 import * as styles from "components/styles";
 
 const lorem = `
@@ -86,9 +108,35 @@ export function TextExample () {
 }
 
 
-export function ImageText () {
+
+export function ListImageExample () {
     return (
-        <section></section>
+        <section>
+            <TextListView 
+                images={
+                    Repeat(300, 2)
+                        .map((width, i) => Doc({
+                            _id: "yolo" + i,
+                            data: Image({
+                                url: "https://unsplash.it/" + width + "/300?random"
+                            }),
+                            tag: Tag()
+                        }))
+                }
+            />
+            <ThumbListView 
+                images={
+                    Repeat(300, 2)
+                        .map((width, i) => Doc({
+                            _id: "yolo" + i,
+                            data: Image({
+                                url: "https://unsplash.it/" + width + "/300"
+                            }),
+                            tag: Tag()
+                        }))
+                }
+            />
+        </section>
     );
 }
 export function ShowcaseView () {
@@ -100,6 +148,8 @@ export function ShowcaseView () {
         >
             <Lorem />
             <TextExample />
+            <ListImageExample />
+
         </Page>
     );
 

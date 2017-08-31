@@ -175,8 +175,6 @@ export function TextImageView ({
     openTagModal = noop
 }) {
 
-    // console.log(openTagModal);
-
     return (
         <section
             className={textStyle}>
