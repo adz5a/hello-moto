@@ -3,10 +3,15 @@ import {
     Page
 } from "components/Page";
 import {
-    TextListView
+    joinClasses as join
+} from "components/styles";
+import {
+    TextListView,
+    TextImage
 } from "views/images/list/ImageText";
 import {
-    ThumbListView
+    ThumbListView,
+    Thumb as ImageThumb
 } from "views/images/list/ImageThumb";
 import {
     Link
@@ -26,6 +31,7 @@ import {
 import {
     Doc
 } from "data/commons";
+import noop from "lodash/noop";
 
 import * as styles from "components/styles";
 
@@ -110,32 +116,53 @@ export function TextExample () {
 
 
 export function ListImageExample () {
+
+
+    const images = Repeat(300, 2)
+        .map((width, i) => Doc({
+            _id: "yolo" + i,
+            data: Image({
+                url: "https://unsplash.it/" + width + "/300?random"
+            }),
+            tag: Tag()
+        }))
     return (
         <section>
-            <TextListView 
-                images={
-                    Repeat(300, 2)
-                        .map((width, i) => Doc({
-                            _id: "yolo" + i,
-                            data: Image({
-                                url: "https://unsplash.it/" + width + "/300?random"
-                            }),
-                            tag: Tag()
-                        }))
+            <section>
+                {
+                    images
+                        .toSeq()
+                        .map(imageDoc => {
+
+                            return (
+                                <TextImage
+                                    key={imageDoc.get("_id")}
+                                    image={imageDoc}
+                                />
+                            );
+
+                        })
+                        .toArray()
                 }
-            />
-            <ThumbListView 
-                images={
-                    Repeat(300, 2)
-                        .map((width, i) => Doc({
-                            _id: "yolo" + i,
-                            data: Image({
-                                url: "https://unsplash.it/" + width + "/300"
-                            }),
-                            tag: Tag()
-                        }))
+            </section>
+            <section className={join("flex", "justify-between", "flex-wrap", "flex-column")}>
+                {
+                    images
+                        .toSeq()
+                        .map(imageDoc => {
+
+                            return (
+                                <ImageThumb
+                                    key={imageDoc.get("_id")}
+                                    image={imageDoc}
+                                    openTagModal={noop}
+                                />
+                            );
+
+                        })
+                        .toArray()
                 }
-            />
+            </section>
         </section>
     );
 }

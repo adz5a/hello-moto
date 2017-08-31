@@ -1,4 +1,5 @@
 import React from "react";
+import { Unchecked, Checked } from "components/icons";
 import{
 //     branch,
     compose,
@@ -96,7 +97,8 @@ const ThumIconStyle = join(
 export function ThumbFooterView ({
     image = EmptyMap,
     onAddTag = noop,
-    openTagModal = noop
+    openTagModal = noop,
+    selected = false
 }) {
 
     const isFav = image.getIn(
@@ -105,8 +107,13 @@ export function ThumbFooterView ({
     );
 
 
+    const checkBox = selected ?
+        <Checked /> :
+        <Unchecked />
+
     return (
         <footer>
+             {checkBox}
             {
 
                 isFav ?

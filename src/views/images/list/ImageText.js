@@ -1,5 +1,6 @@
 import React from "react";
 import { css } from "glamor";
+import { Unchecked, Checked } from "components/icons";
 import {
     Map,
     // List,
@@ -172,12 +173,17 @@ export function TextImageView ({
     showExpand,
     toggleExpand = noop,
     onAddTag = noop,
-    openTagModal = noop
+    openTagModal = noop,
+    selected = false
 }) {
 
+    const checkBox = selected ?
+        <Checked /> :
+        <Unchecked />
     return (
         <section
             className={textStyle}>
+            {checkBox}
             <span>
                 {image.getIn(["data", "url"], "lol").split("/").slice(4).join("/").slice(0, 50)}
             </span>
@@ -200,7 +206,7 @@ export function TextImageView ({
 
 
 
-const TextImage = withReducer(
+export const TextImage = withReducer(
     "showExpand",
     "toggleExpand",
     ( state, _ ) => !state,
