@@ -172,7 +172,7 @@ export const Page = compose(
     withState(
         "isMenuOpen",
         "openMenu",
-        false
+        props => props.menuOpen
     )
 )(PageView)
 Page.propTypes = {

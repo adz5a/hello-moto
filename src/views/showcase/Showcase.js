@@ -10,6 +10,9 @@ import {
     TextImage
 } from "views/images/list/ImageText";
 import {
+    MenuView
+} from "views/images/GalleryMenu";
+import {
     ThumbListView,
     Thumb as ImageThumb
 } from "views/images/list/ImageThumb";
@@ -32,7 +35,7 @@ import {
     Doc
 } from "data/commons";
 import noop from "lodash/noop";
-
+import { withProps } from "components/recompose";
 import * as styles from "components/styles";
 
 const lorem = `
@@ -170,12 +173,29 @@ export function ListImageExample () {
 }
 export function ShowcaseView () {
 
+
+    const images = Repeat(300, 2)
+        .map((width, i) => Doc({
+            _id: "yolo" + i,
+            data: Image({
+                url: "https://unsplash.it/" + width + "/300?random"
+            }),
+            tag: Tag()
+        }));
+
+
     return (
         <Page
-            MenuItems={() => (
-                <ul></ul>
-            )}
+            MenuItems={() => {
+
+                return <MenuView 
+                    images={images}
+                    tags={Repeat("lol", 5)}
+                />;
+
+            }}
             title="ShowCase"
+            menuOpen={true}
         >
             <Lorem />
             <TextExample />
