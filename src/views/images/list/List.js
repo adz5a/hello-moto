@@ -18,7 +18,6 @@ import {
 import { infiniteScroll } from "components/infiniteScroll";
 import { TextListView } from "./ImageText";
 import { ToggleListView } from "./ToggleList";
-import { CreateTagModal } from "./CreateTag";
 // import noop from "lodash/noop";
 import {
     OPEN_TAG_MODAL
@@ -56,7 +55,6 @@ export function ListView ({
         <div>
             <ToggleListView onToggle={onToggle}/>
             <TagList />
-            <CreateTagModal />
             <View
                 {...props}
             />
@@ -70,16 +68,6 @@ export const ImageList = compose(
         state => ({
             images: state.db.byType.get("image", EmptySeq).toSeq()
         }),
-        {
-            openTagModal ( doc ) {
-
-                return {
-                    type: OPEN_TAG_MODAL,
-                    data: { doc }
-                };
-
-            }
-        }
     ),
     branch(
         props => props.images.size === 0,

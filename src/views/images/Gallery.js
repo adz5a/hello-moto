@@ -29,7 +29,7 @@ import {
     Route
 } from "react-router-dom";
 import {
-    MenuView
+    Menu
 } from "views/images/GalleryMenu";
 
 
@@ -63,7 +63,7 @@ export function GalleryView ({ match }) {
         <Page
             title="Gallery"
             menuOpen={true}
-            MenuItems={MenuView}
+            MenuItems={Menu}
         >
             <GalleryStat />
             <ImageList />

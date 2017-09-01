@@ -6,6 +6,8 @@ import {
     inputStyle
 } from "components/styles";
 import { Close } from "components/icons";
+import { connect } from "react-redux";
+import { compose } from "recompose";
 import noop from "lodash/noop";
 
 
@@ -93,3 +95,12 @@ export function MenuView ({
     );
 
 }
+
+
+export const Menu = compose(
+    connect(
+        state => ({
+            images: state.gallery.selection,
+        })
+    )
+)(MenuView);
