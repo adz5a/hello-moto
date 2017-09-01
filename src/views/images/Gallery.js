@@ -63,23 +63,7 @@ export function GalleryView ({ match }) {
         <Page
             title="Gallery"
             menuOpen={true}
-            MenuItems={() => {
-
-                console.log("yolo");
-                const images = Repeat(300, 2)
-                    .map((width, i) => Doc({
-                        _id: "yolo" + i,
-                        data: Image({
-                            url: "https://unsplash.it/" + width + "/300?random"
-                        }),
-                        tag: Tag()
-                    }));
-                return <MenuView 
-                    images={images}
-                    tags={Repeat("lol", 5)}
-                />;
-
-            }}
+            MenuItems={MenuView}
         >
             <GalleryStat />
             <ImageList />
