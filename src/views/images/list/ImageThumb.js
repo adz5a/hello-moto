@@ -24,9 +24,6 @@ import PropTypes from "prop-types";
 import {
     withToggleTag
 } from "components/withAddTag"
-import {
-    AddTag
-} from "./CreateTag";
 
 
 const EmptySeq = Seq();
@@ -129,10 +126,6 @@ export function ThumbFooterView ({
                     />
 
             }
-            <AddTag
-                openTagModal={openTagModal}
-                image={image}
-            />
         </footer>
     );
 

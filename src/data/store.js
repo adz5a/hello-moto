@@ -24,7 +24,7 @@ import {
     // middleware as galleryMiddleware
 } from "data/gallery";
 
-console.log("gallery", gallery);
+
 export function createStore ( {
     middlewares = []
 } = {}) {

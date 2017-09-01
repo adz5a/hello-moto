@@ -20,7 +20,7 @@ import { TextListView } from "./ImageText";
 import { ToggleListView } from "./ToggleList";
 // import noop from "lodash/noop";
 import {
-    OPEN_TAG_MODAL
+    // OPEN_TAG_MODAL
 } from "data/gallery";
 
 

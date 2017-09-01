@@ -12,22 +12,9 @@ import {
     Page
 } from "components/Page";
 import { FIND_DOC } from "data/db";
-import {
-    Repeat
-} from "immutable";
-import {
-    Doc
-} from "data/commons";
-import {
-    Data as Image
-} from "data/image";
-import {
-    Tag
-} from "data/tag";
-import {
-    Link,
-    Route
-} from "react-router-dom";
+// import {
+//     Route
+// } from "react-router-dom";
 import {
     Menu
 } from "views/images/GalleryMenu";

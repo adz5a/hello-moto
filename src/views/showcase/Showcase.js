@@ -6,24 +6,19 @@ import {
     joinClasses as join
 } from "components/styles";
 import {
-    TextListView,
     TextImage
 } from "views/images/list/ImageText";
 import {
     MenuView
 } from "views/images/GalleryMenu";
 import {
-    ThumbListView,
     Thumb as ImageThumb
 } from "views/images/list/ImageThumb";
 import {
     Link
 } from "react-router-dom";
 import {
-    Seq,
-    List,
     Repeat,
-    Map
 } from "immutable";
 import {
     Tag
@@ -35,7 +30,6 @@ import {
     Doc
 } from "data/commons";
 import noop from "lodash/noop";
-import { withProps } from "components/recompose";
 import * as styles from "components/styles";
 
 const lorem = `
@@ -43,17 +37,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 `;
 
 
-const MenuItems = () => (
-    <ul className="list pa0 ma0">
-        <li className="ph3 pv3 bb b--light-silver">Mackeral Tabby</li>
-        <li className="ph3 pv3 bb b--light-silver">Burmese</li>
-        <li className="ph3 pv3 bb b--light-silver">Orange Tabby</li>
-        <li className="ph3 pv3 bb b--light-silver">Maine Coon</li>
-        <li className="ph3 pv3 bb b--light-silver">Siamese</li>
-        <li className="ph3 pv3 bb b--light-silver">Scottish Fold</li>
-        <li className="ph3 pv3">American Bobtail</li>
-    </ul>
-);
 
 
 

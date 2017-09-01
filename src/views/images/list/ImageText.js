@@ -27,9 +27,6 @@ import {
     UpArrow,
     // AddBox
 } from "components/icons";
-import {
-    AddTag
-} from "./CreateTag";
 import noop from "lodash/noop";
 
 
@@ -109,11 +106,6 @@ function TagView ({
     // console.log(onAddTag);
     return (
         <section className="dib">
-            <AddTag 
-                image={image}
-                className={join(expandStyle, "dim")}
-                openTagModal={openTagModal}
-            />
             <FavTag image={image} />
         </section>
     );

@@ -2,7 +2,7 @@ import xs from "xstream";
 // import dropRepeats from "xstream/extra/dropRepeats";
 import { createStreamMiddleware } from "data/streamMiddleware";
 import {
-    FIND_DOC,
+    // FIND_DOC,
     ADD_BULK,
     ADD_BULK_RESPONSE
 } from "data/db";
