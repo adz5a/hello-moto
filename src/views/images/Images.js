@@ -18,7 +18,6 @@ import {
     route as galleryRoute
 } from "./Gallery";
 import PropTypes from "prop-types";
-import { MenuIcon } from "components/icons";
 
 function Home ({ match }) {
 
@@ -32,7 +31,7 @@ function Home ({ match }) {
         >
             <div className={linkContainer}>
                 <Link
-                    to={match.url + "/gallery"}
+                    to={galleryRoute(match)}
                     className={link}
                 >
                     Gallery

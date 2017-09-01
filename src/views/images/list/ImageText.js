@@ -184,8 +184,8 @@ export function TextImageView ({
         <section
             className={textStyle}>
             {checkBox}
-            <span>
-                {image.getIn(["data", "url"], "lol").split("/").slice(4).join("/").slice(0, 50)}
+            <span className="mw4 mw6-ns overflow-hidden">
+                {image.getIn(["data", "url"], "lol").split("/").slice(4).join("/").slice(-30)}
             </span>
             <div>
                 <TagView 
