@@ -1,4 +1,5 @@
 import React from "react";
+import { Unchecked, Checked } from "components/icons";
 import{
 //     branch,
     compose,
@@ -23,9 +24,6 @@ import PropTypes from "prop-types";
 import {
     withToggleTag
 } from "components/withAddTag"
-import {
-    AddTag
-} from "./CreateTag";
 
 
 const EmptySeq = Seq();
@@ -46,15 +44,15 @@ const imageContainerStyle = join(
     "mt2",
     "mb2",
     "justify-center",
-    css({
-        width: "28%"
-    })
+    "w-80",
+    "w-30-ns"
 );
 
 
 export function Thumb ({
     image = EmptyMap,
-    openTagModal = noop
+    openTagModal = noop,
+    selected = false
 }) {
 
     return (
@@ -70,6 +68,7 @@ export function Thumb ({
             <ThumbFooter
                 image={image}
                 openTagModal={openTagModal}
+                selected={selected}
             />
         </div>
     );
@@ -97,7 +96,8 @@ const ThumIconStyle = join(
 export function ThumbFooterView ({
     image = EmptyMap,
     onAddTag = noop,
-    openTagModal = noop
+    openTagModal = noop,
+    selected = false
 }) {
 
     const isFav = image.getIn(
@@ -106,8 +106,13 @@ export function ThumbFooterView ({
     );
 
 
+    const checkBox = selected ?
+        <Checked /> :
+        <Unchecked />
+
     return (
         <footer>
+             {checkBox}
             {
 
                 isFav ?
@@ -121,10 +126,6 @@ export function ThumbFooterView ({
                     />
 
             }
-            <AddTag
-                openTagModal={openTagModal}
-                image={image}
-            />
         </footer>
     );
 
@@ -141,7 +142,12 @@ const ThumbFooter = compose(
 )(ThumbFooterView);
 
 
-const list = join("flex", "justify-between", "flex-wrap");
+const list = join(
+"flex",
+"justify-between-ns",
+    "justify-center",
+"flex-wrap",
+);
 export function ThumbListView ({
     images = EmptySeq,
     size = 10,

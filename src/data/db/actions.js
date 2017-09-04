@@ -27,3 +27,6 @@ export const ADD_BULK_RESPONSE = ACTION("add-bulk-response");
 
 export const QUERY = ACTION("query");
 export const QUERY_DONE = ACTION("query-done");
+
+export const REGISTER_TYPE = ACTION("register-type");
+export const TYPE_REGISTERED = ACTION("type-registered");

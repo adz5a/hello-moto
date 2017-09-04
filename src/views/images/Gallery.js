@@ -8,7 +8,16 @@ import {
     once,
     compose
 } from "components/recompose";
+import {
+    Page
+} from "components/Page";
 import { FIND_DOC } from "data/db";
+// import {
+//     Route
+// } from "react-router-dom";
+import {
+    Menu
+} from "views/images/GalleryMenu";
 
 
 
@@ -35,15 +44,17 @@ export const GalleryStat = connect(
 
 
 
-export function GalleryView () {
+export function GalleryView ({ match }) {
 
     return (
-        <section
+        <Page
+            title="Gallery"
+            menuOpen={true}
+            MenuItems={Menu}
         >
-            <h1>Gallery</h1>
             <GalleryStat />
             <ImageList />
-        </section>
+        </Page>
     );
 
 }

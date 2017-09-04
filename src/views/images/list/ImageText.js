@@ -1,5 +1,6 @@
 import React from "react";
 import { css } from "glamor";
+import { Unchecked, Checked } from "components/icons";
 import {
     Map,
     // List,
@@ -26,9 +27,6 @@ import {
     UpArrow,
     // AddBox
 } from "components/icons";
-import {
-    AddTag
-} from "./CreateTag";
 import noop from "lodash/noop";
 
 
@@ -108,11 +106,6 @@ function TagView ({
     // console.log(onAddTag);
     return (
         <section className="dib">
-            <AddTag 
-                image={image}
-                className={join(expandStyle, "dim")}
-                openTagModal={openTagModal}
-            />
             <FavTag image={image} />
         </section>
     );
@@ -172,16 +165,19 @@ export function TextImageView ({
     showExpand,
     toggleExpand = noop,
     onAddTag = noop,
-    openTagModal = noop
+    openTagModal = noop,
+    selected = false
 }) {
 
-    // console.log(openTagModal);
-
+    const checkBox = selected ?
+        <Checked /> :
+        <Unchecked />
     return (
         <section
             className={textStyle}>
-            <span>
-                {image.getIn(["data", "url"], "lol").split("/").slice(4).join("/").slice(0, 50)}
+            {checkBox}
+            <span className="mw4 mw6-ns overflow-hidden">
+                {image.getIn(["data", "url"], "lol").split("/").slice(4).join("/").slice(-30)}
             </span>
             <div>
                 <TagView 
@@ -202,7 +198,7 @@ export function TextImageView ({
 
 
 
-const TextImage = withReducer(
+export const TextImage = withReducer(
     "showExpand",
     "toggleExpand",
     ( state, _ ) => !state,
@@ -231,7 +227,7 @@ export function TextListView ({
                 images
                     .toSeq()
                     .slice(0, size)
-                    .map(imageDoc => {
+                    .map((imageDoc, index) => {
 
                         return (
                             <TextImage
@@ -239,6 +235,7 @@ export function TextListView ({
                                 image={imageDoc}
                                 onAddTag={onAddTag}
                                 openTagModal={openTagModal}
+                                selected={index % 2 === 0}
                             />
                         );
 

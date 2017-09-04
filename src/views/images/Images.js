@@ -1,10 +1,14 @@
 import React from "react";
+// import { css } from "glamor";
 import {
     viewStyle,
     centerFlex,
     linkStyle,
     joinClasses as join
 } from "components/styles";
+import {
+    Page
+} from "components/Page";
 import {
     Link,
     Route
@@ -15,24 +19,30 @@ import {
 } from "./Gallery";
 import PropTypes from "prop-types";
 
-
 function Home ({ match }) {
 
     const link = join(linkStyle, "ma3", "hover-bg-black", "hover-white");
     const linkContainer = join(centerFlex, "space-between", "pa3");
 
     return (
-        <div className={linkContainer}>
-            <Link
-                to={match.url + "/gallery"}
-                className={link}
-            >
-                Gallery
-            </Link>
-        </div>
+        <Page
+            hasMenu={false}
+            title="Images"
+        >
+            <div className={linkContainer}>
+                <Link
+                    to={galleryRoute(match)}
+                    className={link}
+                >
+                    Gallery
+                </Link>
+            </div>
+        </Page>
     );
 
 }
+
+
 
 
 export function Images ( { match } ) {

@@ -6,14 +6,14 @@ import {
 import {
     TAG_DOC,
     TOGGLE_DOC_TAG,
-    UPDATE_TAG_LIST
+    // UPDATE_TAG_LIST
 } from "./actions";
 import {
-    QUERY
+    // QUERY
 } from "data/db";
 import { withType } from "data/commons";
 import {
-    fromJS
+    // fromJS
 } from "immutable";
 import { createStreamMiddleware } from "data/streamMiddleware";
 // import { makeId } from "./data";

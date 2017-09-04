@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Map, Repeat } from "immutable";
+import { Map, } from "immutable";
 import { smallPillStyle } from "components/styles";
 import times from "lodash/times";
 

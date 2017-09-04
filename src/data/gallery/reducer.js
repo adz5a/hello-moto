@@ -1,31 +1,27 @@
 import { combineReducers } from "redux";
+import { Set } from "immutable";
 import {
-    OPEN_TAG_MODAL,
-    CLOSE_TAG_MODAL
+    SELECT,
+    DESELECT
 } from "./actions";
 
 
-export function tagModale ( state = { show: false }, action ) {
+export function selection ( state = Set(), action ) {
 
     const { type, data } = action;
 
     switch ( type ) {
 
-        case OPEN_TAG_MODAL: {
+        case SELECT: {
             const { doc } = data;
-            return {
-                show: true,
-                doc
-            };
+            return state.add(doc.get("_id"));
 
         }
 
-        case CLOSE_TAG_MODAL: {
+        case DESELECT: {
 
-            return {
-                ...state,
-                show: false,
-            };
+            const { doc } = data;
+            return state.remove(doc.get("_id"));
 
         }
 
@@ -39,5 +35,5 @@ export function tagModale ( state = { show: false }, action ) {
 
 
 export const reducer = combineReducers({
-    tagModale
+    selection
 });

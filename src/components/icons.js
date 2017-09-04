@@ -11,6 +11,10 @@ import AddBox from "react-icons/lib/md/add-box";
 
 import Close from "react-icons/lib/md/close"
 
+import Burger from "react-icons/lib/md/format-align-justify"
+import Unchecked from "react-icons/lib/md/check-box-outline-blank";
+import Checked from "react-icons/lib/md/check-box";
+
 export {
     DownArrow,
     UpArrow,
@@ -19,5 +23,9 @@ export {
     FullHeart,
     EmptyHeart,
     AddBox,
-    Close
+    Close,
+    Burger,
+    Burger as MenuIcon,
+    Unchecked,
+    Checked
 }
