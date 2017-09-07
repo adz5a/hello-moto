@@ -119,7 +119,17 @@ export const enhanceWithStream = Component => componentFromStream( prop$ => {
 } );
 
 export const Form = compose(
-    connect(),
+    connect(
+        null,
+        {
+            onAdd ( bucket ) {
+                return {
+                    type: INSERT_DOC,
+                    data: toDoc( bucket )
+                }
+            }
+        }
+    ),
     enhanceWithStream
 )(FormView);
 
