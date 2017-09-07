@@ -25,7 +25,7 @@ import {
 } from "data/link";
 import { awaitPromises } from "components/stream";
 import {
-    makeIdFromURL
+    bucket
 } from "./data";
 
 
@@ -73,7 +73,7 @@ const getList = ({
                         .map( s => s.trim() )
                         .join("/");
                     return Map({
-                        id: makeIdFromURL(url),
+                        id: bucket.encode(url),
                         url,
                         size: item.Size,
                         lastModified: item.LastModified,

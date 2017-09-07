@@ -15,8 +15,7 @@ import {
     INSERT_DOC,
 } from "data/db";
 import {
-    fromObject,
-    toDoc
+    fromObject
 } from "data/bucket";
 import {
     compose,
@@ -49,7 +48,7 @@ function FormView ( { 
                 <legend className="ph0 mh0 fw6">Create New Bucket</legend>
                 <div className="mt3">
                     <label className="db fw4 lh-copy f6">{"Base URL"}</label>
-                    <input type="text" name="baseURL" className={inputStyle} />
+                    <input type="text" name="url" className={inputStyle} />
                 </div>
                 <div className="mt3">
                     <label className="db fw4 lh-copy f6">{"Bucket Name"}</label>
@@ -63,9 +62,9 @@ function FormView ( { 
                 onClick={( e ) => {
 
                     e.preventDefault();
-                    const { baseURL, name } = parseForm(["baseURL", "name"], e.target.form);
+                    const { url, name } = parseForm(["url", "name"], e.target.form);
 
-                    return onAdd(fromObject({ baseURL, name }));
+                    return onAdd(fromObject({ url, name }));
 
                 }}
             />
@@ -76,48 +75,6 @@ function FormView ( { 
 
 
 
-
-
-export const enhanceWithStream = Component => componentFromStream( prop$ => {
-
-    //  TODO : 
-    //  introduce an "addStream" and a "changeStream"
-    //  those can be used to display a spinner while
-    //  a bucket is being created.
-    //  This is why I leave it here atm...
-
-    return prop$
-        .map( ownProps => {
-
-            const { dispatch } = ownProps;
-
-            return {
-                onAdd: bucket => {
-
-                    // console.log(bucket);
-                    return dispatch({
-                        type: INSERT_DOC,
-                        data: toDoc(bucket)
-                    });
-
-
-                }
-            };
-
-        })
-        .map( props  => {
-
-            return (
-                <Component
-                    { ...props }
-                />
-            );
-
-        } );
-
-
-} );
-
 export const Form = compose(
     connect(
         null,
@@ -125,12 +82,11 @@ export const Form = compose(
             onAdd ( bucket ) {
                 return {
                     type: INSERT_DOC,
-                    data: toDoc( bucket )
+                    data: bucket
                 }
             }
         }
     ),
-    enhanceWithStream
 )(FormView);
 
 export function Add () {

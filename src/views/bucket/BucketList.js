@@ -25,12 +25,16 @@ import {
 // import map from "lodash/map";
 import {
     Map,
-    // is
+    Seq
 } from "immutable";
 import {
     DELETE_DOC,
     FIND_DOC
 } from "data/db";
+import {
+    Null as Empty,
+    of
+} from "data/bucket";
 import constant from "lodash/constant";
 
 
@@ -44,13 +48,13 @@ const centerFlex ="flex flex-column items-center";
 
 
 export function BucketQuickDescriptionView ( {
-    bucket = Map(),
+    id = "",
+    bucket = Empty,
     match  = {},
     onDelete = noop
 } ) {
 
-    const bucketId = bucket.get("id", null);
-    const baseURL = bucket.get("baseURL", null);
+    const baseURL = bucket.get("url", null);
     const name = bucket.get("name", null);
 
     return (
@@ -73,13 +77,13 @@ export function BucketQuickDescriptionView ( {
             </fieldset>
             <Link
                 className={linkStyle}
-                to={match.url + "/" + bucketId + "/edit"}
+                to={match.url + "/" + id + "/edit"}
             >
                 Edit
             </Link>
             <Link
                 className={linkStyle}
-                to={match.url + "/" + bucketId + "/list"}
+                to={match.url + "/" + id + "/list"}
             >
                 List Items
             </Link>
@@ -121,7 +125,7 @@ const BucketQuickDescription = enhanceBucketQuickDescription(BucketQuickDescript
 
 
 export function BucketListView ( {
-    buckets = Map(),
+    buckets = Seq(),
     onDeleteAll = noop,
     match = {}
 } ) {
@@ -140,14 +144,15 @@ export function BucketListView ( {
             </form>
             {
                 buckets
-                    .toArray()
                     .map(
                         bucket => <BucketQuickDescription
-                            key={bucket.get("id")}
-                            bucket={bucket}
+                            key={bucket.get("_id")}
+                            bucket={bucket.get("data")}
+                            id={bucket.get("_id")}
                             match={match}
                         />
                     )
+                    .toArray()
             }
         </section>
     );
@@ -172,7 +177,7 @@ export const enhanceBucketList = compose(
         state => ({
             buckets: state.db.store
             .filter( doc => doc.get("type") === "bucket")
-            .map( doc => doc.get("data") )
+            .toSeq()
         }),
     ),
     once(
