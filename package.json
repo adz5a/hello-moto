@@ -46,7 +46,7 @@
         "react-redux": "^5.0.5",
         "react-router-dom": "^4.1.1",
         "recompose": "^0.23.5",
-        "redux": "^3.7.1",
+        "redux": "^3.7.2",
         "style-loader": "0.18.2",
         "sw-precache-webpack-plugin": "0.11.3",
         "tachyons": "^4.7.4",
@@ -56,7 +56,8 @@
         "webpack-dev-server": "2.5.0",
         "webpack-manifest-plugin": "1.1.0",
         "whatwg-fetch": "2.0.3",
-        "xstream": "^10.9.0"
+        "xstream": "^10.9.0",
+        "xstream-redux-observable": "https://github.com/adz5a/xstream-redux-observable.git"
     },
     "devDependencies": {
         "babel-plugin-transform-object-rest-spread": "^6.23.0",
