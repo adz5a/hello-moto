@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@types/lodash": "^4.14.74",
         "autoprefixer": "7.1.1",
         "awesome-typescript-loader": "^3.2.3",
         "babel-core": "6.25.0",
