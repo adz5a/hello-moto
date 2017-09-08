@@ -1,7 +1,7 @@
 import React from "react";
 import { viewStyle } from "components/styles";
 import { mapPropsStream, createEventHandler } from "components/recompose";
-import { Record, Seq, Repeat, Range } from "immutable";
+import { Repeat, } from "immutable";
 import noop from "lodash/noop";
 import dropRepeats from "xstream/extra/dropRepeats";
 import xs from "xstream";
@@ -134,7 +134,7 @@ const s = Repeat(X, 5)
 
 
 const tiles = s;
-console.log("tiles", s);
+// console.log("tiles", s);
 
 // console.log("tiles", tiles);
 export const enhance = mapPropsStream( props => {
@@ -159,11 +159,9 @@ export const enhance = mapPropsStream( props => {
     })
         .startWith(X)
         .debug("up")
-        .map( direction => tiles => Tile.list.translate(direction, tiles) );
+        .map( direction => tiles => Tile.list.move(direction, tiles) );
 
 
-
-    const s = stop$.debug()
 
 
     const start = () => {

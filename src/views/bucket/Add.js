@@ -21,9 +21,9 @@ import {
     compose,
     // createEventHandler
 } from "components/recompose";
-import {
-    componentFromStream
-} from "components/recompose";
+// import {
+//     componentFromStream
+// } from "components/recompose";
 // import xs from "xstream";
 
 

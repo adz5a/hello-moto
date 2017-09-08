@@ -56,15 +56,15 @@ export function EmptyListView ( {
 export const EmptyList = EmptyListView;
 
 
-const renderLinks = links => links.map( link => (
-    <p
-        key={link.get("url")}
-        className={"flex justify-between"}
-    >
-        <Text>{link.get("url").split("/").pop()}</Text>
-        <Text>{link.get("contentType")}</Text>
-    </p>
-));
+// const renderLinks = links => links.map( link => (
+//     <p
+//         key={link.get("url")}
+//         className={"flex justify-between"}
+//     >
+//         <Text>{link.get("url").split("/").pop()}</Text>
+//         <Text>{link.get("contentType")}</Text>
+//     </p>
+// ));
 
 
 export function ListView ( {

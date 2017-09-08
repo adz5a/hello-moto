@@ -44,7 +44,7 @@ export namespace Tile {
 
     export namespace list {
 
-        export const translate = ( v: Point.Vector, tiles: Tile[] ): Tile[] => {
+        export const move = ( v: Point.Vector, tiles: Tile[] ): Tile[] => {
             if ( tiles.length === 0 ) {
                 return [];
             } else if ( tiles.length === 1 ) {

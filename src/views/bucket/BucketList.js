@@ -24,7 +24,7 @@ import {
 } from "react-redux";
 // import map from "lodash/map";
 import {
-    Map,
+    // Map,
     Seq
 } from "immutable";
 import {
@@ -33,7 +33,7 @@ import {
 } from "data/db";
 import {
     Null as Empty,
-    of
+    // of
 } from "data/bucket";
 import constant from "lodash/constant";
 
