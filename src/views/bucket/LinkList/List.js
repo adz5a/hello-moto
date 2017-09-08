@@ -102,7 +102,6 @@ export function ListView ( {
                 <header>
                     <Text>{"Items " + contents.size}</Text>
                 </header>
-                {renderLinks(contents.slice(0, listSize))}
             </section>
             <section className={centerFlex}>
                 <Input
