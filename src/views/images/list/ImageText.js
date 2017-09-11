@@ -128,6 +128,7 @@ const expandedStyle = join(
         height: "20em"
     })
 );
+
 function Expandable ( { expand = false, image = EmptyMap } ) {
 
     if ( expand ) {
