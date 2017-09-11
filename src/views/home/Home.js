@@ -19,24 +19,6 @@ export function View () {
         >
             <Link
                 className={ls}
-                to={"/bucket"}
-            >
-                {"Buckets"}
-            </Link>
-            <Link
-                className={ls}
-                to={"/music"}
-            >
-                {"Music"}
-            </Link>
-            <Link
-                className={ls}
-                to={"/images"}
-            >
-                {"Images"}
-            </Link>
-            <Link
-                className={ls}
                 to={"/snake"}
             >
                 {"Snake"}
