@@ -92,8 +92,8 @@ export function TextExample () {
                     type="button"
                     defaultValue="a button with hover"
                     className={styles.hoverableInputStyle} />
-                <br />
-            </div>
+            <br />
+        </div>
         </section>
     );
 

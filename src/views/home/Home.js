@@ -29,6 +29,12 @@ export function View () {
             >
                 {"Showcase"}
             </Link>
+            <Link
+                className={ls}
+                to={"/youtube"}
+            >
+                {"Youtube"}
+            </Link>
         </section>
     );
 

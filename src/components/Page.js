@@ -16,7 +16,9 @@ import PropTypes from "prop-types";
 export const mainStyle = join(
     "mt5",
     "pl3",
-    "pr3"
+    "pr3",
+    "w-60-ns",
+    "center"
 );
 
 
@@ -177,5 +179,6 @@ export const Page = compose(
 )(PageView)
 Page.propTypes = {
     menuOpen: PropTypes.bool,
-    MenuItems: PropTypes.any
+    MenuItems: PropTypes.any,
+    title: PropTypes.string.isRequired
 };

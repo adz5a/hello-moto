@@ -11,6 +11,9 @@ import {
 import {
     Showcase
 } from "views/showcase";
+import {
+    Youtube
+} from "views/youtube";
 
 
 
@@ -38,6 +41,10 @@ class App extends React.Component {
                 <Route
                     path="/showcase"
                     component={Showcase}
+                />
+                <Route
+                    path="/youtube"
+                    component={Youtube}
                 />
                 <Route
                     path="/404"
