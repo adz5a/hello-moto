@@ -60,15 +60,17 @@ export function SnakeView ({
     tiles = [],
     onStop = noop,
     onStart = noop,
-    onMove = noop
+    onMove = noop,
+    width = 300,
+    height = 300
 }) {
     return (
         <section className={viewStyle}
         >
             <h1>Awesome snake game</h1>
             <GameBoardView 
-                width={300}
-                height={300}
+                width={width}
+                height={height}
             >
                 {tiles.map(( tile, index ) => <SnakeTile 
                    key={index}
@@ -120,76 +122,141 @@ GameBoardView.propTypes = {
 };
 
 
-// console.log(Tile);
 const { topLeft, translate } = Tile;
-const { X, Y } = Point;
+const { X, Y, inv } = Point;
 
-const s = Repeat(X, 5)
-    .toSeq()
-    .map((X, f) => {
-        return Point.scale(f, X)
-    })
-    .map(X => translate(X, topLeft))
-    .toArray();
+const constrain = ( tile, constraint ) => {
+    const score = Point.normalizedDot( tile.get("position"), constraint );
+
+    if ( -1 <= score && score <= 1 ) {
+        return tile;
+    } else {
+        if ( score < -1 ) {
+            return tile.get("position").update( ( pos ) => translate(pos, constraint) );
+        } else {
+            return tile.get("position").update( ( pos ) => translate(pos, Point.inv(constraint)) );
+        }
+    }
+};
 
 
-const tiles = s;
-// console.log("tiles", s);
+const reducer = ( state, action ) => {
+    const { type } = action;
+    switch ( type ) {
+        case "changeDirection":
+            return {
+                ...state,
+                direction: action.data
+            };
+        case "pause":
+            return {
+                ...state,
+                isPause: !state.isPaused
+            };
+        case "move":
+            if ( !state.isPaused ) {
+                return {
+                    ...state,
+                    tiles: Tile.list.move(
+                        state.direction,
+                        state.tiles,
+                        state.maxX,
+                        state.maxY
+                    )
+                };
+            } else return state;
+        case "grow":
+            if ( !state.isPaused ) {
+                const last = state.tiles[state.tiles.length - 1];
+                return {
+                    ...state,
+                    tiles: Tile.list.move(state.direction, state.tiles, state.maxX, state.maxY).concat(last)
+                };
+            } else return state;
+        default:
+            return state;
+    }
+};
 
-// console.log("tiles", tiles);
-export const enhance = mapPropsStream( props => {
+
+export const enhance = mapPropsStream( props$ => {
+
+    const tiles = Tile.list.make();
+
 
     const { stream: stop$, handler: onStop } = createEventHandler();
     const { stream: start$, handler: onStart } = createEventHandler();
     const { stream: move$, handler: onMove } = createEventHandler();
 
-    const update$ = move$
-        .map(move => {
-        switch ( move ) {
-            case "up":
-                return Point.opp(Y);
-            case "down":
-                return Y;
-            case "left":
-                return Point.opp(X);
-            case "right":
-            default:
-                return X
-        }
-    })
-        .startWith(X)
-        .debug("up")
-        .map( direction => tiles => Tile.list.move(direction, tiles) );
+
+
+    const start = ( { width, height } ) => {
 
 
 
 
-    const start = () => {
+        const directions = {
+            up: inv(Y),
+            down: Y,
+            left: inv(X),
+            right: X
+        };
 
+        const action$ = xs
+            .merge(
+                stop$.mapTo({ type: "stop" }),
+                move$.map( dir => ({
+                    type: "changeDirection",
+                    data: directions[dir] || X
+                })),
+                xs.periodic(500).mapTo({
+                    type: "move"
+                }),
+                xs.periodic(4000).mapTo({
+                    type: "grow"
+                })
+            );
 
-        const tick$ = xs.periodic(500).endWhen(stop$);
+        return action$
+            .fold(reducer, {
+                tiles,
+                isPaused: false,
+                direction: X,
+                maxX: width,
+                maxY: height
+            });
 
-        return xs.combine(
-            tick$,
-            update$
-        )
-            .compose(dropRepeats((first, second) => first[0] === second[0]))
-            .debug()
-            .fold((tiles, [_, update]) => update(tiles), tiles);
-
+        
     };
+
+
+    return props$
+        .map( props => {
+
+            const { width, height } = props;
+            const game$ = start({ width, height });
+
+            return game$
+                .map(game => ({
+                    ...game,
+                    ...props,
+                    onStop,
+                    onStart,
+                    onMove
+                }));
+        } )
+        .flatten();
+
 
     return xs.combine(
         start$
-        .debug()
         .map(start)
         .startWith(start())
         .flatten(),
-        props
+        props$
     )
-        .map(([ tiles, props ]) => ({
+        .map(([ game, props ]) => ({
             ...props,
-            tiles,
             onStop,
             onStart,
             onMove

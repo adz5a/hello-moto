@@ -44,7 +44,10 @@ class App extends React.Component {
                 />
                 <Route
                     path="/snake"
-                    component={Snake}
+                    component={() => <Snake 
+                        width={300}
+                        height={300}
+                    />}
                 />
                 <Route
                     path="/showcase"
