@@ -1,3 +1,4 @@
+import xs, { Stream } from "xstream";
 import { Record, Set } from "immutable";
 
 
@@ -146,7 +147,132 @@ export namespace Tile {
         };
     }
 
-
 }
 
 
+export interface SnakeState {
+    tiles: Tile.Tile[];
+    direction: Point.Point;
+    width: number;
+    height: number;
+    isPaused: boolean;
+    isLost: boolean;
+}
+
+export interface SnakeProps extends SnakeState {
+    onStop: () => void;
+    onStart: () => void;
+    onMove: () => void;
+}
+
+
+export interface SnakeAction {
+    type: string;
+    data: any;
+}
+
+export const reducer = ( state: SnakeState, action: SnakeAction ): SnakeState => {
+    const { type } = action;
+    switch ( type ) {
+        case "changeDirection":
+            return {
+                ...state,
+                direction: <Point.Point>action.data
+            };
+        case "start":
+            return {
+                ...state,
+                isPaused: false
+            };
+        case "stop":
+            return {
+                ...state,
+                isPaused: true
+            };
+        case "move":
+            if ( !state.isPaused && !state.isLost ) {
+                const tiles = Tile.list.move(
+                    state.direction,
+                    state.tiles,
+                    state.width,
+                    state.height
+                );
+                const isLost = Set(tiles).size !== tiles.length;
+
+                return {
+                    ...state,
+                    tiles,
+                    isLost
+                };
+            } else return state;
+        case "grow":
+            if ( !state.isPaused && !state.isLost ) {
+                const last = state.tiles[state.tiles.length - 1];
+                const tiles = Tile.list
+                    .move(
+                        state.direction,
+                        state.tiles,
+                        state.width,
+                        state.height
+                    )
+                    .concat(last);
+                const isLost = Set(tiles).size !== tiles.length;
+
+                return {
+                    ...state,
+                    tiles,
+                    isLost
+                };
+            } else return state;
+        default:
+            return state;
+    }
+};
+
+
+export interface StartArgs {
+    width: number;
+    height: number;
+    stop$: Stream<void>;
+    move$: Stream<string>;
+	start$: Stream<void>;
+}
+
+export const directions = <{[s: string]: Point.Point}>{
+    up: Point.inv(Point.Y),
+    down: Point.Y,
+    left: Point.inv(Point.X),
+    right: Point.X
+};
+
+export type directions = "up" | "down" | "left" | "right";
+
+export const start = ( args: StartArgs ): Stream<SnakeState> => {
+
+    const action$ = <Stream<SnakeAction>>xs
+        .merge(
+            args.stop$.mapTo({ type: "stop" }),
+            args.start$.mapTo({ type: "start" }),
+            args.move$.map( dir => ({
+                type: "changeDirection",
+                data: (directions[dir] || Point.X)
+            })),
+            xs.periodic(500).mapTo({
+                type: "move"
+            }),
+            xs.periodic(4000).mapTo({
+                type: "grow"
+            })
+        );
+
+    return action$
+        .fold(reducer, {
+            tiles: Tile.list.make(),
+            isPaused: true,
+            isLost: false,
+            direction: Point.X,
+            width: args.width,
+            height: args.height
+        });
+
+};
