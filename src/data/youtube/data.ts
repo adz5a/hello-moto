@@ -1,6 +1,7 @@
-export const baseURL = "https://www.googleapis.com/youtube/v3";
+import { Map } from "immutable";
 const API_KEY = "AIzaSyDItu4uyFuEaDNn6XF1u7R2eA3DRT_IUk8";
 
+// type IRecord = 
 
 export namespace utils {
 
@@ -14,19 +15,27 @@ export namespace utils {
 
 }
 
-export interface Channel {
-    kind: "youtube#channel";
-    channelId: string;
-}
 
-export interface Video {
-    kind: "youtube#video";
-    videoId: string;
-}
-
-export type Kinds = Channel | Video;
-
+/*
+ * Describes the youtube search api
+ *
+ *
+ */
 export namespace search {
+
+    export const baseURL = "https://www.googleapis.com/youtube/v3";
+
+    export interface C {
+        kind: "youtube#channel";
+        channelId: string;
+    }
+
+    export interface V {
+        kind: "youtube#video";
+        videoId: string;
+    }
+
+    export type Kinds = C | V;
 
     export interface Thumb {
         url: string;
@@ -55,9 +64,12 @@ export namespace search {
         snippet?: Snippet;
     }
 
+    export interface Video extends Item<V> {}
+    export interface Channel extends Item<C> {}
+
     export interface Response <T> {
         etag: string;
-        items: Item<T>[];
+        items: T[];
         kind: "youtube#searchListResponse";
         nextPageToken: string;
         pageInfo: {
@@ -68,13 +80,13 @@ export namespace search {
     }
 
 
-    export function video ( query: string = "" ) {
+    export function video ( query: string = "", maxResults: number = 10 ) {
         const params = {
             q: query,
             type: "video",
             part: "snippet",
             key: API_KEY,
-            maxResults: 25
+            maxResults
         };
         const url = baseURL + "/search?" + utils.encodeParams(params);
 

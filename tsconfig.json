@@ -9,10 +9,20 @@
         "outDir": "lib",
         "moduleResolution": "node",
         "pretty": true,
-        "strict": true
+        "strict": true,
+        "jsx": "React",
+        "baseUrl": "src",
+        "paths": {
+            "views": [ "view/*" ],
+            "data": [ "data/*" ],
+            "components": [ "components/*" ]
+        }
     },
     "exclude": [
         "node_modules"
+    ],
+    "include": [
+        "./src/**/*"
     ],
     "awesomeTypescriptLoaderOptions": {
         "useBabel": true

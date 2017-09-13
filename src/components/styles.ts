@@ -1,6 +1,8 @@
-import { css } from "glamor";
+declare function require( a: string ): any;
+const css: any = require("glamor").css;
 
-export const joinClasses = (...classes) => classes.join(" ");
+
+export const joinClasses = ( ...classes: string[] ) => classes.join(" ");
 
 export const defaultBordered = "b ph3 pa2 ba b--black f6";
 export const defaultBorderedBlock = "b ph3 pa2 ba b--black  f6 db";

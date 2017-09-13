@@ -2,7 +2,7 @@ import React from 'react';
 import { Page } from "components/Page";
 import { Switch, Route, Link } from "react-router-dom";
 import { Home } from "./Home";
-import { Search } from "./Search";
+import  { Search } from "./Search";
 
 
 
